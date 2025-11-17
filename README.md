@@ -7,5 +7,5 @@ After it has synced with NTP server for the first time, it can work also in OFFL
 
 ![alt text](https://github.com/telepath9/ESPclock/blob/6b2b2224a42deda354a8a7220dcf724643eb9c2e/pics/pic1.jpg)
 
-🔜In the next release, the v2.0, user wouldn't need to use hardcoded credentials anymore, plus there would be some other features so, 
+🔜In the next release, the v2.0, user won't need to use hardcoded credentials anymore, plus there would be some other features so, 
 stay tuned...
