@@ -45,7 +45,7 @@ display: https://github.com/avishorp/TM1637/blob/master/TM1637Display.h
   const char *ssid     = "your_ssid";
   const char *password = "your_pw";
 
-
+  //SETUP NTP
   WiFiUDP ntpUDP;  //NTP server uses UDP communication protocol
 
 // You can specify the time server pool and the offset, (in seconds, es:(3600=1h))
@@ -61,13 +61,7 @@ void setup() {
     pinMode(14, INPUT_PULLUP);
 
 
-    //wifimanager --> per captive portal
-    // WiFiManager wifiManager;
-    // wifiManager.autoConnect("Clock_8266", "resident");
-    //end wifimanager
-
-    
-//SETUP NTP
+//WIFI connection
     WiFi.begin(ssid, password);
     mydisplay.clear();
     int ct=4;   //counter used for waiting-4-wifi animation
@@ -114,7 +108,7 @@ void setup() {
           timeClient.begin();
           timeClient.update();
       }
-//END SETUP NTP
+
 
  
 //SETUP RTC 
