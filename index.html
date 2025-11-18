@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+   
+<!--control+c+shift = html inspector with mouse-->
+<title>ESP8266 Clock</title>
+
+<meta charset="UTF-8" />
+<!--<meta> tag makes your web page responsive in any browser (laptop, tablet or smartphone)-->
+<!-- maximum-scale=1.0, user-scalable=no-->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="data:,">
+<style>
+
+body{background-color: #184E77;
+    margin: 0px;
+    height: inherit;
+font-family: "Roboto", sans-serif, system-ui;}
+
+.grid-container{
+    width: 250px; height:300px;
+    margin:auto;
+    display:grid;
+  
+    grid-template-columns:200px ;
+    justify-content: center;
+    /* grid-template-rows: 100px 220px 100px;*/
+}
+
+
+.internal {
+ /*il div che contiene il div "container", che contiene
+ gli input fields,checkbox, ecc...*/
+  
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+input:focus {
+  border: 6px solid red;
+}
+
+
+/* The actual popup (appears on top) */
+.popup .popuptext {
+  visibility: hidden;
+  width: 160px;
+  background-color: #555555;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 8px 0;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%;
+  left: 50%;
+  margin-left: -80px;
+}
+
+/* Popup arrow */
+.popup .popuptext::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #555555 transparent transparent transparent;
+}
+
+/* Toggle this class when clicking on the popup container (hide and show the popup) */
+.popup .show {
+  visibility: visible;
+  -webkit-animation: fadeIn 1s;
+  animation: fadeIn 1s
+}
+
+/* Add animation (fade in the popup) */
+@-webkit-keyframes fadeIn {
+  from {opacity: 0;}
+  to {opacity: 1;}
+}
+
+@keyframes fadeIn {
+  from {opacity: 0;}
+  to {opacity:1 ;}
+}
+
+
+</style>
+</head>
+
+<body>
+
+<div class="header2" style="display: flex;  justify-content: center;">
+
+<h2 style="padding-top:25px ; color:white; text-align:center;">🕰️ ESP8266 Clock Setup ⌚</h2>
+</div>
+<br><br>
+<div class="outer" style=" width:260px; margin:auto; text-align: center; border-radius: 14px; border: 4px solid transparent; background-color:#e7e3da;">
+ 
+<div id="credscard_title" style="top:0;">
+    <p style="margin-top: 0px;color:#003049; padding-top:10px; padding-bottom: 10px; 
+    background-color:#e7e3da; border: 4px solid #9a031e; 
+    border-radius: 10px; float:center;"><b>Enter your Wifi credentials</b></p>
+</div>
+
+
+<!--DICHIARAZIONE SVG, dentro il tag svg ci vanno tutti i file svg dichiarati 
+singolarmente dentro i tag symbol (1 per ogni svg)-->
+            
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+
+    <!----dichiarazione OPEN-->
+    <symbol id="openeye_id"  viewBox="0 0 576 512">
+
+        <path fill="#778da9" d="M288 32c-80.8 0-145.5 36.8-192.6 80.6-46.8 43.5-78.1 95.4-93 131.1-3.3 7.9-3.3 16.7 0 
+        24.6 14.9 35.7 46.2 87.7 93 131.1 47.1 43.7 111.8 80.6 192.6 80.6s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 
+        93-131.1 3.3-7.9 3.3-16.7 0-24.6-14.9-35.7-46.2-87.7-93-131.1-47.1-43.7-111.8-80.6-192.6-80.6zM144 256a144 
+        144 0 1 1 288 0 144 144 0 1 1 -288 0zm144-64c0 35.3-28.7 64-64 64-11.5 0-22.3-3-31.7-8.4-1 10.9-.1 22.1 2.9 
+        33.2 13.7 51.2 66.4 81.6 117.6 67.9s81.6-66.4 67.9-117.6c-12.2-45.7-55.5-74.8-101.1-70.8 5.3 9.3 8.4 20.1 8.4 
+        31.7z"/>
+
+    </symbol>
+
+    <!----dichiarazione shuteye-->
+    <symbol id="shuteye_id" viewBox="0 0 576 512" >
+
+        <path fill="#778da9" d="M41-24.9c-9.4-9.4-24.6-9.4-33.9 0S-2.3-.3 7 9.1l528 528c9.4 9.4 24.6 
+        9.4 33.9 0s9.4-24.6 0-33.9l-96.4-96.4c2.7-2.4 5.4-4.8 8-7.2 46.8-43.5 
+        78.1-95.4 93-131.1 3.3-7.9 3.3-16.7 0-24.6-14.9-35.7-46.2-87.7-93-131.1-47.1-43.7-111.8-80.6-192.6-80.6-56.8 
+        0-105.6 18.2-146 44.2L41-24.9zM204.5 138.7c23.5-16.8 52.4-26.7 83.5-26.7 79.5 0 144 64.5 144 144 0 
+        31.1-9.9 59.9-26.7 83.5l-34.7-34.7c12.7-21.4 17-47.7 10.1-73.7-13.7-51.2-66.4-81.6-117.6-67.9-8.6 
+        2.3-16.7 5.7-24 10l-34.7-34.7zM325.3 395.1c-11.9 3.2-24.4 4.9-37.3 4.9-79.5 0-144-64.5-144-144 0-12.9 
+        1.7-25.4 4.9-37.3L69.4 139.2c-32.6 36.8-55 75.8-66.9 104.5-3.3 7.9-3.3 16.7 0 24.6 14.9 35.7 46.2 87.7 93 
+        131.1 47.1 43.7 111.8 80.6 192.6 80.6 37.3 0 71.2-7.9 101.5-20.6l-64.2-64.2z"/>
+
+    </symbol>
+</svg>
+
+      
+
+<div class="grid-container">
+    <div class="internal" style="padding-bottom: 22px;" >
+        <div class="container" >
+         
+                <label style="color: rgb(0, 0, 0); float: left;" for="ssid_list" ><b>SSID</b></label><br>
+                
+                <!--select è la label usata per visualizzare gli SSID disponibili-->
+                <select id="ssid_list" name="ssid" style="background-color: #fff9ee; height: 34px; width:188px; border-radius: 6px; border-color:transparent;border-style:solid; border-width: 2px;padding: 0 0 0 3px;">
+                </select><br><br>
+                
+                <label style="color: rgb(0, 0, 0); float:left" for="pw"><b>PASSWORD</b></label><br>
+                
+                <!--wrapper del campo PW + toggle pw (eye)-->
+                <div class="pw_wrapper" style=" position: relative; display: inline-block;">
+                    <input type="password" placeholder="Password" id="pw" maxlength="32" name="pw" style=" padding-right: 40px; background-color: #fff9ee; height: 30px;width:180px;border-radius: 6px; border-color:transparent; border-style:solid; border-width: 2px; padding: 0 0 0 3px; ">
+                    
+                    <!--BOTTONE PER IL TOGGLE PASSWORD-->
+                    <button type="button" id="toggleopen_id" style="position: absolute;  top: 0px; right:0px;  border: none;
+                        cursor: pointer;width:31px; height:34px; background-color: transparent;">
+                        <svg style="height:20px ; width:21px; position: absolute; right: 5px; top:7px"><use id="useopen" href="#openeye_id"/></svg>
+                    </button>
+            
+                <br>
+                </div>
+                <br><br><br><br>
+                
+                <!--POPUP 
+                <div class="popup" onclick="popupfunct()" style="position: relative;  display: inline-block; cursor: pointer;">
+                    Click me!
+                <span class="popuptext" id="myPopup">Trying connection...</span>
+                </div>-->
+
+
+                <!--CONNECT BUTTON onclick="popupfunct()"-->
+                 <div class="popup"  style="position: relative;  display: inline-block; cursor: pointer;">
+                    
+                    <button type="submit" id="connect" value="CONNECT" style="cursor: pointer;font-size: 14px; font-weight: 550; height: 34px;width: 188px; border-radius: 8px; border-color: transparent; color: #fff9ee;background-color: #9a031e;">
+                    CONNECT
+                    </button>
+                    <span class="popuptext" style="font-size: 14px; " id="myPopup">POPUP MESSAGE</span>
+                </div>
+
+           
+        </div>
+    </div>
+
+
+</div>
+</div>
+
+
+<footer style=" padding:2px 0 2px 16px ; line-height: 11px; bottom: 0; width: 100%; box-sizing: border-box; background-color: #267bbc; height: 90px; text-align:left;position: absolute; display: block; ">
+    <p style="color:#e7e3da">A project by <strong>telepath</strong> <br><br>You can find me on:<br><br>
+        <b>
+            <span style="font-size: 18px;">
+                <a href="https://github.com/telepath9/TM1637Clock" style=" text-decoration-line:none; color:#e4dae7">GitHub</a> | 
+                <a href="https://makerworld.com/it/models/1594116-espclock-digital-clock" style="text-decoration-line:none; color:#e7e3da">Makerworld</a> | 
+                <a href="https://www.printables.com/model/1350472-digital-clock-wemos-d1-mini"  style="text-decoration-line:none; color:#e7e3da">Printables</a>
+            </span>
+        </b>
+    </p>
+</footer>
+
+
+
+<script>
+    /*
+    scrivi un programma che ACCEDA ad un file JSON (presente nel FS di esp8266)
+    e che
+    riesca a popolare le option(s) di una select label
+    con gli elementi trovati all'interno
+    */
+
+    //FUNZIONA
+    var network_list;
+    
+    //onload() è fondamentale, altrimenti non esegue il fetch
+     window.onload = function () {
+
+            //fetch() manda una request al server (esp8266) 
+            fetch("/network_list.json")
+                    .then(response=> response.json())
+                    .then(data=> {
+
+                        //data sarebbe l'oggetto json ricevuto da server
+                        network_list= data;
+
+                        //console.log(network_list);
+
+                        //seleziono la label che conterrà le options
+                        const ssid_element = document.getElementById("ssid_list");
+
+                        let ssid_prefix= "ssid";       
+
+                        //campo found nel json che indica quante reti sono state trovate
+                        let foundnets = data.found;
+                        
+                        //questo for popola la drop-down select label
+                    for(let i=0; i<foundnets; i++){
+
+                            //crea nuovo elem(option) per la drop down list
+                            let add_option_n = document.createElement("option");
+
+                            //let ssidcounter =  ssid_prefix.concat(i);
+                            let ssidcounter =  i;
+
+                            add_option_n.value = ssidcounter;
+                            
+                            add_option_n.innerHTML = data.network[i].credentials[0];
+
+                            ssid_element.appendChild(add_option_n);
+
+                            
+                        }
+                    
+                });
+    }
+
+        //new custom password toggler
+      const password = document.getElementById("pw");
+      const buttoneye = document.getElementById("toggleopen_id");
+      const useshift = document.getElementById("useopen");
+      const popup_text_elem = document.getElementById("myPopup");
+
+      //password toggle
+      buttoneye.onclick = function(){
+
+          if ( password.type === "password") {
+              password.type = "text";
+        
+              //attivo L'SVG SHUTEYE cambiando href all'interno di <use>
+              useshift.setAttribute("href", "#shuteye_id" );
+          }
+
+          else{
+              password.type = "password";
+              useshift.setAttribute("href", "#openeye_id" );     
+          }
+      }
+
+    // da togliere (forse)
+     /* function popupfunct() {
+        var popup = document.getElementById("myPopup");
+        popup.classList.toggle("show");
+        }*/
+
+      //TASTO CONNECT -event 
+      const connect_but= document.getElementById("connect");
+      const pw_element = document.getElementById("pw");
+      let ssid_by_user;
+      let pw_by_user;
+
+      connect_but.onclick = function(){
+
+            const ssid_element_s = document.getElementById("ssid_list");
+
+            //valori inseriti da user
+            ssid_by_user = ssid_element_s.value;
+            console.log("chosen network is: ", ssid_by_user);
+
+            pw_by_user = pw_element.value;
+            console.log("Password is: ", pw_by_user);
+
+            //1 capire quale ssid ha selezionato l'user + la pw [OK]
+            //vanno inserite in un json poi
+            //fetch deve inviare il json al server 
+
+
+            //PS: i parametri sono: method,headers,body... ma di solito ci si riferisce al contenuto del body
+            //fetch( method: POST) ....
+
+            
+            fetch("/sendcreds", {
+                
+                method: "POST",
+
+                headers: {
+                'Content-Type': "application/json"
+                },
+
+                //i dati in formato JSON sono nel body della richiesta HTTP
+                body: JSON.stringify({"ssid" : ssid_by_user , "pw" :pw_by_user })
+            
+            
+            })
+
+            //se pw è corretta e Server manda OK (200 ?)
+            .then((response)=> {console.log(response.status);
+               /* if(response.status== "200"){
+                    var popup = document.getElementById("myPopup");
+                     popup_text_elem.innerHTML() = "CONNECTED✅";
+                    popup.classList.toggle("show");
+                }
+
+                else{
+                    var popup = document.getElementById("myPopup");
+                    popup_text_elem.innerHTML() = "WRONG PASSWORD❌";
+                    popup.classList.toggle("show");
+                }
+        */
+              });
+            }
+            
+
+
+    /* CODE for CHECKBOX toggle/untoggle
+    let password = document.getElementById("pw");
+    let checkbox = document.getElementById("show_pw");
+
+    checkbox.onclick = function(){
+        if (checkbox.checked) {
+            password.type = "text";
+        }
+
+        else{
+            password.type = "password";
+        }
+    }
+    */
+       
+</script>
+
+</body>
+</html>
