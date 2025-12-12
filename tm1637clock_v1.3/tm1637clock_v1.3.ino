@@ -3,8 +3,6 @@
 #include <WiFiUdp.h> 
 #include "RTClib.h"
 #include "TM1637Display.h"
-#include <WiFiManager.h>          //https://github.com/tzapu/WiFiManager WiFi Configuration Magic
-
 
 /* Libraries used:
 RTC module: https://github.com/adafruit/RTClib
@@ -19,11 +17,9 @@ display: https://github.com/avishorp/TM1637/blob/master/TM1637Display.h
 
       static unsigned long t1, diff_time;
       int ret=0;
-
       diff_time= millis() - t1;
-
+        
       if(diff_time >= everywhen){
-
         t1= millis();
         ret=1;
       }
@@ -77,8 +73,7 @@ void setup() {
                   if(ct<4 && ct>-1){
                   mydisplay.showNumberDecEx(0, 0, false, 1, ct);
                   Serial.println( "Trying to connect. Press button 2 skip 2 RTC" );
-                  ct--;
-                   
+                  ct--;          
                   }
 
                   //clear() needs to be called in order to refresh the display 
@@ -183,14 +178,11 @@ void loop() {
       mydisplay.showNumberDecEx(timeClient.getHours(), 0, true, 2, 0);
       mydisplay.showNumberDecEx(timeClient.getMinutes(), 0, true, 2, 2);
       blink=true;
-  }
+      }
       
   }
 
-
-
   }
-
     
   //RTC Mode (when there's no wifi)
   else{
@@ -199,8 +191,6 @@ void loop() {
   mydisplay.showNumberDecEx(adesso.hour(), 0b01000000, true, 2, 0);
   mydisplay.showNumberDecEx(adesso.minute(), 0b01000000, true, 2, 2);
      }
-  
-
 }
 
    
