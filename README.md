@@ -1,6 +1,6 @@
 Welcome to the page of my (W.I.P.) project called <h2>ESPclock</h2>
-which basically is a smart clock that connects to wifi to synchronize the time. 
-It relies on a Esp8266 (devboard: Wemos D1 mini, next i will make it work also for Esp32).
+which basically is a smart clock that connects to wifi to get the time. 
+It relies on a ESP8266 (devboard: Wemos D1 mini, soon i will make it work also for ESP32).
 
 At the actual state, it uses hardcoded wifi credentials (that the user must insert in the firmware before compiling it),
 then, it retrieves the time (hour and minutes) from an NTP server.
