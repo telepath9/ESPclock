@@ -1,6 +1,6 @@
 Welcome to the page of my (W.I.P.) project called 
 
-<img src="https://github.com/telepath9/ESPclock/blob/a2afaaca9273734f5d5979462e870066c1febdce/pics/title.png" alt="Alt Text" width="60%" height="60%">
+<img src="https://github.com/telepath9/ESPclock/blob/54c39c18d9204351de640fb42218651ce3664671/pics/newfont.png" alt="Alt Text" width="60%" height="60%">
 
 which basically is a smart clock that connects to wifi to get the time. 
 It relies on a ESP8266 (devboard: Wemos D1 mini, soon i will make it work also for ESP32).
