@@ -36,3 +36,7 @@ After it has synced with NTP server for the first time, it can work also in OFFL
 
 
 <img src="https://github.com/telepath9/ESPclock/blob/fc8962a5a3ac24c1769f0fc2af601251f94913a0/pics/v2.0_new.jpg" alt="Alt Text" width="100%" height="100%">
+
+<h2>ESP8266 (Wemos D1 Mini 3.0.0 devboard) PINOUT</h2>
+<img src="https://github.com/telepath9/ESPclock/blob/29cbf9b2a12f70d9c52a61b395483ac53f8dbaba/pics/esp8266_v2.0_pinout.jpg" alt="Alt Text" width="100%" height="100%">
+
