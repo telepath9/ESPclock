@@ -26,7 +26,7 @@ After it has synced with NTP server for the first time, it can work also in OFFL
 	1. General -> Build
 	2. General -> Upload
 
-6. Now let's connect pc or mobile to the Espclock access point, with the password: supermario64
+6. Now let's connect pc or mobile to the Espclock access point, with the password: waltwhite64
 
 7. After connecting to the AP, open your browser and paste in the address bar: http://192.168.4.1/
 
@@ -40,3 +40,10 @@ After it has synced with NTP server for the first time, it can work also in OFFL
 <h2>ESP8266 (Wemos D1 Mini 3.0.0 devboard) PINOUT</h2>
 <img src="https://github.com/telepath9/ESPclock/blob/29cbf9b2a12f70d9c52a61b395483ac53f8dbaba/pics/esp8266_v2.0_pinout.jpg" alt="Alt Text" width="100%" height="100%">
 
+
+<h2>TROUBLESHOOTING</h2>
+There are (at the moment) two errors that can be displayed from the 7-segment display:
+<ul>
+<li>Err0 -> when "LittleFS.begin()" fails</li>
+<li>Err1 -> when "index.html" doesn't exists in flash memory (user forgot to upload it)</li>
+</ul>
