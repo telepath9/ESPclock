@@ -34,13 +34,13 @@ After it has synced with NTP server for the first time, it can work also in OFFL
 9. and we're done! Hope that you liked my project! If you have any suggestions, let me know!
 
 <h2>📱 WEB UI </h2>
-<img src="https://github.com/telepath9/ESPclock/blob/b7e9a17b113168cbe1b109e211301ea0b07abd35/pics/2.0.3.jpg" alt="Alt Text" width="100%" height="100%">
+<img src="https://github.com/telepath9/ESPclock/blob/34c6915141348c3f2546474637ee8ee67e9d2076/pics/2.0.3.jpg" alt="Alt Text" width="100%" height="100%">
 
 <h2>🤖 FEATURES </h2>
 <ul>
 <li>Asynchronous webserver</li>
 <li>Automatic Wifi Scan</li>
-<li>Wifi and NTP server setup via webpage</li>
+<li>Wifi and NTP server setup via web UI</li>
 <li>Automatic Brightness mode</li>
 <li>Blinking colon toggle</li>
 <li>... other features are coming soon!</li>
