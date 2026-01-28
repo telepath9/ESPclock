@@ -9,7 +9,7 @@ After it has synced with NTP server for the first time, it can work also in OFFL
 
 <img src="https://github.com/telepath9/ESPclock/blob/6b2b2224a42deda354a8a7220dcf724643eb9c2e/pics/pic1.jpg" alt="Alt Text" width="100%" height="100%">
 
-<h2>🛠️ INSTRUCTIONS </h2>
+<h2>📜 INSTRUCTIONS </h2>
 
 1. Install VSCode or <b>VSCodium</b> (i prefer VSCodium because it basically is VSCode but <b>without</b> telemetry);
 
@@ -46,9 +46,21 @@ After it has synced with NTP server for the first time, it can work also in OFFL
 <li>... other features are coming soon!</li>
 </ul>
 
+<h2>🪛 PART LIST</h2>
+<ul>
+<li>Wemos D1 MINI (mine is V3.0.0 clone)</li>
+<li>TM1637 module https://it.aliexpress.com/item/1005001582129952.html?spm=a2g0o.order_list.order_list_main.49.370e3696i4W9Sn&gatewayAdapt=glo2ita </li>
+<li>Dupont wires</li>
+<li>DG308 terminal block: x2</li>
+<li>female 8Pin header: x2</li>
+<li>7x3cm perfboard: x1</li>
+<li>M2.5 nuts: x10</li>
+<li>single row female 5 PINS (for common GND): x1</li>
+</ul>
 
-<h2>🔌 ESP8266 (Wemos D1 Mini 3.0.0 devboard) PINOUT</h2>
-<img src="https://github.com/telepath9/ESPclock/blob/29cbf9b2a12f70d9c52a61b395483ac53f8dbaba/pics/esp8266_v2.0_pinout.jpg" alt="Alt Text" width="100%" height="100%">
+
+<h2>🔌 ESP8266 PINOUT (Wemos D1 Mini 3.0.0 devboard)</h2>
+<img src="https://github.com/telepath9/ESPclock/blob/ebe4f234343fb306297fa49ef42fd830830b3c9a/pics/esp8266_pinout.jpg" alt="Alt Text" width="100%" height="100%">
 
 
 <h2>⚠️ TROUBLESHOOTING</h2>
