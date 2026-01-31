@@ -315,7 +315,7 @@ void setup() {
             //checks json integrity
             if(!f) {
                 Serial.println("Error opening /network_list.json");
-                request->send(500, "application/json", "{\"error\":\"Failed to open config.json\"}");
+                request->send(500, "application/json", "{\"error\":\"Failed to open network_list.json\"}");
                 return;
             }
 
