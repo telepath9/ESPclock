@@ -68,11 +68,13 @@ It uses a ESP8266 (devboard: Wemos D1 mini, soon i will make it work also for ES
 <li>7x3cm perfboard: x1</li>
 <li>M2.5 screws: x10</li>
 <li>M2.5 nuts: x2</li>
-<li>Single row female 5 PINS (for common GND): x1</li>
+<li>Single row female 5pins header (for common GND): x1</li>
 </ul>
 
 
 <h2>🔌 ESP8266 WIRING (Wemos D1 Mini 3.0.0)</h2>
+<img src="https://github.com/telepath9/ESPclock/blob/0defb72bb5107271487eb4c452812158a96b2c5e/pics/top_pcb.jpg" alt="Alt Text" width="100%" height="100%">
+<img src="https://github.com/telepath9/ESPclock/blob/0defb72bb5107271487eb4c452812158a96b2c5e/pics/bottom.jpg" alt="Alt Text" width="100%" height="100%">
 <img src="https://github.com/telepath9/ESPclock/blob/ebe4f234343fb306297fa49ef42fd830830b3c9a/pics/esp8266_pinout.jpg" alt="Alt Text" width="100%" height="100%">
 
 <h2>🪛 HOW TO ASSEMBLE ESPclock</h2>
@@ -81,7 +83,7 @@ It uses a ESP8266 (devboard: Wemos D1 mini, soon i will make it work also for ES
 <h2>❤️ SUPPORT</h2>
 If you liked the project and want to financially contribute, you can buy me a coffee! <br><br>
 
-[![Paypal Badge](https://img.shields.io/badge/Donate-Paypal-blue?logo=paypal)](https://www.paypal.com/donate/?hosted_button_id=NBJ3VHSWGQK7A)
+[![Paypal Badge](https://img.shields.io/badge/Donate-PayPal-blue?logo=paypal)](https://www.paypal.com/donate/?hosted_button_id=NBJ3VHSWGQK7A)
 
 <h2>⚠️ TROUBLESHOOTING</h2>
 There are (at the moment) two errors that can be displayed from the 7-segment display:
