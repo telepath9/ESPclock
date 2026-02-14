@@ -1,4 +1,6 @@
-[![Static Badge](https://img.shields.io/badge/Free_Download-MakerWorld-%2308bf08?style=flat&logo=bambulab)](https://makerworld.com/it/models/1594116-espclock-digital-clock#profileId-2069321)
+[![Static Badge](https://img.shields.io/badge/Free_Download-MakerWorld-%2308bf08?style=flat&logo=bambulab)](https://makerworld.com/it/models/1594116-espclock-digital-clock#profileId-2069321) <br><br>
+![GitHub Repo stars](https://img.shields.io/github/stars/telepath9/ESPclock?style=social&logo=github)
+
 
 Welcome to the page of my (W.I.P.) project called 
 
