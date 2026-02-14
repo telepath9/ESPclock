@@ -1,3 +1,5 @@
+[![Static Badge](https://img.shields.io/badge/Free_Download-MakerWorld-%2308bf08?style=flat&logo=bambulab)](https://makerworld.com/it/models/1594116-espclock-digital-clock#profileId-2069321)
+
 Welcome to the page of my (W.I.P.) project called 
 
 <img src="https://github.com/telepath9/ESPclock/blob/54c39c18d9204351de640fb42218651ce3664671/pics/newfont.png" alt="Alt Text" width="100%" height="100%">
@@ -49,7 +51,7 @@ It uses a ESP8266 (devboard: Wemos D1 mini, soon i will make it work also for ES
 <h2>🧰 NEW FEATURES TO ADD</h2>
 <ul>
 <li>🔳 ESP32 port</li>
-<li>🔳 Replace NTPclient.h with ESP standard NTP functionality (no libraries to include!)<\li>	
+<li>🔳 Replace NTPclient.h with ESP standard NTP functionality (no libraries to include!) </li>	
 <li>🔳 Alarm clock mode with buzzer</li>
 <li>🔳 Display uptime in webUI</li>
 <li>🔳 Adding 1 or 2 buttons to the case</li>
