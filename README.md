@@ -1,4 +1,5 @@
-[![Static Badge](https://img.shields.io/badge/Free_Download-MakerWorld-%2308bf08?style=flat&logo=bambulab)](https://makerworld.com/it/models/1594116-espclock-digital-clock#profileId-2069321) <br><br>
+[![Static Badge](https://img.shields.io/badge/SLIM_case-MakerWorld-%2308bf08?style=flat&logo=bambulab)](https://makerworld.com/it/models/1594116-espclock-digital-clock#profileId-2069321) [![Static Badge](https://img.shields.io/badge/BOLD%20case-Cults3D-%23822ef5?style=flat&link=https%3A%2F%2Fcults3d.com%2Fen%2F3d-model%2Fgadget%2Fespclock-bold-case)](https://cults3d.com/en/3d-model/gadget/espclock-bold-case)
+<br><br>
 ![GitHub Repo stars](https://img.shields.io/github/stars/telepath9/ESPclock?style=social&logo=github)
 
 
