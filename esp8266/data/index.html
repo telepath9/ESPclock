@@ -15,6 +15,7 @@ body{
     color: #ced4da;
     background-color:  #101011;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+    margin: 3px 3px 3px 3px;
 }
 
 /*parent div, where all elements are placed*/
@@ -108,7 +109,7 @@ body{
 #update_but{
     cursor:not-allowed;
     color:#ced4da;
-    background-color: #8099b3;
+    background-color: #5d84b1;
     font-size: 14px;
     /*line-height: 40px; -->on linux this centers text in Y, but not on windows. Maybe is a font issue (?)*/
     width: 275px;
@@ -260,19 +261,50 @@ text-align: center;*/
   border-radius: 50%;
 }
 
+.config_div{
+    display:flex;
+    flex-direction:row;
+    margin: 0px 0px 20px 0px;
+}
+
+#saveconf_id{
+    cursor:pointer;
+    color:#ced4da;
+    background-color: #267bbc;
+    font-size: 14px;
+    /*line-height: 40px; -->on linux this centers text in Y, but not on windows. Maybe is a font issue (?)*/
+    width: 174px; /*135px;*/
+    height: 40px;
+    font-weight: 550;
+    border-radius: 8px;
+    border-style:none;
+    margin:0px 0px 0px 6px;
+}
+
+#deleteconf_id{
+    cursor:pointer;
+    color:#ced4da;
+    background-color: #740c0c;
+    font-size: 14px;
+    /*line-height: 40px; -->on linux this centers text in Y, but not on windows. Maybe is a font issue (?)*/
+    width: 95px;/*135px;*/
+    height: 40px;
+    font-weight: 550;
+    border-radius: 8px;
+    border-style:none;
+    margin:0px 0px 0px 20px;
+}
+
 
 /*
 .pw_wrapper:focus {
   outline-color: red;
   outline-style:double;
 }   */
-
   /* FIX THIS
 #pw:focus {
-  
   outline-color: transparent;
   outline-style: none;
-  
 }   */
 
 </style>
@@ -282,10 +314,8 @@ text-align: center;*/
     <div class="flex_container" >
     <!--#9a031e; #003049-->
     
-        <h2 style="margin: 8px 0px 8px 0px;padding-top:5px; padding-bottom: 5px;
-        border-radius: 12px; float:center;">ESPclock Setup</h2>
-   
-        <form style="background-color: #1a1a1a; text-align: left;border-style:solid; border-color:#3c3e3f;border-radius: 12px; border-width: 1px;" >
+        <h2 style="margin: 8px 0px 8px 0px;">ESPclock</h2>
+        <form style="background-color: #1a1a1a; text-align: left;border-style:solid; border-color:#3c3e3f;border-radius: 12px; border-width: 1px;">
             
                 <h3 style="margin: 18px 0px 18px 26px;">WiFi Settings</h3>
                 <label style="padding-left: 26px;" for="ssid_list">Available networks</label>
@@ -317,8 +347,7 @@ text-align: center;*/
                         <svg style="width:30px; height:37px; margin: 3px 5px 0px 8px; ">
                         <use  id="useopen" transform="scale(0.78)"  href="#openeye_id"/></svg>
                     </button>
-             
-                <br>
+                    <br>
                 </div>
                 
                 <div class="butpop">
@@ -329,7 +358,7 @@ text-align: center;*/
                     <span class="popuptext" style="font-size: 14px; user-select: none;" id="myPopup"></span>
                 </div>
             </div>
-            </form>
+        </form>
 
 
             <!--  ⌚  NTP SERVER FORM ⌚ -->
@@ -343,14 +372,14 @@ text-align: center;*/
                 <button disabled type="submit" id="update_but" value="update_but">
                     UPDATE TIME
                 </button>
-                </div>
+            </div>
 
                 <div class="brightness_form" style="background-color:#1a1a1a;text-align: left; margin-top: 6px;border-style:solid; border-color: #3c3e3f;border-radius: 12px; border-width: 1px;">     
-                    <h3 style="margin:18px 10px 5px 26px;">Display Settings</h3>
+                    <h3 style="margin:18px 10px 0px 26px;">Display Settings</h3>
 
                      <label style="display: flex; align-items: center; ">
                     <p style="font-size: 17px; margin:18px 0px 2px 26px;">Brightness: </p>
-                    <p id="brp" style="margin:18px 0px 2px 6px;"></p> <!--actual brightness value-->
+                    <p id="brp" style="margin:18px 0px 2px 6px;"></p> <!--displays actual brightness value-->
                     </label>
 
                     <input style=" margin:0px 0px 2px 20px;width: 275px; height: 40px;" type="range" id="brightness" name="brightness" min="0" max="7">
@@ -366,14 +395,41 @@ text-align: center;*/
                     <label style="display: flex; align-items: center; justify-content: space-between; margin:4px 0px 20px 0px;" class="blinky">
                     <p style="font-size: 17px; margin:0px 0px 2px 26px;">Blinking colon</p>
                     <label class="switch">
-                        <input id="blink_togg" type="checkbox" checked> <!--check è un attributo??-->
+                        <input id="blink_togg" type="checkbox" checked> <!--checked is an attribute-->
                         <span class="slider round"></span>
                     </label>
                     </label>
 
                 </div>
+
+                <div class="othersettings_form" style="background-color:#1a1a1a;text-align: left; margin-top: 6px;border-style:solid; border-color: #3c3e3f;border-radius: 12px; border-width: 1px;">     
+                    <h3 style="margin:18px 10px 18px 26px;">Configuration</h3>
+
+                    <!--
+                    <label style="display: flex; align-items: center; justify-content: space-between; margin:0px 0px 20px 0px;" class="saveconf">
+                        <p style="font-size: 17px; margin:0px 0px 2px 26px;">Save Configuration</p>
+                        <label class="switch">
+                            <input id="saveconf_togg" type="checkbox">
+                            <span class="slider round"></span>
+                        </label>
+                    </label>-->
+
+                    <p style="font-size: 17px; margin:0px 0px 10px 26px;">(to restore data at reboot)</p>
+                    <div class="config_div">
+                        <button type="submit" id="deleteconf_id" value="0">
+                           DELETE
+                        </button>
+                        <button type="submit" id="saveconf_id" value="1">
+                           SAVE
+                        </button>
+                      
+
+                    </div>
+
+                </div>
+
             
-            <p style=" margin: 4px 12px 0px 12px; ; color:#dee2e6">ESPclock v2.0.4 - A project by <strong>telepath</strong>
+            <p style=" margin: 4px 12px 0px 12px; ; color:#dee2e6">ESPclock v2.1 - A project by <strong>telepath</strong></p>
     </div>
                
 <svg style="display: none;">
@@ -409,9 +465,8 @@ text-align: center;*/
     </symbol>
 </svg>
 
-
 <script>
-   let network_list;
+    let network_list;
     
     function networkFetch(json_path_or_route){
         
@@ -458,6 +513,8 @@ text-align: center;*/
         document.querySelectorAll("path")[0].style.fill="#808080";
     }
 
+    const deleteconf = document.getElementById("deleteconf_id");
+            
     //onload() is mandatory, otherwise won't run the 1st fetch
     //it activates when server.on("/") function is called
     window.onload = function () {
@@ -468,9 +525,8 @@ text-align: center;*/
             .then(data=> data.json())
             .then(data=> {
 
-                console.log(data.conn);
-                console.log(data.br_auto);
-                console.log(data.blink);
+            br_tag.innerText = data.bright;
+            slider.value = data.bright;
                                      
             if(data.conn === true){  
                 disable_connect_but();
@@ -493,6 +549,20 @@ text-align: center;*/
             if(data.blink === false){
                 blink.removeAttribute("checked", "");
 
+            }
+
+            if(data.config===0){
+                //console.log("config NOT exists");
+                deleteconf.setAttribute("disabled", "");
+                deleteconf.style.backgroundColor ="#ab6975";
+                deleteconf.style.cursor = "not-allowed";
+            }
+
+            else if(data.config===1){
+                saveconf.innerText = "SAVED";
+                saveconf.setAttribute("disabled", "");
+                saveconf.style.backgroundColor ="#5d84b1";
+                saveconf.style.cursor = "not-allowed";
             }
 
         });
@@ -636,7 +706,7 @@ text-align: center;*/
    
             //pw entered by user
             let pw_by_user = pw_element.value;
-            console.log("Password is: ", pw_by_user);
+            //console.log("Password is: ", pw_by_user);
 
             if(pw_by_user.length == 0 ){
               alert("🔴Password field is empty!!!");
@@ -671,7 +741,6 @@ text-align: center;*/
 
                 .then(response => response.json())
                 .then((response)=> {
-                            
                         //console.log(response.creds);
                         //polling starts after the client sends credentials to server 
                         polling_state = true;
@@ -690,11 +759,11 @@ text-align: center;*/
                 let offset_by_user = document.getElementById("gmt_offset").value;
                 
                 if(offset_by_user > 12 || offset_by_user < -12){
-                     alert("🔴GMT/UTC Offset must be a number from -12 to +12 !!");
+                     alert("🔴GMT/UTC Offset must be a number from -12 to +12!!");
                 }
 
                 else{
-                console.log("NTP addr: ", ntp_by_user, "Offset:", offset_by_user);
+                //console.log("NTP addr: ", ntp_by_user, "Offset:", offset_by_user);
 
                     fetch("/updatetime", {
                         method: "POST",
@@ -706,10 +775,10 @@ text-align: center;*/
                         body: JSON.stringify({"ntp_addr": ntp_by_user , "offset": offset_by_user })
                     })
 
-                    .then(response => response.json())
+                    /*.then(response => response.json())
                     .then((response)=> {                            
-                        console.log(response.ntp);
-                    });
+                        console.log("NTP updated",response.ntp);
+                    });*/
                 }
             }
 
@@ -719,7 +788,7 @@ text-align: center;*/
                
             slider.onchange= function(){
 
-                br_tag.textContent = slider.value;
+                br_tag.textContent = slider.value; //this shows the current brightness value (==slider.value)
               
                 fetch("/slider", {
                     method: "POST",
@@ -736,7 +805,7 @@ text-align: center;*/
             }
 
 
-            const blink = document.getElementById("blink_togg");   //[OK]
+            const blink = document.getElementById("blink_togg"); 
 
             blink.onchange = function(){        
                 let ublink = this.checked ? 1 : 0;
@@ -749,10 +818,11 @@ text-align: center;*/
                     body: JSON.stringify({"bl": ublink}) 
                 })
 
+                /*
                 .then(response => response.json())
                 .then((response)=> {
-                        console.log(response.status);
-                });         
+                        console.log("BLINK UPDATED" ,response.status);
+                });         */
             }
 
             const bright_auto = document.getElementById("bright_auto");   //[OK]
@@ -776,6 +846,54 @@ text-align: center;*/
                     br_tag.textContent = response.status;
                 });         
             }
+
+            
+            const saveconf = document.getElementById("saveconf_id");
+            //deleteconf reference is up
+
+            //this must be called ONLY from saveconf and deleteconf buttons!!
+            function edit_conf(){
+
+                saveconf.setAttribute("disabled", "");
+                saveconf.style.backgroundColor ="#5d84b1";
+                saveconf.style.cursor = "not-allowed";
+
+                deleteconf.setAttribute("disabled", "");
+                deleteconf.style.backgroundColor ="#ab6975";
+                deleteconf.style.cursor = "not-allowed";
+
+                fetch("/config", {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': "application/json"
+                    },            
+                    body: JSON.stringify({"save": ((this.value == 1) ? true : false)}) //sends the value of the button that calls the function 
+                })
+
+                //if user deleted config, then only saveconf button must be enabled
+                if(this.value == 0){
+
+                    saveconf.removeAttribute("disabled", "");
+                    saveconf.style.backgroundColor ="#267bbc";
+                    saveconf.style.cursor = "pointer";
+
+                    connect_but.removeAttribute("disabled");
+                    connect_but.style.cursor = "pointer";
+                    connect_but.style.backgroundColor ="#9a031e";
+                }
+
+                //if user saves config, deleteconf button is enabled
+                else{   
+
+                    saveconf.innerText = "SAVED"; 
+                    deleteconf.removeAttribute("disabled", "");
+                    deleteconf.style.backgroundColor ="#740c0c";
+                    deleteconf.style.cursor = "pointer";
+                }
+            }
+           
+            saveconf.addEventListener("click", edit_conf);
+            deleteconf.addEventListener("click", edit_conf);
 </script>      
 </body>
 </html>
