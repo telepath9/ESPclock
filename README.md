@@ -39,7 +39,7 @@ It uses a ESP8266 (devboard: Wemos D1 mini, soon i will make it work also for ES
 9. And we're done! Hope that you liked my project! If you have any suggestions, let me know!
 
 <h2>📱 WEB UI </h2>
-<img src="https://github.com/telepath9/ESPclock/blob/4d5b517d9cb80707b275a74371fc66d4375e1897/pics/espclock2.1.png" alt="Alt Text" width="100%" height="100%">
+<img src="https://github.com/telepath9/ESPclock/blob/9306d1c4720c6f6852ac14c1f52d81838a5623ad/pics/espclock2.1.1.png" alt="Alt Text" width="100%" height="100%">
 
 <h2>🤖 FEATURES </h2>
 <ul>
@@ -89,6 +89,9 @@ It uses a ESP8266 (devboard: Wemos D1 mini, soon i will make it work also for ES
 If you liked the project and want to financially contribute, you can buy me a coffee! <br><br>
 
 [![Paypal Badge](https://img.shields.io/badge/Donate-PayPal-blue?logo=paypal)](https://www.paypal.com/donate/?hosted_button_id=NBJ3VHSWGQK7A)
+[![Static Badge](https://img.shields.io/badge/Donate-LiberaPay-%23f6c915?style=flat&logo=liberapay&link=https%3A%2F%2Fliberapay.com%2Ftelepath%2Fdonate)](https://liberapay.com/telepath/donate)
+
+
 
 <h2>⚠️ TROUBLESHOOTING</h2>
 There are (at the moment) two errors that can be displayed from the 7-segment display:
