@@ -42,27 +42,21 @@ It uses a ESP8266 (devboard: Wemos D1 mini, soon i will make it work also for ES
 <h2>📱 WEB UI </h2>
 <img src="https://github.com/telepath9/ESPclock/blob/9306d1c4720c6f6852ac14c1f52d81838a5623ad/pics/espclock2.1.1.png" alt="Alt Text" width="100%" height="100%">
 
-<h2>🤖 FEATURES </h2>
-<ul>
-<li>Asynchronous webserver</li>
-<li>Automatic Wifi Scan</li>
-<li>Wifi and NTP server setup via web UI</li>
-<li>Save/delete configuration (to restore data after reboot)</li>
-<li>Automatic Brightness mode</li>
-<li>Blinking colon toggle</li>
-</ul>
+<h2>🤖 CURRENT (AND TO ADD) FEATURES </h2>
 
-<h2>🧰 NEW FEATURES TO ADD</h2>
-<ul>
-<li>🔳 ESP32 port</li>
-<li>🔳 Replace NTPclient.h with ESP standard NTP functionality (no libraries to include!) </li>	
-<li>🔳 Alarm clock mode with buzzer</li>
-<li>🔳 Display uptime in webUI</li>
-<li>🔳 Adding 1 or 2 buttons to the case</li>
-<li>🔳 ESPhome or Homeassistant integration</li>
-<li>🔳 HA support</li>
-<li>...</li>
-</ul>
+- [x] Asynchronous webserver
+- [x] Automatic Wifi Scan</li>
+- [x] Wifi and NTP server setup via web UI
+- [x] Save/delete configuration (used to restore data after reboot)
+- [x] Automatic Brightness mode
+- [x] Blinking colon toggle
+- [ ] ESP32 port
+- [ ] Replace NTPclient.h with ESP standard NTP functionality (no libraries to include!)
+- [ ] Alarm clock mode with buzzer
+- [ ] Display uptime in webUI
+- [ ] Adding 1 or 2 buttons to the case
+- [ ] ESPhome or Homeassistant integration
+- [ ] HA support
 
 <h2>🛒 PART LIST</h2>
 <ul>
@@ -87,8 +81,9 @@ It uses a ESP8266 (devboard: Wemos D1 mini, soon i will make it work also for ES
 <img src="https://github.com/telepath9/ESPclock/blob/fc197cfd72fc6f489c0196dcbc484aab385d8b21/pics/howtoassemble.webp" alt="Alt Text" width="100%" height="100%">
 
 <h2>🤝 CODE CONTRIBUTIONS</h2>
-This is a personal project which i'm using to learn and to improve my coding skills. So, in order to follow my own vision, I disabled the "Pull Requests" tab.
-Forks are encouranged though, and i'm eager to see new changes that people can add to this project! 
+This is a personal project which i'm using to learn and to improve my coding skills. So, in order to follow my own plans, I won't accept any pull request.
+If you have any suggestion/advice/feedback, you can open an issue.
+Forks are encouranged too, and i'm eager to see new changes that people can add to this project! 
 
 <h2>❤️ SUPPORT</h2>
 If you liked the project and want to financially contribute, you can buy me a coffee! <br><br>
