@@ -86,12 +86,15 @@ It uses a ESP8266 (devboard: Wemos D1 mini, soon i will make it work also for ES
 <h2>🪛 HOW TO ASSEMBLE ESPclock</h2>
 <img src="https://github.com/telepath9/ESPclock/blob/fc197cfd72fc6f489c0196dcbc484aab385d8b21/pics/howtoassemble.webp" alt="Alt Text" width="100%" height="100%">
 
+<h2>🤝 CODE CONTRIBUTIONS</h2>
+This is a personal project which i'm using to learn and to improve my coding skills. So, in order to follow my own vision, I disabled the "Pull Requests" tab.
+Forks are encouranged though, and i'm eager to see new changes that people can add to this project! 
+
 <h2>❤️ SUPPORT</h2>
 If you liked the project and want to financially contribute, you can buy me a coffee! <br><br>
 
 [![Paypal Badge](https://img.shields.io/badge/Donate-PayPal-blue?logo=paypal)](https://www.paypal.com/donate/?hosted_button_id=NBJ3VHSWGQK7A)
 [![Static Badge](https://img.shields.io/badge/Donate-LiberaPay-%23f6c915?style=flat&logo=liberapay&link=https%3A%2F%2Fliberapay.com%2Ftelepath%2Fdonate)](https://liberapay.com/telepath/donate)
-
 
 
 <h2>⚠️ TROUBLESHOOTING</h2>
