@@ -1,3 +1,9 @@
+[![Static Badge](https://img.shields.io/badge/SLIM_case-MakerWorld-%2308bf08?style=flat&logo=bambulab)](https://makerworld.com/it/models/1594116-espclock-digital-clock#profileId-2069321)
+[![Static Badge](https://img.shields.io/badge/BOLD_case-MakerWorld-%2308bf08?style=flat&logo=bambulab)](https://makerworld.com/it/models/2405754-espclock-bold-digital-clock)
+
+![GitHub Repo stars](https://img.shields.io/github/stars/telepath9/ESPclock?style=social&logo=github)
+
+
 Welcome to the page of my (W.I.P.) project called 
 
 <img src="https://github.com/telepath9/ESPclock/blob/54c39c18d9204351de640fb42218651ce3664671/pics/newfont.png" alt="Alt Text" width="100%" height="100%">
@@ -34,29 +40,23 @@ It uses a ESP8266 (devboard: Wemos D1 mini, soon i will make it work also for ES
 9. And we're done! Hope that you liked my project! If you have any suggestions, let me know!
 
 <h2>📱 WEB UI </h2>
-<img src="https://github.com/telepath9/ESPclock/blob/34c6915141348c3f2546474637ee8ee67e9d2076/pics/2.0.3.jpg" alt="Alt Text" width="100%" height="100%">
+<img src="https://github.com/telepath9/ESPclock/blob/9306d1c4720c6f6852ac14c1f52d81838a5623ad/pics/espclock2.1.1.png" alt="Alt Text" width="100%" height="100%">
 
-<h2>🤖 FEATURES </h2>
-<ul>
-<li>Asynchronous webserver</li>
-<li>Automatic Wifi Scan</li>
-<li>Wifi and NTP server setup via web UI</li>
-<li>Automatic Brightness mode</li>
-<li>Blinking colon toggle</li>
-</ul>
+<h2>🤖 CURRENT (AND TO ADD) FEATURES </h2>
 
-<h2>🧰 NEW FEATURES TO ADD</h2>
-<ul>
-<li>🔳 ESP32 port</li>
-<li>🔳 Replace NTPclient.h with ESP standard NTP functionality (no libraries to include!)<\li>	
-<li>🔳 Alarm clock mode with buzzer</li>
-<li>🔳 Display uptime in webUI</li>
-<li>🔳 Remember/forget configuration and credentials</li>
-<li>🔳 Adding 1 or 2 buttons to the case</li>
-<li>🔳 ESPhome or Homeassistant integration</li>
-<li>🔳 HA support</li>
-<li>...</li>
-</ul>
+- [x] Asynchronous webserver
+- [x] Automatic Wifi Scan</li>
+- [x] Wifi and NTP server setup via web UI
+- [x] Save/delete configuration (used to restore data after reboot)
+- [x] Automatic Brightness mode
+- [x] Blinking colon toggle
+- [ ] ESP32 port
+- [ ] Replace NTPclient.h with ESP standard NTP functionality (no libraries to include!)
+- [ ] Alarm clock mode with buzzer
+- [ ] Display uptime in webUI
+- [ ] Adding 1 or 2 buttons to the case
+- [ ] ESPhome or Homeassistant integration
+- [ ] HA support
 
 <h2>🛒 PART LIST</h2>
 <ul>
@@ -80,10 +80,17 @@ It uses a ESP8266 (devboard: Wemos D1 mini, soon i will make it work also for ES
 <h2>🪛 HOW TO ASSEMBLE ESPclock</h2>
 <img src="https://github.com/telepath9/ESPclock/blob/fc197cfd72fc6f489c0196dcbc484aab385d8b21/pics/howtoassemble.webp" alt="Alt Text" width="100%" height="100%">
 
+<h2>🤝 CODE CONTRIBUTIONS</h2>
+This is a personal project which i'm using to learn and to improve my coding skills. So, in order to follow my own plans, I won't accept any pull request.
+If you have any suggestion/advice/feedback, you can open an issue.
+Forks are encouranged too, and i'm eager to see new changes that people can add to this project! 
+
 <h2>❤️ SUPPORT</h2>
 If you liked the project and want to financially contribute, you can buy me a coffee! <br><br>
 
 [![Paypal Badge](https://img.shields.io/badge/Donate-PayPal-blue?logo=paypal)](https://www.paypal.com/donate/?hosted_button_id=NBJ3VHSWGQK7A)
+[![Static Badge](https://img.shields.io/badge/Donate-LiberaPay-%23f6c915?style=flat&logo=liberapay&link=https%3A%2F%2Fliberapay.com%2Ftelepath%2Fdonate)](https://liberapay.com/telepath/donate)
+
 
 <h2>⚠️ TROUBLESHOOTING</h2>
 There are (at the moment) two errors that can be displayed from the 7-segment display:
