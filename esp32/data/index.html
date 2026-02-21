@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>ESPclock</title>
+
+<meta charset="UTF-8" />
+<!--<meta> tag makes your web page responsive in any browser (laptop, tablet or smartphone)-->
+<!-- maximum-scale=1.0, user-scalable=no-->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="data:,">
+<style>
+
+body{
+    color: #ced4da;
+    background-color:  #101011;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+    margin: 3px 3px 3px 3px;
+}
+
+/*parent div, where all elements are placed*/
+.flex_container {
+    display:flex;
+    flex-direction:column;
+    width:315px;
+    border-radius: 14px;
+    border: 1px solid #3c3e3f; /*#d40228*/
+    background-color:#141414;/* #e7e3da;*/  
+    text-align: center; 
+    margin: 0px auto;
+    padding: 0px 8px 4px 8px;
+    
+}
+
+.ssid_wrapper {
+  display:flex;
+  flex-direction:row;
+  margin: 0px 18px 15px 20px;
+}
+
+.pw_wrapper{
+    display:flex;
+    flex-direction:row;
+    width: 275px;
+    height: 41px;
+    margin:0px 20px 36px ;
+    /*background-color: #fff9ee;*/
+    border-radius: 6px;
+    background-color: #444444;
+}
+
+#connect{
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 550;
+    width: 275px;
+    height: 40px;
+    /*line-height: 40px; --> on linux this centers text in Y, but not on windows. Maybe is a font issue (?)*/
+    text-align: center;
+    border-radius: 8px;
+    border-style:none;
+    color: #ced4da;
+    background-color: #ae0423;
+    user-select: none;
+}
+
+#connect:hover{
+    background-color: #d40228;
+}
+
+.butpop{
+    margin:0px 20px 20px ;
+}
+
+.ntp_form{
+    border-radius: 10px;
+}
+
+.ntp_wrapper{
+    display:flex;
+    flex-direction:row;
+   
+}
+
+#ntp_id{
+    margin:0px 0px 10px 20px;
+    font-size: 15px; 
+    padding: 0 0 0 6px; 
+    color:#bec1c4;
+    background-color: #444444; 
+    width: 150px;
+    height: 40px;
+    border-radius: 6px;
+    border-style:none;
+}
+
+#gmt_offset{
+    margin:0px 18px 00px 10px;
+    font-size: 15px; 
+    padding: 0 0 0 6px ; 
+    background-color: #444444; 
+    color:#bec1c4;
+    width: 120px;
+    height: 40px;
+    border-radius: 6px;
+    border-style:none;
+}
+
+#update_but{
+    cursor:not-allowed;
+    color:#ced4da;
+    background-color: #5d84b1;
+    font-size: 15px;
+    /*line-height: 40px; -->on linux this centers text in Y, but not on windows. Maybe is a font issue (?)*/
+    width: 275px;
+    height: 40px;
+    font-weight: 550;
+    border-radius: 8px;
+    border-style:none;
+    margin:0px 0px 20px 20px;
+}
+
+/* POPUP message (appears on top) */
+.popup .popuptext {
+  visibility: hidden;
+  width: 160px;
+  background-color: #dcdcdc;
+  color: #000000;
+  text-align: center;
+  border-radius: 6px;
+  padding: 8px 0;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%;
+  left: 50%;
+  margin-left: -80px;
+}
+
+/* Popup arrow */
+.popup .popuptext::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #dcdcdc transparent transparent transparent;
+}
+
+/* Toggle this class when clicking on the popup container (hide and show the popup) */
+.popup .show {
+  visibility: visible;
+  -webkit-animation: fadeIn 5s;
+  animation: fadeIn 5s
+}
+
+/*Add animation (fade in the popup) */ 
+@-webkit-keyframes fadeIn {
+ 0%   {opacity: 0;}
+ 50%  {opacity:1 ;}
+ 100% {opacity: 0;}
+}
+
+@keyframes fadeIn {
+    0%   {opacity: 0;}
+    50%  {opacity: 1;}
+    100% {opacity: 0;}
+}
+
+#pw{
+    font-size: 15px;
+    padding: 0 0 0 6px ;
+    background-color: #444444;
+    color: #bec1c4;
+    height: 41px;
+    width:230px;
+    border-radius: 6px 0px 0px 6px; 
+    border-color:transparent;
+    border-style:none; 
+    
+}
+
+::placeholder {
+  color: #adb5bd; 
+}
+
+
+.blinky{
+/*display: inline-flex;
+*/
+height:30px;
+
+}
+
+/*slider deve PARTIRE da ON*/
+.switch {
+  margin: 0px 18px 0px 0px;
+  position: relative;
+  display: inline-block;
+  width: 56px;
+  height: 30px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* The slider */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #9c9c9c;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+
+  position: absolute;
+  content: "";
+  height: 22px;
+  width: 22px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #ae0423;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #ae0423;
+}
+
+input:checked + .slider:before {
+/*content: 'A'; per la luminosità auto
+color:black;
+text-align: center;*/
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
+.config_div{
+    display:flex;
+    flex-direction:row;
+    margin: 0px 0px 20px 0px;
+}
+
+#saveconf_id{
+    color:#51A0DB;
+    background-color: #1440616e;
+    border-color: #51A0DB;
+    border-style:solid; 
+    border-width: 1px;
+    cursor:pointer;
+    font-size: 15px;
+    /*line-height: 40px; -->on linux this centers text in Y, but not on windows. Maybe is a font issue (?)*/
+    width: 174px; /*135px;*/
+    height: 40px;
+    font-weight: 550;
+    border-radius: 8px;
+    margin:0px 0px 0px 6px;
+}
+
+#deleteconf_id{
+    color:#BA1E16;
+    background-color: #740c0c45;
+    border-color: #BA1E16;
+    border-style:solid; 
+    border-width: 1px;
+    font-size: 15px;
+    cursor:pointer;
+    /*line-height: 40px; -->on linux this centers text in Y, but not on windows. Maybe is a font issue (?)*/
+    width: 95px;/*135px;*/
+    height: 40px;
+    font-weight: 550;
+    border-radius: 8px;
+    margin:0px 0px 0px 20px;
+}
+
+
+/*
+.pw_wrapper:focus {
+  outline-color: red;
+  outline-style:double;
+}   */
+  /* FIX THIS
+#pw:focus {
+  outline-color: transparent;
+  outline-style: none;
+}   */
+
+</style>
+</head>
+<body>
+
+    <div class="flex_container" >
+    <!--#9a031e; #003049-->
+    
+        <h2 style="margin: 8px 0px 8px 0px;">ESPclock</h2>
+        <form style="background-color: #1a1a1a; text-align: left;border-style:solid; border-color:#3c3e3f;border-radius: 12px; border-width: 1px;">
+            
+                <h3 style="margin: 18px 0px 18px 26px;">WiFi Settings</h3>
+                <p id="tip1" style="font-size:14px; margin: 0px 26px 18px 26px; color:#6e9cd1;"></p>
+                <label style="margin-left: 26px;" for="ssid_list">Available networks</label>
+               
+                   <div class="ssid_wrapper">
+                        
+                      <select id="ssid_list" name="ssid" style=" padding-left: 2px; color: #bec1c4;
+                                font-size: 15px; background-color: #444444;  height: 40px; width: 237px;
+                                border-radius: 6px 0px 0px 6px; border-color:transparent;border-style:none; 
+                                ">
+                        </select>
+                        <button type="button" id="refresh"  for="ssid_list" style="border-radius: 0px 6px 6px 0px;
+                                 border: none;
+                                cursor: pointer;width:40px; height:40px; background-color: #444444;">
+                                <svg style="width:30px; height:30px;  margin: 6px 8px 6px 1px; ">
+                                <use transform="scale(0.88)" href="#refresh_id" /></svg>
+                        </button>
+                    </div>
+                
+               
+                <label style="padding-left: 26px; " for="pw"> Password</label><br>
+                
+                <!--wrapper for PW field + toggle PW (eye)-->
+                <div class="pw_wrapper">
+                    <input type="password" placeholder="Enter password" id="pw" maxlength="32" name="pw" required>
+                    
+                    <!--TOGGLE PASSWORD button-->
+                    <button type="button" id="toggleopen_id" style=" border: none;
+                        cursor: pointer;width:40px; height:40px; background-color: transparent; padding: 0px">
+                        <svg style="width:30px; height:37px; margin: 3px 5px 0px 8px; ">
+                        <use  id="useopen" transform="scale(0.78)"  href="#openeye_id"/></svg>
+                    </button>
+                    <br>
+                </div>
+                
+                <div class="butpop">
+                 <div class="popup"  style="position: relative;  display: inline-block; cursor: pointer;">
+                    <button type="submit" id="connect"  value="CONNECT">
+                         CONNECT
+                    </button>
+                    <span class="popuptext" style="font-size: 14px; user-select: none;" id="myPopup"></span>
+                </div>
+            </div>
+        </form>
+
+
+            <!--  ⌚  NTP SERVER FORM ⌚ -->
+            <div class="ntp_form" style="background-color:#1a1a1a; text-align: left; margin-top: 6px;border-style:solid; border-color: #3c3e3f;border-radius: 12px; border-width: 1px;">     
+             <!--   <h3 style="margin: 18px 0px 18px 26px;">Timezone</h3>
+                <label style="margin-left: 26px;" for="tz">Select timezone</label>
+                <select id="tz" style="width: 275px; margin: 0px 0px 0px 20px; color: #bec1c4;
+                                font-size: 15px; background-color: #444444;  height: 40px;
+                                border-radius: 6px 6px 6px 6px; border-color:transparent;border-style:none; 
+                                "></select>-->
+
+                <h3 style="margin: 18px 0px 18px 26px;">NTP Server Settings</h3>
+                <div class="ntp_wrapper">
+                    <input id="ntp_id" type="text" placeholder="Enter NTP address" required>
+                    <input required type="number" placeholder="GMT Offset" id="gmt_offset" name="gmt_offset" min="-12" max="12">
+                </div>
+            
+                <button disabled type="submit" id="update_but" value="update_but">
+                    UPDATE TIME
+                </button>
+            </div>
+
+                <div class="brightness_form" style="background-color:#1a1a1a;text-align: left; margin-top: 6px;border-style:solid; border-color: #3c3e3f;border-radius: 12px; border-width: 1px;">     
+                    <h3 style="margin:18px 10px 0px 26px;">Display Settings</h3>
+
+                     <label style="display: flex; align-items: center; ">
+                    <p style="font-size: 17px; margin:18px 0px 2px 26px;">Brightness: </p>
+                    <p id="brp" style="margin:18px 0px 2px 6px;"></p> <!--displays actual brightness value-->
+                    </label>
+
+                    <input style=" margin:0px 0px 2px 20px;width: 275px; height: 40px;" type="range" id="brightness" name="brightness" min="0" max="7">
+                    
+                    <label style="display: flex; align-items: center; justify-content: space-between; margin:4px 0px 20px 0px;" class="blinky">
+                    <p style="font-size: 17px; margin:0px 0px 2px 26px;">Brightness (auto)</p>
+                    <label class="switch">
+                        <input id="bright_auto" type="checkbox">
+                        <span class="slider round"></span>
+                    </label>
+                    </label>
+
+                    <label style="display: flex; align-items: center; justify-content: space-between; margin:4px 0px 20px 0px;" class="blinky">
+                    <p style="font-size: 17px; margin:0px 0px 2px 26px;">Blinking colon</p>
+                    <label class="switch">
+                        <input id="blink_togg" type="checkbox" checked> <!--checked is an attribute-->
+                        <span class="slider round"></span>
+                    </label>
+                    </label>
+
+                </div>
+
+                <div class="othersettings_form" style="background-color:#1a1a1a;text-align: left; margin-top: 6px;border-style:solid; border-color: #3c3e3f;border-radius: 12px; border-width: 1px;">     
+                    <h3 style="margin:18px 10px 18px 26px;">Configuration</h3>
+
+                    <p style="font-size: 16px; margin:0px 0px 10px 26px;">(to restore data at reboot)</p>
+                    <div class="config_div">
+                        <button type="submit" id="deleteconf_id" value="0">
+                           DELETE
+                        </button>
+                        <button type="submit" id="saveconf_id" value="1">
+                           SAVE
+                        </button>
+
+                    </div>
+
+                </div>
+
+            
+            <p style=" margin: 4px 12px 0px 12px; ; color:#dee2e6">ESPclock v2.1 - A project by <strong>telepath</strong></p>
+    </div>
+               
+<svg style="display: none;">
+    <!--refresh_but-->
+    <symbol id="refresh_id" viewBox="0 0 640 640">
+      <path id="refresh_path" fill="#dee2e6" d="M552 256L408 256C398.3 256 389.5 250.2 385.8 241.2C382.1 232.2 384.1 221.9 391 215L437.7 
+      168.3C362.4 109.7 253.4 115 184.2 184.2C109.2 259.2 109.2 380.7 184.2 455.7C259.2 530.7 380.7 530.7 455.7 
+      455.7C463.9 447.5 471.2 438.8 477.6 429.6C487.7 415.1 507.7 411.6 522.2 421.7C536.7 431.8 540.2 451.8 530.1 
+      466.3C521.6 478.5 511.9 490.1 501 501C401 601 238.9 601 139 501C39.1 401 39 239 139 139C233.3 44.7 382.7 39.4 
+      483.3 122.8L535 71C541.9 64.1 552.2 62.1 561.2 65.8C570.2 69.5 576 78.3 576 88L576 232C576 245.3 565.3 256 552 256z"/>
+    </symbol>
+
+    <!--OPENeye-->
+    <symbol id="openeye_id"  viewBox="0 0 576 380" >
+        <path fill="#dee2e6" d="M288 32c-80.8 0-145.5 36.8-192.6 80.6-46.8 43.5-78.1 95.4-93 131.1-3.3 7.9-3.3 16.7 0 
+        24.6 14.9 35.7 46.2 87.7 93 131.1 47.1 43.7 111.8 80.6 192.6 80.6s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 
+        93-131.1 3.3-7.9 3.3-16.7 0-24.6-14.9-35.7-46.2-87.7-93-131.1-47.1-43.7-111.8-80.6-192.6-80.6zM144 256a144 
+        144 0 1 1 288 0 144 144 0 1 1 -288 0zm144-64c0 35.3-28.7 64-64 64-11.5 0-22.3-3-31.7-8.4-1 10.9-.1 22.1 2.9 
+        33.2 13.7 51.2 66.4 81.6 117.6 67.9s81.6-66.4 67.9-117.6c-12.2-45.7-55.5-74.8-101.1-70.8 5.3 9.3 8.4 20.1 8.4 
+        31.7z"/>
+    </symbol>
+
+    <!--shuteye-->
+    <symbol id="shuteye_id" viewBox="0 0 576 380" >
+        <path fill="#dee2e6" d="M41-24.9c-9.4-9.4-24.6-9.4-33.9 0S-2.3-.3 7 9.1l528 528c9.4 9.4 24.6 
+        9.4 33.9 0s9.4-24.6 0-33.9l-96.4-96.4c2.7-2.4 5.4-4.8 8-7.2 46.8-43.5 
+        78.1-95.4 93-131.1 3.3-7.9 3.3-16.7 0-24.6-14.9-35.7-46.2-87.7-93-131.1-47.1-43.7-111.8-80.6-192.6-80.6-56.8 
+        0-105.6 18.2-146 44.2L41-24.9zM204.5 138.7c23.5-16.8 52.4-26.7 83.5-26.7 79.5 0 144 64.5 144 144 0 
+        31.1-9.9 59.9-26.7 83.5l-34.7-34.7c12.7-21.4 17-47.7 10.1-73.7-13.7-51.2-66.4-81.6-117.6-67.9-8.6 
+        2.3-16.7 5.7-24 10l-34.7-34.7zM325.3 395.1c-11.9 3.2-24.4 4.9-37.3 4.9-79.5 0-144-64.5-144-144 0-12.9 
+        1.7-25.4 4.9-37.3L69.4 139.2c-32.6 36.8-55 75.8-66.9 104.5-3.3 7.9-3.3 16.7 0 24.6 14.9 35.7 46.2 87.7 93 
+        131.1 47.1 43.7 111.8 80.6 192.6 80.6 37.3 0 71.2-7.9 101.5-20.6l-64.2-64.2z"/>
+    </symbol>
+</svg>
+
+<script>
+    let network_list;
+    
+    function networkFetch(json_path_or_route){
+        
+            fetch(json_path_or_route)
+                    .then(data=> data.json())
+                    .then(data=> {
+
+                        //data is the json obj received from server
+                        network_list= data;
+
+                        //select label that will contain all of the options
+                        const ssid_element = document.getElementById("ssid_list");
+                        let ssid_prefix= "ssid";       
+                        
+                        //"Found" field that indicates how many networks are found after the scan
+                        let foundnets = data.found;
+                        
+                        //this for populates the drop-down list (select label tag)
+                        for(let i=0; i<foundnets; i++){
+
+                            //creates new elem(option) for drop-down list
+                            let add_option_n = document.createElement("option");
+
+                            let ssidcounter =  i;
+                            add_option_n.value = ssidcounter;
+                                
+                            add_option_n.innerText = data.network[i].credentials[0];
+                            
+                            //once created the option, must add it to parent node (ssid_element)
+                            ssid_element.appendChild(add_option_n);
+                        }           
+                });
+    }  
+
+    function disable_connect_but(){
+        connect_but.setAttribute("disabled", "");
+        connect_but.style.backgroundColor ="#ab6975";
+        connect_but.style.cursor = "not-allowed";
+    }
+
+    function disable_refresh_but(){
+        refresh_but.setAttribute("disabled", "");
+        refresh_but.style.cursor = "not-allowed";
+        document.querySelectorAll("path")[0].style.fill="#808080";
+    }
+
+    const deleteconf = document.getElementById("deleteconf_id");
+            
+    //onload() is mandatory, otherwise won't run the 1st fetch
+    //it activates when server.on("/") function is called
+    window.onload = function () {
+        networkFetch("/scan");        
+
+        //if ESP is already connected, setup page is loaded with wifi settings greyed-out and disabled    
+        fetch("/uicheck")
+            .then(data=> data.json())
+            .then(data=> {
+
+            br_tag.innerText = data.bright;
+            slider.value = data.bright;
+                                     
+            if(data.conn === true){  
+                disable_connect_but();
+                connect_but.innerHTML = "CONNECTED";
+                connect_but.style.backgroundColor ="#52885d";
+
+                disable_refresh_but();
+
+                update_but.removeAttribute("disabled");
+                update_but.style.cursor = "pointer";
+                update_but.style.backgroundColor= "#267bbc";
+
+            }
+
+            if(data.br_auto ===true){
+                slider.setAttribute("disabled", "");
+                bright_auto.setAttribute("checked", "");
+            }
+
+            if(data.blink === false){
+                blink.removeAttribute("checked", "");
+
+            }
+
+            if(data.config===0){
+                //console.log("config NOT exists");
+                deleteconf.setAttribute("disabled", "");
+                deleteconf.style.backgroundColor ="#1a1a1a";
+                deleteconf.style.cursor = "not-allowed";
+                deleteconf.style.color = "#9c9c9c";
+                deleteconf.style.borderColor = "#4E4E56";
+                saveconf.innerText = "SAVE";
+            }
+
+            else if(data.config===1){
+                const tip1= document.getElementById("tip1");
+                tip1.innerHTML= "A configuration already exists.<br>To save a new configuration, be sure to delete the last one before.<br>Otherwise, ignore this message."
+                saveconf.innerText = "SAVED";
+                saveconf.setAttribute("disabled", "");
+                saveconf.style.backgroundColor ="#1a1a1a";
+                saveconf.style.cursor = "not-allowed";
+                saveconf.style.color = "#9c9c9c";
+                saveconf.style.borderColor = "#4E4E56";
+            }
+
+        });
+    }
+
+    //-------------
+    function networkRefresh(){
+            
+           //deletes input elements. ssid_list matches to ssid_element of networkFetch
+           const ssid_list = document.getElementById("ssid_list");
+           const ssid_list_NodeList = ssid_list.querySelectorAll("option");
+
+           for(let k=ssid_list_NodeList.length-1; k>-1; --k){
+                ssid_list_NodeList[k].remove();
+           }
+
+            networkFetch("/refresh");
+        }
+
+    const refresh_but = document.getElementById("refresh");
+    refresh_but.addEventListener("click", networkRefresh);
+
+
+    //--------------
+    //new custom password toggler (eye)
+    const password = document.getElementById("pw");
+    const buttoneye = document.getElementById("toggleopen_id");
+    const useshift = document.getElementById("useopen");
+
+    const popup_span_elem = document.getElementById("myPopup");   //for popup message
+
+      //password toggle
+      buttoneye.onclick = function(){
+
+          if (password.type === "password") {
+              password.type = "text";
+        
+              //activates SHUTEYE svg, from switching href inside <use>
+              useshift.setAttribute("href", "#shuteye_id" );
+          }
+
+          else{
+              password.type = "password";
+              useshift.setAttribute("href", "#openeye_id" );     
+          }
+      }
+   
+      //Connect-button event 
+      const connect_but= document.getElementById("connect");
+      const update_but= document.getElementById("update_but");
+      const pw_element = document.getElementById("pw");
+      
+      //to know if i'm connected to wifi
+      let polling_state= false;
+      let connected = false;
+      const ascii_anim = ["🔵  ⚪  ⚪", "⚪  🔵  ⚪", "⚪  ⚪  🔵"];
+
+      //--------------------------------x
+      //def of POLLING function of client, to know if it's connected
+                function pollingfunc(){
+
+                    disable_connect_but();
+                    disable_refresh_but();
+                    
+                    //START LOADER anim
+                    let cti = 0;
+                    let asciivar = setInterval(()=>{
+
+                        if(cti===3){
+                            cti= 0;
+                        }
+
+                        else{
+                            connect_but.innerHTML = ascii_anim[cti];
+                            cti++;
+                        }
+                    }, 500);
+                    //STOP LOADER anim  
+
+                    const interval_obj = setInterval(() => {
+
+                        //HTTP-GET req
+                        fetch("/wifi_status")
+                            .then(data => data.json())
+                            .then((data) => { 
+                                
+                                console.log("data.stat:", data.stat);
+
+                                if(data.stat==="ok" ){
+                                    //console.log("timer_deleted!");
+                                    clearInterval(interval_obj);
+
+                                    connected = true;
+                                    //console.log("CONNECTED! - should SHOW POPUP");
+
+                                    clearInterval(asciivar);
+                                    connect_but.innerHTML = "CONNECTED";
+                                    connect_but.style.backgroundColor ="#52885d";
+
+                                    popup_span_elem.innerHTML = "CONNECTED✅";
+                                    popup_span_elem.classList.add("show");
+
+                                    //activated update button
+                                    update_but.removeAttribute("disabled");
+                                    update_but.style.cursor = "pointer";
+                                    update_but.style.backgroundColor= "#267bbc";
+
+                                    setTimeout(()=>{
+                                        popup_span_elem.classList.remove("show");
+                                    }, 4900);     //popup fades out after 4900ms
+                            }
+                                
+                                else if(data.stat==="fail" ){
+                               
+                                    console.log("WRONG PASSWORD!");
+                                    clearInterval(interval_obj);
+                                    clearInterval(asciivar);
+                                    //console.log("timer_deleted!!!");
+
+                                    connect_but.innerText = "CONNECT";
+                                  
+                                    popup_span_elem.innerHTML = "WRONG PASSWORD❌";
+                                    popup_span_elem.classList.add("show");
+
+                                    setTimeout(()=>{
+                                        popup_span_elem.classList.remove("show");
+                                        connect_but.removeAttribute("disabled");
+                                        connect_but.style.cursor = "pointer";
+                                        connect_but.style.backgroundColor ="#9a031e";
+
+                                        refresh_but.removeAttribute("disabled");
+                                        refresh_but.style.cursor = "pointer";
+                                        document.querySelectorAll("path")[0].style.fill="#dee2e6";
+                                    }, 4900);     
+                            }
+                          })
+                        }, 3000);
+        }//END POLLING funct def 
+      
+      connect_but.onclick = function(){
+   
+            //pw entered by user
+            let pw_by_user = pw_element.value;
+            //console.log("Password is: ", pw_by_user);
+
+            if(pw_by_user.length == 0 ){
+              alert("🔴Password field is empty!!!");
+            }
+
+            else{
+                //element list
+                const ssid_element_s = document.getElementById("ssid_list");
+
+                //ssid by user (value is the one selected by user)
+                let ssid_by_user_num = ssid_element_s.value;
+               
+                //list that contains the options
+                let select_list = document.getElementById("ssid_list");
+                
+                //select of all of the options from ssid_list
+                let ssid_by_user_opt = select_list.querySelectorAll("option");
+                let ssid_by_user_name = ssid_by_user_opt[ssid_by_user_num].innerText;
+
+                //console.log("chosen SSID is: ", ssid_by_user_name);
+
+                fetch("/sendcreds", {
+                    
+                    method: "POST",
+                    headers: {
+                    'Content-Type': "application/json"
+                    },
+
+                    //puts credentials in json format, inside http POST req body
+                    body: JSON.stringify({"ssid" : ssid_by_user_name , "pw" :pw_by_user }) 
+                })
+
+                .then(response => response.json())
+                .then((response)=> {
+                        //console.log(response.creds);
+                        //polling starts after the client sends credentials to server 
+                        polling_state = true;
+                });
+
+                pollingfunc();
+                }
+            }
+
+
+            update_but.onclick = function(){
+
+                const ntp_input = document.getElementById("ntp_id");
+                let ntp_by_user = ntp_input.value;
+
+                let offset_by_user = document.getElementById("gmt_offset").value;
+                
+                if(offset_by_user > 12 || offset_by_user < -12){
+                     alert("🔴GMT/UTC Offset must be a number from -12 to +12!!");
+                }
+
+                else{
+                //console.log("NTP addr: ", ntp_by_user, "Offset:", offset_by_user);
+
+                    fetch("/updatetime", {
+                        method: "POST",
+                        headers: {
+                            'Content-Type': "application/json"
+                        },
+
+                        //puts ntp data in json format, inside http POST req body
+                        body: JSON.stringify({"ntp_addr": ntp_by_user , "offset": offset_by_user })
+                    })
+
+                    /*.then(response => response.json())
+                    .then((response)=> {                            
+                        console.log("NTP updated",response.ntp);
+                    });*/
+                }
+            }
+
+            //onChange() event is used for SLIDER
+            const slider = document.getElementById("brightness");
+            const br_tag = document.getElementById("brp");
+               
+            slider.onchange= function(){
+
+                br_tag.textContent = slider.value; //this shows the current brightness value (==slider.value)
+              
+                fetch("/slider", {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': "application/json"
+                    },
+                    body: JSON.stringify({"bgt": this.value})
+                })
+
+                .then(response => response.json())
+                .then((response)=> {
+                        console.log(response.status);
+                });         
+            }
+
+
+            const blink = document.getElementById("blink_togg"); 
+
+            blink.onchange = function(){        
+                let ublink = this.checked ? 1 : 0;
+        
+                fetch("/blink", {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': "application/json"
+                    },            
+                    body: JSON.stringify({"bl": ublink}) 
+                })
+
+                /*
+                .then(response => response.json())
+                .then((response)=> {
+                        console.log("BLINK UPDATED" ,response.status);
+                });         */
+            }
+
+            const bright_auto = document.getElementById("bright_auto");   //[OK]
+
+            bright_auto.onchange = function(){      
+                
+                this.checked ? slider.setAttribute("disabled", "") : slider.removeAttribute("disabled", "");
+                let br_a = this.checked ? true : false;
+                
+                fetch("/br_auto", {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': "application/json"
+                    },            
+                    body: JSON.stringify({"br": br_a}) 
+                })
+
+                .then(response => response.json())
+                .then((response)=> {
+                       
+                    br_tag.textContent = response.status;
+                });         
+            }
+
+            
+            const saveconf = document.getElementById("saveconf_id");
+            //deleteconf reference is up
+
+            //this must be called ONLY from saveconf and deleteconf buttons!!
+            function edit_conf(){
+
+                saveconf.setAttribute("disabled", "");
+                saveconf.style.backgroundColor ="#1a1a1a";
+                saveconf.style.cursor = "not-allowed";
+                saveconf.style.color = "#9c9c9c";
+                saveconf.style.borderColor = "#4E4E56";
+
+                deleteconf.setAttribute("disabled", "");
+                deleteconf.style.backgroundColor ="#1a1a1a";
+                deleteconf.style.cursor = "not-allowed";
+                deleteconf.style.color = "#9c9c9c";
+                deleteconf.style.borderColor = "#4E4E56";
+
+                fetch("/config", {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': "application/json"
+                    },            
+                    body: JSON.stringify({"save": ((this.value == 1) ? true : false)}) //sends the value of the button that calls the function 
+                })
+
+                //if user deleted config, then only saveconf button must be enabled
+                if(this.value == 0){    
+
+                    saveconf.removeAttribute("disabled", "");
+                    saveconf.style.backgroundColor ="#1440616e";
+                    saveconf.style.cursor = "pointer";
+                    saveconf.style.borderColor ="#51A0DB";
+                    saveconf.style.color ="#51A0DB";
+                    saveconf.innerText = "SAVE";
+
+                    connect_but.removeAttribute("disabled");
+                    connect_but.style.cursor = "pointer";
+                    connect_but.style.backgroundColor ="#9a031e";
+                    connect_but.innerText = "CONNECT";
+                    
+                    refresh_but.removeAttribute("disabled");
+                    refresh_but.style.cursor = "pointer";
+                    document.querySelectorAll("path")[0].style.fill="#dee2e6";
+                }
+
+                //if user saves config, deleteconf button is enabled
+                else{   
+                    saveconf.innerText = "SAVED"; 
+                    deleteconf.removeAttribute("disabled", "");
+                    deleteconf.style.backgroundColor =" #740c0c45";
+                    deleteconf.style.cursor = "pointer";
+                    deleteconf.style.borderColor ="#BA1E16";
+                    deleteconf.style.color ="#BA1E16";
+                }
+            }
+           
+            saveconf.addEventListener("click", edit_conf);
+            deleteconf.addEventListener("click", edit_conf);
+</script>      
+</body>
+</html>
