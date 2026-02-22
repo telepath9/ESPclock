@@ -9,7 +9,7 @@ Welcome to the page of my (W.I.P.) project called
 <img src="https://github.com/telepath9/ESPclock/blob/54c39c18d9204351de640fb42218651ce3664671/pics/newfont.png" alt="Alt Text" width="100%" height="100%">
 
 which is a smart clock that connects to a NTP server to get the current time. 
-It uses a ESP8266 (Wemos D1 mini) and ESP32(XIAO ESP32 C3).
+It uses a ESP8266 (Wemos D1 mini) or ESP32 (XIAO ESP32 C3).
 
 <img src="https://github.com/telepath9/ESPclock/blob/6b2b2224a42deda354a8a7220dcf724643eb9c2e/pics/pic1.jpg" alt="Alt Text" width="100%" height="100%">
 <img src="https://github.com/telepath9/ESPclock/blob/d3ea40822622406152dad12554adbceba28abb7e/pics/espclock_bold.jpg" alt="Alt Text" width="100%" height="100%">
@@ -50,8 +50,8 @@ It uses a ESP8266 (Wemos D1 mini) and ESP32(XIAO ESP32 C3).
 - [x] Save/delete configuration (used to restore data after reboot)
 - [x] Automatic Brightness mode
 - [x] Blinking colon toggle
-- [ ] ESP32 port
-- [ ] Replace NTPclient.h with ESP standard NTP functionality (no libraries to include!)
+- [x] ESP32 port
+- [x] Replace NTPclient.h with <time.h> library
 - [ ] Alarm clock mode with buzzer
 - [ ] Display uptime in webUI
 - [ ] Adding 1 or 2 buttons to the case
@@ -60,11 +60,11 @@ It uses a ESP8266 (Wemos D1 mini) and ESP32(XIAO ESP32 C3).
 
 <h2>🛒 PART LIST</h2>
 <ul>
-<li>Wemos D1 MINI (mine is V3.0.0 clone)</li>
+<li>XIAO ESP32 C3 or Wemos D1 MINI (mine is V3.0.0 clone)</li>
 <li>TM1637 module https://it.aliexpress.com/item/1005001582129952.html?spm=a2g0o.order_list.order_list_main.49.370e3696i4W9Sn&gatewayAdapt=glo2ita </li>
 <li>Dupont wires</li>
-<li>DG308 8pins terminal block: x2</li>
-<li>Female 8pins header: x2</li>
+<li>DG308 7pins terminal block (for XIAO) OR DG308 8pins terminal block (for WEMOS): x2</li>
+<li>Female 7pins header(for XIAO) OR Female 8pins header (for WEMOS): x2</li>
 <li>7x3cm perfboard: x1</li>
 <li>M2.5 screws: x10</li>
 <li>M2.5 nuts: x2</li>
@@ -72,7 +72,11 @@ It uses a ESP8266 (Wemos D1 mini) and ESP32(XIAO ESP32 C3).
 </ul>
 
 
-<h2>🔌 ESP8266 WIRING (Wemos D1 Mini 3.0.0)</h2>
+<h2>🔌 BOARD WIRING</h2>
+<h3> ESP32 (XIAO ESP32 C3)</h3>
+<img src="https://github.com/telepath9/ESPclock/blob/ff830831e95c264ad7939fba758ce32de801831d/pics/xiao-top1.jpg" alt="Alt Text" width="100%" height="100%">
+<img src="https://github.com/telepath9/ESPclock/blob/ff830831e95c264ad7939fba758ce32de801831d/pics/xiao_top3_w.jpg" alt="Alt Text" width="100%" height="100%">
+<h3> ESP8266 (Wemos D1 Mini 3.0.0)</h3>
 <img src="https://github.com/telepath9/ESPclock/blob/0defb72bb5107271487eb4c452812158a96b2c5e/pics/top_pcb.jpg" alt="Alt Text" width="100%" height="100%">
 <img src="https://github.com/telepath9/ESPclock/blob/0defb72bb5107271487eb4c452812158a96b2c5e/pics/bottom.jpg" alt="Alt Text" width="100%" height="100%">
 <img src="https://github.com/telepath9/ESPclock/blob/ebe4f234343fb306297fa49ef42fd830830b3c9a/pics/esp8266_pinout.jpg" alt="Alt Text" width="100%" height="100%">
