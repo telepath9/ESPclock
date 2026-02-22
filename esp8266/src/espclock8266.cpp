@@ -107,8 +107,8 @@ void displayAnim(void){
 
 //NTP SETUP
 WiFiUDP ntpUDP;  //NTP server uses UDP communication protocol
-NTPClient timeClient(ntpUDP, "europe.pool.ntp.org", 0, 3600); //<-- must be instantiated once, globally
-                                                  //updateInterval = every 1hour (3600ms)
+NTPClient timeClient(ntpUDP, "europe.pool.ntp.org", 0, 3600000); //<-- must be instantiated once, globally
+                                                  //updateInterval = every 1hour (3600000ms)
 const char *ntp_addr;
 int gmt_offset;
 bool start_NtpClient = false;
