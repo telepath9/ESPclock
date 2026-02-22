@@ -1,6 +1,5 @@
 #include <Arduino.h>
 #include <ESP8266WiFi.h>
-#include <NTPClient.h>
 #include <WiFiClient.h>
 #include <ESPAsyncTCP.h>
 #include <ESPAsyncWebServer.h>
@@ -9,6 +8,7 @@
 #include <LittleFS.h>      //to access to filesystem
 #include <WiFiUdp.h> 
 #include "TM1637Display.h"
+#include <time.h>
 
 //JSON optimizations
 #define ARDUINOJSON_SLOT_ID_SIZE 1
@@ -31,6 +31,7 @@ unsigned long myTimer(unsigned long everywhen){
         return ret;
 }
 
+//GLOBAL vars
 const char* ssid;
 const char* password;
 bool creds_available=false;
@@ -106,9 +107,22 @@ void displayAnim(void){
 //END TM1637 DISPLAY SETUP
 
 //NTP SETUP
-WiFiUDP ntpUDP;  //NTP server uses UDP communication protocol
-NTPClient timeClient(ntpUDP, "europe.pool.ntp.org", 0, 3600); //<-- must be instantiated once, globally
-                                                  //updateInterval = every 1hour (3600ms)
+struct tm timeinfo;
+
+/*
+void printLocalTime(){
+    struct tm timeinfo;
+
+    if(!getLocalTime(&timeinfo)){
+      Serial.println("Failed to obtain time 1");
+      return;
+    }
+
+    Serial.println(&timeinfo, "%H:%M:%S zone %Z %z ");
+    //Serial.println(timeinfo.tm_hour); //access to single time vars
+}
+*/
+
 const char *ntp_addr;
 int gmt_offset;
 bool start_NtpClient = false;
@@ -222,7 +236,7 @@ void wifiScan(){
 void checkConfig(void){
 
     if(LittleFS.exists("/config.json")){
-      Serial.println(F("config esists, trying to restore it*"));
+      Serial.println(F("config esists, trying to restore it"));
       creds_available=true;
 
       File fld = LittleFS.open("/config.json", "r");
@@ -264,18 +278,17 @@ void checkConfig(void){
       }
 
       if(WiFi.status() == WL_CONNECTED){
+
         attempts=0;
         connected=true;
         Serial.println("WIFI RESTORED");
 
         start_NtpClient=true;
-        timeClient.begin();
         ntp_addr= strdup(load_cf["ntp_ad"]); 
-        gmt_offset = load_cf["offset"];
+        gmt_offset = load_cf["offset"];   
         
-        timeClient.setPoolServerName(ntp_addr);  //poolservername accepts only const char*
-        timeClient.setTimeOffset(gmt_offset*3600);  
-        
+        configTime(gmt_offset*3600, 3600, "ntp1.inrim.it");
+  
         brightness = (uint8_t)load_cf["br"];
         mydisplay.setBrightness(brightness);
         blink=  load_cf[F("blink")];
@@ -320,18 +333,13 @@ void setup() {
   }
   
   checkConfig();
+  
   //PHASE1 - AP_STA_MODE + WIFI SCAN
   //here scans for networks, and as already said, networks are then stored in json
   //Serial.println("\nPHASE 1.0: AP_STA_MODE + WIFI SCAN");
 
-  //IPAddress local_IP(192, 168, 1, 33); 
-  IPAddress staticIP(192, 168, 1, 33); 
-  IPAddress gateway(192,168,4,9);
-  IPAddress subnet(255,255,255,0);
-  IPAddress dns(1,1,1,1);
-    
-  WiFi.config(staticIP, gateway, subnet, dns);
-  WiFi.mode(WIFI_AP_STA);
+  WiFi.mode(WIFI_AP_STA);   
+  WiFi.setAutoReconnect(true);
   
   delay(100);
 
@@ -407,9 +415,7 @@ void setup() {
     ssid = strdup(user_ssid_str);
     password = strdup(user_pw);
     creds_available = true;
-    Serial.println(ssid);
-    Serial.println(password);
-            
+    
     request->send(200, "application/json", "{\"creds\":\"OK\"}");
   }); 
 
@@ -435,9 +441,6 @@ void setup() {
 
   //HTTP GET req from client, in order to know if connection attempt was successful
   server.on("/wifi_status", HTTP_GET, [](AsyncWebServerRequest *request) {
-
-    //Serial.print("attempt num: ");
-    //Serial.println(attempts);
           
     if(attempts == 6){
       creds_available = false;
@@ -468,19 +471,14 @@ void setup() {
 
     ntp_addr = strdup(ntp_json["ntp_addr"]); 
     gmt_offset = (int)atoi(ntp_json["offset"]);
-          
-    timeClient.setPoolServerName(ntp_addr);  //poolservername must be const char*
-    timeClient.setTimeOffset(gmt_offset*3600);    //setTimeOffset only accepts "signed long"
-
-    if(!timeClient.isTimeSet()){
-      Serial.println("TIME not SET, try new NTP addr");
-    }
-
+    configTime(gmt_offset*3600, 3600, "ntp1.inrim.it"); 
+  
     if(start_NtpClient == false){
       start_NtpClient=true;
-      timeClient.begin();
     }
-                  
+    
+   
+
     request->send(200, "application/json", "{\"ntp\":\"OK\"}");
   });
 
@@ -494,38 +492,44 @@ void setup() {
           //extract light value
           brightness =(uint8_t)atoi(bgt_json["bgt"]);
           mydisplay.setBrightness(brightness); 
-          Serial.print("SLIDER: ");
+          //Serial.print("SLIDER: ");
           Serial.println((uint8_t)atoi(bgt_json["bgt"]));
 
           request->send(200, "application/json", "{\"status\":\"BGT OK\"}");
   });
 
+  
   server.on("/br_auto", HTTP_POST, [](AsyncWebServerRequest *request){}, NULL, [](AsyncWebServerRequest *request, uint8_t *data, size_t len, size_t index, size_t total){
 
             JsonDocument br_auto_json;
             deserializeJson(br_auto_json, data);
             br_auto = br_auto_json["br"];
 
+            /*to get single time vars 
+            Serial.println("Time variables");
+            char timeHour[3];
+            strftime(timeHour,3, "%H", &timeinfo); https://cplusplus.com/reference/ctime/strftime/*/
+            
             //optimization: should i replace it with a switch-case (?)
-            if(timeClient.getHours() >= 0 && timeClient.getHours() < 9){
+            if(timeinfo.tm_hour >= 0 && timeinfo.tm_hour < 9){
               brightness=0;
               mydisplay.setBrightness(0);
               request->send(200, "application/json", "{\"status\":\"0\"}");
             }
 
-            else if(timeClient.getHours() >= 7 && timeClient.getHours() < 17){
+            else if(timeinfo.tm_hour >= 7 && timeinfo.tm_hour < 17){
               brightness=6;
               mydisplay.setBrightness(6);
               request->send(200, "application/json", "{\"status\":\"6\"}");
             }
 
-            else if(timeClient.getHours() >= 17 && timeClient.getHours() < 20){
+            else if(timeinfo.tm_hour >= 17 && timeinfo.tm_hour < 20){
               brightness=3;
               mydisplay.setBrightness(3);
               request->send(200, "application/json", "{\"status\":\"3\"}");
             }
 
-            else if(timeClient.getHours() >= 20){
+            else if(timeinfo.tm_hour >= 20){
               brightness=2;
               mydisplay.setBrightness(2);
               request->send(200, "application/json", "{\"status\":\"2\"}");
@@ -546,10 +550,10 @@ void setup() {
     JsonDocument scf_json;
     deserializeJson(scf_json, data);
     bool saveconfig = scf_json["save"];
-    Serial.print("ACTION: ");
-    Serial.println(saveconfig); //PERCHè QUI DIVENTA 0 SE FACCIO DELETE'??
+    //Serial.print("ACTION: ");
+    Serial.println(saveconfig);
 
-    if((!LittleFS.exists("/config.json") && saveconfig==1)){ //vuol dire chhe user vuole salvare config
+    if((!LittleFS.exists("/config.json") && saveconfig==1)){ //user wants to save config
               
       JsonDocument config;
 
@@ -563,8 +567,6 @@ void setup() {
 
       config.shrinkToFit();
               
-      //fai store di ssid, pw, ... su config
-      //scrive su flash
       File fc = LittleFS.open("/config.json", "w+");
 
       //serializes json and passes it to "fc" var, in order to store it in FS 
@@ -574,7 +576,7 @@ void setup() {
     }
 
                 
-    else if(LittleFS.exists("/config.json") && saveconfig==0){     //se prima config era salvata e poi user non vuole più salvarla...
+    else if(LittleFS.exists("/config.json") && saveconfig==0){     //if user wants to delete config
               
       LittleFS.remove("/config.json");
      
@@ -597,21 +599,22 @@ void setup() {
 
 
 void loop() {
-
+  
+  
   if(newScan==true){
     wifiScan();
     newScan=false;
   }
 
   if(start_NtpClient==true){
-  
-    timeClient.update();  
-
+    getLocalTime(&timeinfo);
+   
     if(myTimer(1000)){
+        //printLocalTime();
 
         if(br_auto==true){
-
-            switch(timeClient.getHours()){
+             
+            switch(timeinfo.tm_hour){
     
               case 0 || 00: 
               brightness=0;
@@ -633,28 +636,32 @@ void loop() {
               mydisplay.setBrightness(2);
               break;
             }
-        }
-
+        }   
+           
+        
         if(blink ==1){
             if(colon==true){
             //colon is ON
-            mydisplay.showNumberDecEx(timeClient.getHours(), 0b01000000, true, 2, 0);
-            mydisplay.showNumberDecEx(timeClient.getMinutes(), 0b01000000, true, 2, 2);
+            mydisplay.showNumberDecEx(timeinfo.tm_hour, 0b01000000, true, 2, 0);
+            mydisplay.showNumberDecEx(timeinfo.tm_min, 0b01000000, true, 2, 2);
             colon=false;
+        
           }
 
           else if(colon==false){
             //colon is OFF
-            mydisplay.showNumberDecEx(timeClient.getHours(), 0, true, 2, 0);
-            mydisplay.showNumberDecEx(timeClient.getMinutes(), 0, true, 2, 2);
+            
+            mydisplay.showNumberDecEx(timeinfo.tm_hour, 0, true, 2, 0);
+            mydisplay.showNumberDecEx(timeinfo.tm_min, 0, true, 2, 2);
             colon=true;
           }
         }
         
         else{
-            mydisplay.showNumberDecEx(timeClient.getHours(), 0b01000000, true, 2, 0);
-            mydisplay.showNumberDecEx(timeClient.getMinutes(), 0b01000000, true, 2, 2);
+            mydisplay.showNumberDecEx(timeinfo.tm_hour, 0b01000000, true, 2, 0);
+            mydisplay.showNumberDecEx(timeinfo.tm_min, 0b01000000, true, 2, 2);
         }
+        
     }
   }     
 
@@ -668,11 +675,11 @@ void loop() {
     
     displayAnim();
     
-    Serial.println("Trying connection with these creds: ");
+    /*  Serial.println("Trying connection with these creds: ");
     Serial.print("SSID chosen: ");
     Serial.println(ssid);
     Serial.print("PW is: ");
-    Serial.println(password); 
+    Serial.println(password); */
 
     WiFi.begin(ssid, password);
     
@@ -688,13 +695,13 @@ void loop() {
     
       //once connected, exit form while(1) with break, and then from first if since "connected==true" now
       else if(WiFi.status() == WL_CONNECTED){
+       
+        //configTime(gmt_offset*3600, 3600, ntp_addr);
         connected = true;
-        //attempts=0;
         break;
       }
 
       else if(attempts == 6){
-       
         //resets "attempts", so it can try a new connection
         attempts=0;  
         break; //exit from while(1)
@@ -702,5 +709,3 @@ void loop() {
     }
   }
 }
-
-

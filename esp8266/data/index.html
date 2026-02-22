@@ -51,7 +51,7 @@ body{
 
 #connect{
     cursor: pointer;
-    font-size: 14px;
+    font-size: 15px;
     font-weight: 550;
     width: 275px;
     height: 40px;
@@ -110,7 +110,7 @@ body{
     cursor:not-allowed;
     color:#ced4da;
     background-color: #5d84b1;
-    font-size: 14px;
+    font-size: 15px;
     /*line-height: 40px; -->on linux this centers text in Y, but not on windows. Maybe is a font issue (?)*/
     width: 275px;
     height: 40px;
@@ -268,30 +268,34 @@ text-align: center;*/
 }
 
 #saveconf_id{
+    color:#51A0DB;
+    background-color: #1440616e;
+    border-color: #51A0DB;
+    border-style:solid; 
+    border-width: 1px;
     cursor:pointer;
-    color:#ced4da;
-    background-color: #267bbc;
-    font-size: 14px;
+    font-size: 15px;
     /*line-height: 40px; -->on linux this centers text in Y, but not on windows. Maybe is a font issue (?)*/
     width: 174px; /*135px;*/
     height: 40px;
     font-weight: 550;
     border-radius: 8px;
-    border-style:none;
     margin:0px 0px 0px 6px;
 }
 
 #deleteconf_id{
+    color:#BA1E16;
+    background-color: #740c0c45;
+    border-color: #BA1E16;
+    border-style:solid; 
+    border-width: 1px;
+    font-size: 15px;
     cursor:pointer;
-    color:#ced4da;
-    background-color: #740c0c;
-    font-size: 14px;
     /*line-height: 40px; -->on linux this centers text in Y, but not on windows. Maybe is a font issue (?)*/
     width: 95px;/*135px;*/
     height: 40px;
     font-weight: 550;
     border-radius: 8px;
-    border-style:none;
     margin:0px 0px 0px 20px;
 }
 
@@ -318,9 +322,11 @@ text-align: center;*/
         <form style="background-color: #1a1a1a; text-align: left;border-style:solid; border-color:#3c3e3f;border-radius: 12px; border-width: 1px;">
             
                 <h3 style="margin: 18px 0px 18px 26px;">WiFi Settings</h3>
-                <label style="padding-left: 26px;" for="ssid_list">Available networks</label>
+                <p id="tip1" style="font-size:14px; margin: 0px 26px 18px 26px; color:#6e9cd1;"></p>
+                <label style="margin-left: 26px;" for="ssid_list">Available networks</label>
                
                    <div class="ssid_wrapper">
+                        
                       <select id="ssid_list" name="ssid" style=" padding-left: 2px; color: #bec1c4;
                                 font-size: 15px; background-color: #444444;  height: 40px; width: 237px;
                                 border-radius: 6px 0px 0px 6px; border-color:transparent;border-style:none; 
@@ -363,6 +369,13 @@ text-align: center;*/
 
             <!--  ⌚  NTP SERVER FORM ⌚ -->
             <div class="ntp_form" style="background-color:#1a1a1a; text-align: left; margin-top: 6px;border-style:solid; border-color: #3c3e3f;border-radius: 12px; border-width: 1px;">     
+                <h3 style="margin: 18px 0px 18px 26px;">Timezone</h3>
+                <!--<label style="margin-left: 26px;" for="tz">Select timezone</label>
+                <select id="tz" style="width: 275px; margin: 0px 0px 0px 20px; color: #bec1c4;
+                                font-size: 15px; background-color: #444444;  height: 40px;
+                                border-radius: 6px 6px 6px 6px; border-color:transparent;border-style:none; 
+                                "></select>-->
+
                 <h3 style="margin: 18px 0px 18px 26px;">NTP Server Settings</h3>
                 <div class="ntp_wrapper">
                     <input id="ntp_id" type="text" placeholder="Enter NTP address" required>
@@ -405,16 +418,7 @@ text-align: center;*/
                 <div class="othersettings_form" style="background-color:#1a1a1a;text-align: left; margin-top: 6px;border-style:solid; border-color: #3c3e3f;border-radius: 12px; border-width: 1px;">     
                     <h3 style="margin:18px 10px 18px 26px;">Configuration</h3>
 
-                    <!--
-                    <label style="display: flex; align-items: center; justify-content: space-between; margin:0px 0px 20px 0px;" class="saveconf">
-                        <p style="font-size: 17px; margin:0px 0px 2px 26px;">Save Configuration</p>
-                        <label class="switch">
-                            <input id="saveconf_togg" type="checkbox">
-                            <span class="slider round"></span>
-                        </label>
-                    </label>-->
-
-                    <p style="font-size: 17px; margin:0px 0px 10px 26px;">(to restore data at reboot)</p>
+                    <p style="font-size: 16px; margin:0px 0px 10px 26px;">(to restore data at reboot)</p>
                     <div class="config_div">
                         <button type="submit" id="deleteconf_id" value="0">
                            DELETE
@@ -422,7 +426,6 @@ text-align: center;*/
                         <button type="submit" id="saveconf_id" value="1">
                            SAVE
                         </button>
-                      
 
                     </div>
 
@@ -554,15 +557,22 @@ text-align: center;*/
             if(data.config===0){
                 //console.log("config NOT exists");
                 deleteconf.setAttribute("disabled", "");
-                deleteconf.style.backgroundColor ="#ab6975";
+                deleteconf.style.backgroundColor ="#1a1a1a";
                 deleteconf.style.cursor = "not-allowed";
+                deleteconf.style.color = "#9c9c9c";
+                deleteconf.style.borderColor = "#4E4E56";
+                saveconf.innerText = "SAVE";
             }
 
             else if(data.config===1){
+                const tip1= document.getElementById("tip1");
+                tip1.innerHTML= "A configuration already exists.<br>To save a new configuration, be sure to delete the last one before.<br>Otherwise, ignore this message."
                 saveconf.innerText = "SAVED";
                 saveconf.setAttribute("disabled", "");
-                saveconf.style.backgroundColor ="#5d84b1";
+                saveconf.style.backgroundColor ="#1a1a1a";
                 saveconf.style.cursor = "not-allowed";
+                saveconf.style.color = "#9c9c9c";
+                saveconf.style.borderColor = "#4E4E56";
             }
 
         });
@@ -682,7 +692,7 @@ text-align: center;*/
                                     clearInterval(asciivar);
                                     //console.log("timer_deleted!!!");
 
-                                    connect_but.innerHTML = "CONNECT";
+                                    connect_but.innerText = "CONNECT";
                                   
                                     popup_span_elem.innerHTML = "WRONG PASSWORD❌";
                                     popup_span_elem.classList.add("show");
@@ -855,12 +865,16 @@ text-align: center;*/
             function edit_conf(){
 
                 saveconf.setAttribute("disabled", "");
-                saveconf.style.backgroundColor ="#5d84b1";
+                saveconf.style.backgroundColor ="#1a1a1a";
                 saveconf.style.cursor = "not-allowed";
+                saveconf.style.color = "#9c9c9c";
+                saveconf.style.borderColor = "#4E4E56";
 
                 deleteconf.setAttribute("disabled", "");
-                deleteconf.style.backgroundColor ="#ab6975";
+                deleteconf.style.backgroundColor ="#1a1a1a";
                 deleteconf.style.cursor = "not-allowed";
+                deleteconf.style.color = "#9c9c9c";
+                deleteconf.style.borderColor = "#4E4E56";
 
                 fetch("/config", {
                     method: "POST",
@@ -871,24 +885,33 @@ text-align: center;*/
                 })
 
                 //if user deleted config, then only saveconf button must be enabled
-                if(this.value == 0){
+                if(this.value == 0){    
 
                     saveconf.removeAttribute("disabled", "");
-                    saveconf.style.backgroundColor ="#267bbc";
+                    saveconf.style.backgroundColor ="#1440616e";
                     saveconf.style.cursor = "pointer";
+                    saveconf.style.borderColor ="#51A0DB";
+                    saveconf.style.color ="#51A0DB";
+                    saveconf.innerText = "SAVE";
 
                     connect_but.removeAttribute("disabled");
                     connect_but.style.cursor = "pointer";
                     connect_but.style.backgroundColor ="#9a031e";
+                    connect_but.innerText = "CONNECT";
+                    
+                    refresh_but.removeAttribute("disabled");
+                    refresh_but.style.cursor = "pointer";
+                    document.querySelectorAll("path")[0].style.fill="#dee2e6";
                 }
 
                 //if user saves config, deleteconf button is enabled
                 else{   
-
                     saveconf.innerText = "SAVED"; 
                     deleteconf.removeAttribute("disabled", "");
-                    deleteconf.style.backgroundColor ="#740c0c";
+                    deleteconf.style.backgroundColor =" #740c0c45";
                     deleteconf.style.cursor = "pointer";
+                    deleteconf.style.borderColor ="#BA1E16";
+                    deleteconf.style.color ="#BA1E16";
                 }
             }
            
