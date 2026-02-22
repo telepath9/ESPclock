@@ -51,8 +51,8 @@ uint8_t attempts = 0;
 AsyncWebServer server(80);
 
 //TM1637 DISPLAY SETUP
-#define CLK 2 //xiao: D0
-#define DIO 3 //xiao: D1
+#define CLK 9
+#define DIO 10
 
 TM1637Display mydisplay(CLK, DIO);
 bool colon=true;
