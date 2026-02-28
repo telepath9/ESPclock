@@ -109,7 +109,7 @@ body{
 #update_but{
     cursor:not-allowed;
     color:#ced4da;
-    background-color: #5d84b1;
+    background-color: #627D9E; /*new: #627D9E; old: #5d84b1*/
     font-size: 15px;
     /*line-height: 40px; -->on linux this centers text in Y, but not on windows. Maybe is a font issue (?)*/
     width: 275px;
@@ -187,13 +187,9 @@ body{
 
 
 .blinky{
-/*display: inline-flex;
-*/
 height:30px;
-
 }
 
-/*slider deve PARTIRE da ON*/
 .switch {
   margin: 0px 18px 0px 0px;
   position: relative;
@@ -202,8 +198,7 @@ height:30px;
   height: 30px;
 }
 
-/* Hide default HTML checkbox */
-.switch input {
+.switch input { /* Hide default HTML checkbox */
   opacity: 0;
   width: 0;
   height: 0;
@@ -223,7 +218,6 @@ height:30px;
 }
 
 .slider:before {
-
   position: absolute;
   content: "";
   height: 22px;
@@ -244,9 +238,7 @@ input:focus + .slider {
 }
 
 input:checked + .slider:before {
-/*content: 'A'; per la luminosità auto
-color:black;
-text-align: center;*/
+/*content: 'A'; for auto brightness*/
   -webkit-transform: translateX(26px);
   -ms-transform: translateX(26px);
   transform: translateX(26px);
@@ -299,7 +291,6 @@ text-align: center;*/
     margin:0px 0px 0px 20px;
 }
 
-
 /*
 .pw_wrapper:focus {
   outline-color: red;
@@ -316,7 +307,6 @@ text-align: center;*/
 <body>
 
     <div class="flex_container" >
-    <!--#9a031e; #003049-->
     
         <h2 style="margin: 8px 0px 8px 0px;">ESPclock</h2>
         <form style="background-color: #1a1a1a; text-align: left;border-style:solid; border-color:#3c3e3f;border-radius: 12px; border-width: 1px;">
@@ -397,22 +387,29 @@ text-align: center;*/
 
                     <input style=" margin:0px 0px 2px 20px;width: 275px; height: 40px;" type="range" id="brightness" name="brightness" min="0" max="7">
                     
-                    <label style="display: flex; align-items: center; justify-content: space-between; margin:4px 0px 20px 0px;" class="blinky">
-                    <p style="font-size: 17px; margin:0px 0px 2px 26px;">Brightness (auto)</p>
-                    <label class="switch">
-                        <input id="bright_auto" type="checkbox">
-                        <span class="slider round"></span>
-                    </label>
-                    </label>
+                    <span style="display: flex; align-items: center; justify-content: space-between; margin:4px 0px 20px 0px;" class="blinky">
+                        <p style="font-size: 17px; margin:0px 0px 2px 26px;">Auto brightness</p>
+                        <label class="switch">
+                            <input id="bright_auto" type="checkbox">
+                            <span class="slider round"></span>
+                        </label>
+                    </span>
 
-                    <label style="display: flex; align-items: center; justify-content: space-between; margin:4px 0px 20px 0px;" class="blinky">
-                    <p style="font-size: 17px; margin:0px 0px 2px 26px;">Blinking colon</p>
-                    <label class="switch">
-                        <input id="blink_togg" type="checkbox" checked> <!--checked is an attribute-->
-                        <span class="slider round"></span>
-                    </label>
-                    </label>
-
+                    <span style="display: flex; align-items: center; justify-content: space-between; margin:4px 0px 20px 0px;" class="blinky">
+                        <p style="font-size: 17px; margin:0px 0px 2px 26px;">Blinking colon</p>
+                        <label class="switch">
+                            <input id="blink_togg" type="checkbox" checked> <!--checked is an attribute-->
+                            <span class="slider round"></span>
+                        </label>
+                    </span>
+                    
+                    <span style="display: flex; align-items: center; justify-content: space-between; margin:4px 0px 20px 0px;" class="twelve">
+                        <p style="font-size: 17px; margin:0px 0px 2px 26px;">12-Hour clock</p>
+                        <label class="switch">
+                            <input id="twelve" type="checkbox">
+                            <span class="slider round"></span>
+                        </label>
+                    </span>
                 </div>
 
                 <div class="othersettings_form" style="background-color:#1a1a1a;text-align: left; margin-top: 6px;border-style:solid; border-color: #3c3e3f;border-radius: 12px; border-width: 1px;">     
@@ -439,32 +436,23 @@ text-align: center;*/
     <!--refresh_but-->
     <symbol id="refresh_id" viewBox="0 0 640 640">
       <path id="refresh_path" fill="#dee2e6" d="M552 256L408 256C398.3 256 389.5 250.2 385.8 241.2C382.1 232.2 384.1 221.9 391 215L437.7 
-      168.3C362.4 109.7 253.4 115 184.2 184.2C109.2 259.2 109.2 380.7 184.2 455.7C259.2 530.7 380.7 530.7 455.7 
-      455.7C463.9 447.5 471.2 438.8 477.6 429.6C487.7 415.1 507.7 411.6 522.2 421.7C536.7 431.8 540.2 451.8 530.1 
-      466.3C521.6 478.5 511.9 490.1 501 501C401 601 238.9 601 139 501C39.1 401 39 239 139 139C233.3 44.7 382.7 39.4 
-      483.3 122.8L535 71C541.9 64.1 552.2 62.1 561.2 65.8C570.2 69.5 576 78.3 576 88L576 232C576 245.3 565.3 256 552 256z"/>
+      168.3C362.4 109.7 253.4 115 184.2 184.2C109.2 259.2 109.2 380.7 184.2 455.7C259.2 530.7 380.7 530.7 455.7 455.7C463.9 447.5 471.2 438.8 477.6 429.6C487.7 415.1 507.7 411.6 522.2 421.7C536.7 431.8 540.2 451.8 530.1 
+      466.3C521.6 478.5 511.9 490.1 501 501C401 601 238.9 601 139 501C39.1 401 39 239 139 139C233.3 44.7 382.7 39.4 483.3 122.8L535 71C541.9 64.1 552.2 62.1 561.2 65.8C570.2 69.5 576 78.3 576 88L576 232C576 245.3 565.3 256 552 256z"/>
     </symbol>
 
     <!--OPENeye-->
     <symbol id="openeye_id"  viewBox="0 0 576 380" >
-        <path fill="#dee2e6" d="M288 32c-80.8 0-145.5 36.8-192.6 80.6-46.8 43.5-78.1 95.4-93 131.1-3.3 7.9-3.3 16.7 0 
-        24.6 14.9 35.7 46.2 87.7 93 131.1 47.1 43.7 111.8 80.6 192.6 80.6s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 
-        93-131.1 3.3-7.9 3.3-16.7 0-24.6-14.9-35.7-46.2-87.7-93-131.1-47.1-43.7-111.8-80.6-192.6-80.6zM144 256a144 
-        144 0 1 1 288 0 144 144 0 1 1 -288 0zm144-64c0 35.3-28.7 64-64 64-11.5 0-22.3-3-31.7-8.4-1 10.9-.1 22.1 2.9 
-        33.2 13.7 51.2 66.4 81.6 117.6 67.9s81.6-66.4 67.9-117.6c-12.2-45.7-55.5-74.8-101.1-70.8 5.3 9.3 8.4 20.1 8.4 
-        31.7z"/>
+        <path fill="#dee2e6" d="M288 32c-80.8 0-145.5 36.8-192.6 80.6-46.8 43.5-78.1 95.4-93 131.1-3.3 7.9-3.3 16.7 0 24.6 14.9 35.7 46.2 87.7 93 131.1 47.1 43.7 111.8 80.6 192.6 80.6s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 
+        93-131.1 3.3-7.9 3.3-16.7 0-24.6-14.9-35.7-46.2-87.7-93-131.1-47.1-43.7-111.8-80.6-192.6-80.6zM144 256a144 144 0 1 1 288 0 144 144 0 1 1 -288 0zm144-64c0 35.3-28.7 64-64 64-11.5 0-22.3-3-31.7-8.4-1 10.9-.1 22.1 2.9 
+        33.2 13.7 51.2 66.4 81.6 117.6 67.9s81.6-66.4 67.9-117.6c-12.2-45.7-55.5-74.8-101.1-70.8 5.3 9.3 8.4 20.1 8.4 31.7z"/>
     </symbol>
 
     <!--shuteye-->
     <symbol id="shuteye_id" viewBox="0 0 576 380" >
-        <path fill="#dee2e6" d="M41-24.9c-9.4-9.4-24.6-9.4-33.9 0S-2.3-.3 7 9.1l528 528c9.4 9.4 24.6 
-        9.4 33.9 0s9.4-24.6 0-33.9l-96.4-96.4c2.7-2.4 5.4-4.8 8-7.2 46.8-43.5 
-        78.1-95.4 93-131.1 3.3-7.9 3.3-16.7 0-24.6-14.9-35.7-46.2-87.7-93-131.1-47.1-43.7-111.8-80.6-192.6-80.6-56.8 
-        0-105.6 18.2-146 44.2L41-24.9zM204.5 138.7c23.5-16.8 52.4-26.7 83.5-26.7 79.5 0 144 64.5 144 144 0 
-        31.1-9.9 59.9-26.7 83.5l-34.7-34.7c12.7-21.4 17-47.7 10.1-73.7-13.7-51.2-66.4-81.6-117.6-67.9-8.6 
-        2.3-16.7 5.7-24 10l-34.7-34.7zM325.3 395.1c-11.9 3.2-24.4 4.9-37.3 4.9-79.5 0-144-64.5-144-144 0-12.9 
-        1.7-25.4 4.9-37.3L69.4 139.2c-32.6 36.8-55 75.8-66.9 104.5-3.3 7.9-3.3 16.7 0 24.6 14.9 35.7 46.2 87.7 93 
-        131.1 47.1 43.7 111.8 80.6 192.6 80.6 37.3 0 71.2-7.9 101.5-20.6l-64.2-64.2z"/>
+        <path fill="#dee2e6" d="M41-24.9c-9.4-9.4-24.6-9.4-33.9 0S-2.3-.3 7 9.1l528 528c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-96.4-96.4c2.7-2.4 5.4-4.8 8-7.2 46.8-43.5 
+        78.1-95.4 93-131.1 3.3-7.9 3.3-16.7 0-24.6-14.9-35.7-46.2-87.7-93-131.1-47.1-43.7-111.8-80.6-192.6-80.6-56.8 0-105.6 18.2-146 44.2L41-24.9zM204.5 138.7c23.5-16.8 52.4-26.7 83.5-26.7 79.5 0 144 64.5 144 144 0 
+        31.1-9.9 59.9-26.7 83.5l-34.7-34.7c12.7-21.4 17-47.7 10.1-73.7-13.7-51.2-66.4-81.6-117.6-67.9-8.6 2.3-16.7 5.7-24 10l-34.7-34.7zM325.3 395.1c-11.9 3.2-24.4 4.9-37.3 4.9-79.5 0-144-64.5-144-144 0-12.9 
+        1.7-25.4 4.9-37.3L69.4 139.2c-32.6 36.8-55 75.8-66.9 104.5-3.3 7.9-3.3 16.7 0 24.6 14.9 35.7 46.2 87.7 93 131.1 47.1 43.7 111.8 80.6 192.6 80.6 37.3 0 71.2-7.9 101.5-20.6l-64.2-64.2z"/>
     </symbol>
 </svg>
 
@@ -504,23 +492,50 @@ text-align: center;*/
                 });
     }  
 
-    function disable_connect_but(){
-        connect_but.setAttribute("disabled", "");
-        connect_but.style.backgroundColor ="#ab6975";
-        connect_but.style.cursor = "not-allowed";
-    }
-
+   
     function disable_refresh_but(){
         refresh_but.setAttribute("disabled", "");
         refresh_but.style.cursor = "not-allowed";
         document.querySelectorAll("path")[0].style.fill="#808080";
     }
 
+    //this is only for pushbuttons that don't have SVG inside
+    function disable_button(button_id, background_color, color, bordercolor){
+        button_id.setAttribute("disabled", "");
+        button_id.style.backgroundColor = background_color;
+        button_id.style.cursor = "not-allowed";
+
+        if(color){
+            button_id.style.color = color;
+        }
+        if(bordercolor){
+            button_id.style.borderColor = bordercolor;
+        }
+    }
+
+     function enable_button(button_id, background_color, color, bordercolor){
+        button_id.removeAttribute("disabled", "");
+        button_id.style.backgroundColor = background_color;
+        button_id.style.cursor = "pointer";
+
+        if(color){
+            button_id.style.color = color;
+        }
+        if(bordercolor){
+            button_id.style.borderColor = bordercolor;
+        }
+    }
+
+
+
+
     const deleteconf = document.getElementById("deleteconf_id");
             
     //onload() is mandatory, otherwise won't run the 1st fetch
     //it activates when server.on("/") function is called
     window.onload = function () {
+
+        
         networkFetch("/scan");        
 
         //if ESP is already connected, setup page is loaded with wifi settings greyed-out and disabled    
@@ -531,17 +546,12 @@ text-align: center;*/
             br_tag.innerText = data.bright;
             slider.value = data.bright;
                                      
-            if(data.conn === true){  
-                disable_connect_but();
+            if(data.conn === true){
+
+                disable_button(connect_but, "#52885d");
                 connect_but.innerHTML = "CONNECTED";
-                connect_but.style.backgroundColor ="#52885d";
-
                 disable_refresh_but();
-
-                update_but.removeAttribute("disabled");
-                update_but.style.cursor = "pointer";
-                update_but.style.backgroundColor= "#267bbc";
-
+                enable_button(update_but, "#267bbc");
             }
 
             if(data.br_auto ===true){
@@ -554,13 +564,14 @@ text-align: center;*/
 
             }
 
+            if(data.twelve=== true){
+                twelve.setAttribute("checked", "");
+            }
+
             if(data.config===0){
                 //console.log("config NOT exists");
-                deleteconf.setAttribute("disabled", "");
-                deleteconf.style.backgroundColor ="#1a1a1a";
-                deleteconf.style.cursor = "not-allowed";
-                deleteconf.style.color = "#9c9c9c";
-                deleteconf.style.borderColor = "#4E4E56";
+
+                disable_button(deleteconf, "#1a1a1a","#9c9c9c", "#4E4E56");
                 saveconf.innerText = "SAVE";
             }
 
@@ -568,11 +579,8 @@ text-align: center;*/
                 const tip1= document.getElementById("tip1");
                 tip1.innerHTML= "A configuration already exists.<br>To save a new configuration, be sure to delete the last one before.<br>Otherwise, ignore this message."
                 saveconf.innerText = "SAVED";
-                saveconf.setAttribute("disabled", "");
-                saveconf.style.backgroundColor ="#1a1a1a";
-                saveconf.style.cursor = "not-allowed";
-                saveconf.style.color = "#9c9c9c";
-                saveconf.style.borderColor = "#4E4E56";
+
+                disable_button(saveconf, "#1a1a1a","#9c9c9c", "#4E4E56");
             }
 
         });
@@ -628,13 +636,14 @@ text-align: center;*/
       //to know if i'm connected to wifi
       let polling_state= false;
       let connected = false;
-      const ascii_anim = ["🔵  ⚪  ⚪", "⚪  🔵  ⚪", "⚪  ⚪  🔵"];
+      const ascii_anim = ["⚫  ⚪  ⚪", "⚪  ⚫  ⚪", "⚪  ⚪  ⚫"];
 
       //--------------------------------x
       //def of POLLING function of client, to know if it's connected
                 function pollingfunc(){
 
-                    disable_connect_but();
+                    disable_button(connect_but, "#ab6975");
+                    //disable_connect_but();
                     disable_refresh_but();
                     
                     //START LOADER anim
@@ -675,10 +684,7 @@ text-align: center;*/
                                     popup_span_elem.innerHTML = "CONNECTED✅";
                                     popup_span_elem.classList.add("show");
 
-                                    //activated update button
-                                    update_but.removeAttribute("disabled");
-                                    update_but.style.cursor = "pointer";
-                                    update_but.style.backgroundColor= "#267bbc";
+                                    enable_button(update_but, "#267bbc");
 
                                     setTimeout(()=>{
                                         popup_span_elem.classList.remove("show");
@@ -699,10 +705,9 @@ text-align: center;*/
 
                                     setTimeout(()=>{
                                         popup_span_elem.classList.remove("show");
-                                        connect_but.removeAttribute("disabled");
-                                        connect_but.style.cursor = "pointer";
-                                        connect_but.style.backgroundColor ="#9a031e";
 
+                                        enable_button(connect_but, "#9a031e");
+                                        
                                         refresh_but.removeAttribute("disabled");
                                         refresh_but.style.cursor = "pointer";
                                         document.querySelectorAll("path")[0].style.fill="#dee2e6";
@@ -751,8 +756,7 @@ text-align: center;*/
 
                 .then(response => response.json())
                 .then((response)=> {
-                        //console.log(response.creds);
-                        //polling starts after the client sends credentials to server 
+                        //polling starts after the client sends credentials to server |console.log(response.creds);
                         polling_state = true;
                 });
 
@@ -784,11 +788,6 @@ text-align: center;*/
                         //puts ntp data in json format, inside http POST req body
                         body: JSON.stringify({"ntp_addr": ntp_by_user , "offset": offset_by_user })
                     })
-
-                    /*.then(response => response.json())
-                    .then((response)=> {                            
-                        console.log("NTP updated",response.ntp);
-                    });*/
                 }
             }
 
@@ -827,12 +826,6 @@ text-align: center;*/
                     },            
                     body: JSON.stringify({"bl": ublink}) 
                 })
-
-                /*
-                .then(response => response.json())
-                .then((response)=> {
-                        console.log("BLINK UPDATED" ,response.status);
-                });         */
             }
 
             const bright_auto = document.getElementById("bright_auto");   //[OK]
@@ -857,24 +850,36 @@ text-align: center;*/
                 });         
             }
 
-            
+            const twelve= document.getElementById("twelve");
+
+             twelve.onchange = function(){      
+                
+                let twhr = this.checked ? true : false;
+                
+                fetch("/twelve", {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': "application/json"
+                    },            
+                    body: JSON.stringify({"tw": twhr}) 
+                })
+
+                .then(response => response.json())
+                .then((response)=> {
+                       
+                    console.log(response.status);
+                });        
+            }
+
+
             const saveconf = document.getElementById("saveconf_id");
             //deleteconf reference is up
 
             //this must be called ONLY from saveconf and deleteconf buttons!!
             function edit_conf(){
 
-                saveconf.setAttribute("disabled", "");
-                saveconf.style.backgroundColor ="#1a1a1a";
-                saveconf.style.cursor = "not-allowed";
-                saveconf.style.color = "#9c9c9c";
-                saveconf.style.borderColor = "#4E4E56";
-
-                deleteconf.setAttribute("disabled", "");
-                deleteconf.style.backgroundColor ="#1a1a1a";
-                deleteconf.style.cursor = "not-allowed";
-                deleteconf.style.color = "#9c9c9c";
-                deleteconf.style.borderColor = "#4E4E56";
+                disable_button(saveconf, "#1a1a1a","#9c9c9c", "#4E4E56");
+                disable_button(deleteconf, "#1a1a1a","#9c9c9c", "#4E4E56");
 
                 fetch("/config", {
                     method: "POST",
@@ -887,16 +892,11 @@ text-align: center;*/
                 //if user deleted config, then only saveconf button must be enabled
                 if(this.value == 0){    
 
-                    saveconf.removeAttribute("disabled", "");
-                    saveconf.style.backgroundColor ="#1440616e";
-                    saveconf.style.cursor = "pointer";
-                    saveconf.style.borderColor ="#51A0DB";
-                    saveconf.style.color ="#51A0DB";
+                    enable_button(saveconf, "#1440616e", "#51A0DB", "#51A0DB");
+                    disable_button(update_but, "#627D9E");
                     saveconf.innerText = "SAVE";
 
-                    connect_but.removeAttribute("disabled");
-                    connect_but.style.cursor = "pointer";
-                    connect_but.style.backgroundColor ="#9a031e";
+                    enable_button(connect_but, "#9a031e");
                     connect_but.innerText = "CONNECT";
                     
                     refresh_but.removeAttribute("disabled");
@@ -907,16 +907,14 @@ text-align: center;*/
                 //if user saves config, deleteconf button is enabled
                 else{   
                     saveconf.innerText = "SAVED"; 
-                    deleteconf.removeAttribute("disabled", "");
-                    deleteconf.style.backgroundColor =" #740c0c45";
-                    deleteconf.style.cursor = "pointer";
-                    deleteconf.style.borderColor ="#BA1E16";
-                    deleteconf.style.color ="#BA1E16";
+
+                    enable_button(deleteconf, "#740c0c45", "#BA1E16", "#BA1E16");
                 }
             }
            
             saveconf.addEventListener("click", edit_conf);
             deleteconf.addEventListener("click", edit_conf);
+/*UPTIME WILL DISPLAY TIME AS DAYS AND HOURS -> e.g. 4d 22h (REFRESH EVERY 1HR)*/
 </script>      
 </body>
 </html>
