@@ -698,20 +698,20 @@ void loop() {
             //colon is OFF
             
               if(!twelve){
-                mydisplay.showNumberDecEx(timeinfo.tm_hour, 0b01000000, true, 2, 0);
-                mydisplay.showNumberDecEx(timeinfo.tm_min, 0b01000000, true, 2, 2);
+                mydisplay.showNumberDecEx(timeinfo.tm_hour, 0, true, 2, 0);
+                mydisplay.showNumberDecEx(timeinfo.tm_min, 0, true, 2, 2);
               }
 
               else{ //if 12hr mode is active
                 if(timeinfo.tm_hour <= 12){
-                  mydisplay.showNumberDecEx(timeinfo.tm_hour, 0b01000000, true, 2, 0);
+                  mydisplay.showNumberDecEx(timeinfo.tm_hour, 0, true, 2, 0);
                 }
                 
                 else{
-                  mydisplay.showNumberDecEx(timeinfo.tm_hour-12, 0b01000000, true, 2, 0);
+                  mydisplay.showNumberDecEx(timeinfo.tm_hour-12, 0, true, 2, 0);
                 }
 
-                mydisplay.showNumberDecEx(timeinfo.tm_min, 0b01000000, true, 2, 2);
+                mydisplay.showNumberDecEx(timeinfo.tm_min, 0, true, 2, 2);
               }
 
             colon=true;
