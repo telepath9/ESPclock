@@ -33,7 +33,7 @@ It uses a ESP8266 (Wemos D1 mini) or ESP32 (XIAO ESP32 C3).
 
 6. Now let's connect PC or mobile to the ESPclock access point, with the password: waltwhite64
 
-7. After connecting to the ESPclock's AP, open your browser and paste in the address bar: http://192.168.4.1/
+7. After connecting to the ESPclock's AP, open your browser and paste in the address bar: http://192.168.4.1/ or "espclock.local".
 
 8. From the web UI, first add your home network, then the NTP server that matches your region, plus the GMT/UTC offset hour(s).
 
@@ -42,7 +42,7 @@ It uses a ESP8266 (Wemos D1 mini) or ESP32 (XIAO ESP32 C3).
 <h2>📱 WEB UI </h2>
 <img src="https://github.com/telepath9/ESPclock/blob/9306d1c4720c6f6852ac14c1f52d81838a5623ad/pics/espclock2.1.1.png" alt="Alt Text" width="100%" height="100%">
 
-<h2>🤖 CURRENT (AND TO ADD) FEATURES </h2>
+<h2>🤖 CURRENT FEATURES</h2>
 
 - [x] Asynchronous webserver
 - [x] Automatic Wifi Scan</li>
@@ -51,7 +51,9 @@ It uses a ESP8266 (Wemos D1 mini) or ESP32 (XIAO ESP32 C3).
 - [x] Automatic Brightness mode
 - [x] Blinking colon toggle
 - [x] ESP32 port
-- [x] Replace NTPclient.h with <time.h> library
+- [x] Replace NTPclient.h with time.h library
+- [x] ESPmDNS
+- [x] 12-Hour clock mode
 - [ ] Alarm clock mode with buzzer
 - [ ] Display uptime in webUI
 - [ ] Adding 1 or 2 buttons to the case
