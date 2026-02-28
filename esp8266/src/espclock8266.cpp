@@ -6,7 +6,6 @@
 #include <ESP8266mDNS.h>   //https://tttapa.github.io/ESP8266/Chap08%20-%20mDNS.html
 #include <FS.h>            //for file handling
 #include <LittleFS.h>      //to access to filesystem
-#include <WiFiUdp.h> 
 #include "TM1637Display.h"
 #include <time.h>
 
