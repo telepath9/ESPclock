@@ -58,6 +58,7 @@ TM1637Display mydisplay(CLK, DIO);
 bool colon=true;
 bool blink=true;
 bool br_auto=false;
+bool twelve=false;
 uint8_t brightness=7;
 
 const uint8_t SEG_try[]={
@@ -268,7 +269,7 @@ void checkConfig(void){
           mydisplay.showNumberDec(attempts, true, 1, 3);
         }
 
-        else if(attempts==6){
+        else if(attempts==4){
           attempts=0;
           creds_available = false;
           //Serial.println(F("Can't connect. Goto webUI"));
@@ -292,6 +293,7 @@ void checkConfig(void){
         mydisplay.setBrightness(brightness);
         blink=  load_cf[F("blink")];
         br_auto = load_cf[F("br_auto")];
+        twelve= load_cf[F("twelve")];
         fld.close();
       }
   }
@@ -303,6 +305,17 @@ void notFound(AsyncWebServerRequest *request){
     request->send(404, "text/plain", "NOT FOUND");
 }
 
+void initMDNS(){
+
+  MDNS.end();
+
+  if (MDNS.begin("espclock")) {
+    MDNS.addService("http", "tcp", 80);
+  } else {
+    Serial.println("mDNS fail");
+  }
+}
+
 void setup() {
   Serial.begin(115200);
   
@@ -312,9 +325,8 @@ void setup() {
 
   //to format FS
   //LittleFS.format();
-
-  //Begin LittleFS can throw Err0
-  if(!LittleFS.begin()){
+  
+  if(!LittleFS.begin()){  //LittleFS.begin() can throw Err0
     mydisplay.setSegments(SEG_Err, 3, 0);
     mydisplay.showNumberDec(0, false, 1, 3);
     //Serial.println("An Error has occurred while mounting LittleFS");
@@ -339,7 +351,9 @@ void setup() {
 
   WiFi.mode(WIFI_AP_STA);   
   WiFi.setAutoReconnect(true);
-  
+
+  initMDNS();
+
   delay(100);
 
   if(WiFi.status() != WL_CONNECTED){
@@ -372,6 +386,7 @@ void setup() {
     uicheck_json["bright"]= brightness; 
     uicheck_json["br_auto"] = br_auto;
     uicheck_json["blink"] = blink;
+    uicheck_json["twelve"] = twelve;
     uicheck_json["config"] = (LittleFS.exists("/config.json")) ? 1 : 0;
 
     String uc_str;
@@ -441,17 +456,19 @@ void setup() {
   //HTTP GET req from client, in order to know if connection attempt was successful
   server.on("/wifi_status", HTTP_GET, [](AsyncWebServerRequest *request) {
           
-    if(attempts == 6){
+    if(attempts == 4){
       creds_available = false;
-      attempts=0;
-      Serial.println(F("handler says: 7 attempts->WRONG PASSWORD"));
+      //attempts=0;
+      Serial.println(password);
+      Serial.println(F("handler says: 5 attempts->WRONG PASSWORD - RESET attempts to 0"));
       request->send(200, "application/json", "{\"stat\":\"fail\"}");
     }
 
     else{
       ++attempts;
       if(WiFi.status() == WL_CONNECTED){
-        attempts=0;
+        //attempts=0;
+        Serial.println(password);
         request->send(200, "application/json", "{\"stat\":\"ok\"}");
       }
 
@@ -476,8 +493,6 @@ void setup() {
       start_NtpClient=true;
     }
     
-   
-
     request->send(200, "application/json", "{\"ntp\":\"OK\"}");
   });
 
@@ -491,9 +506,7 @@ void setup() {
           //extract light value
           brightness =(uint8_t)atoi(bgt_json["bgt"]);
           mydisplay.setBrightness(brightness); 
-          //Serial.print("SLIDER: ");
-          Serial.println((uint8_t)atoi(bgt_json["bgt"]));
-
+          //Serial.println((uint8_t)atoi(bgt_json["bgt"]));
           request->send(200, "application/json", "{\"status\":\"BGT OK\"}");
   });
 
@@ -535,7 +548,6 @@ void setup() {
             }
   });
 
-
   server.on("/blink", HTTP_POST, [](AsyncWebServerRequest *request){}, NULL, [](AsyncWebServerRequest *request, uint8_t *data, size_t len, size_t index, size_t total){
 
             JsonDocument blink_json;
@@ -544,13 +556,20 @@ void setup() {
             request->send(200, "application/json", "{\"status\":\"updated\"}");
   });
 
+   server.on("/twelve", HTTP_POST, [](AsyncWebServerRequest *request){}, NULL, [](AsyncWebServerRequest *request, uint8_t *data, size_t len, size_t index, size_t total){
+
+            JsonDocument twelve_json;
+            deserializeJson(twelve_json, data);
+            twelve = (uint8_t)twelve_json["tw"];  //update blink var
+            request->send(200, "application/json", "{\"status\":\"updated\"}");
+  });
+
   server.on("/config", HTTP_POST, [](AsyncWebServerRequest *request){}, NULL, [](AsyncWebServerRequest *request, uint8_t *data, size_t len, size_t index, size_t total){
 
     JsonDocument scf_json;
     deserializeJson(scf_json, data);
     bool saveconfig = scf_json["save"];
-    //Serial.print("ACTION: ");
-    Serial.println(saveconfig);
+    //Serial.println(saveconfig);
 
     if((!LittleFS.exists("/config.json") && saveconfig==1)){ //user wants to save config
               
@@ -563,7 +582,7 @@ void setup() {
       config[F("br_auto")] = br_auto;     //bool as 1 or 0
       config[F("br")] = brightness;       //uint8_t
       config[F("blink")] = blink;        //bool as 1 or 0
-
+      config[F("twelve")] = twelve;      
       config.shrinkToFit();
               
       File fc = LittleFS.open("/config.json", "w+");
@@ -584,6 +603,7 @@ void setup() {
       creds_available = false;
       start_NtpClient=false;
       attempts=0;
+      Serial.println(password);
       Serial.println(F("\n*Config.json DELETED*"));
     }
 
@@ -599,6 +619,9 @@ void setup() {
 
 void loop() {
   
+  MDNS.update();
+
+
   
   if(newScan==true){
     wifiScan();
@@ -638,20 +661,50 @@ void loop() {
         }   
            
         
-        if(blink ==1){
-            if(colon==true){
-            //colon is ON
-            mydisplay.showNumberDecEx(timeinfo.tm_hour, 0b01000000, true, 2, 0);
-            mydisplay.showNumberDecEx(timeinfo.tm_min, 0b01000000, true, 2, 2);
-            colon=false;
-        
+        if(blink==1){
+            if(colon==true){   //colon is ON
+              if(!twelve){
+                mydisplay.showNumberDecEx(timeinfo.tm_hour, 0b01000000, true, 2, 0);
+                mydisplay.showNumberDecEx(timeinfo.tm_min, 0b01000000, true, 2, 2);
+              }
+
+              else{
+                if(timeinfo.tm_hour <= 12){
+                  mydisplay.showNumberDecEx(timeinfo.tm_hour, 0b01000000, true, 2, 0);
+                 
+                }
+
+                else{
+                  mydisplay.showNumberDecEx(timeinfo.tm_hour-12, 0b01000000, true, 2, 0);
+                }
+
+                mydisplay.showNumberDecEx(timeinfo.tm_min, 0b01000000, true, 2, 2);
+              }
+
+           
+              colon=false;  
           }
 
           else if(colon==false){
             //colon is OFF
             
-            mydisplay.showNumberDecEx(timeinfo.tm_hour, 0, true, 2, 0);
-            mydisplay.showNumberDecEx(timeinfo.tm_min, 0, true, 2, 2);
+              if(!twelve){
+                mydisplay.showNumberDecEx(timeinfo.tm_hour, 0, true, 2, 0);
+                mydisplay.showNumberDecEx(timeinfo.tm_min, 0, true, 2, 2);
+              }
+
+              else{ //if 12hr mode is active
+                if(timeinfo.tm_hour <= 12){
+                  mydisplay.showNumberDecEx(timeinfo.tm_hour, 0, true, 2, 0);
+                }
+                
+                else{
+                  mydisplay.showNumberDecEx(timeinfo.tm_hour-12, 0, true, 2, 0);
+                }
+
+                mydisplay.showNumberDecEx(timeinfo.tm_min, 0, true, 2, 2);
+              }
+
             colon=true;
           }
         }
@@ -673,9 +726,7 @@ void loop() {
   if(connected == false && creds_available == true ){
     
     displayAnim();
-    
-    /*  Serial.println("Trying connection with these creds: ");
-    Serial.print("SSID chosen: ");
+    /* Serial.print("SSID chosen: ");
     Serial.println(ssid);
     Serial.print("PW is: ");
     Serial.println(password); */
@@ -689,20 +740,22 @@ void loop() {
       //cycles here until it's connected to wifi
       if (WiFi.status() != WL_CONNECTED && creds_available==true){
           delay(200);
-          //Serial.print(".");
       }
     
       //once connected, exit form while(1) with break, and then from first if since "connected==true" now
       else if(WiFi.status() == WL_CONNECTED){
-       
+        //start_mdns_service();
         //configTime(gmt_offset*3600, 3600, ntp_addr);
         connected = true;
+        initMDNS();
         break;
       }
 
-      else if(attempts == 6){
-        //resets "attempts", so it can try a new connection
-        attempts=0;  
+      else if(attempts == 4){
+        attempts=0;  //reset "attempts", so it can try a new connection
+        creds_available=false;
+        Serial.println("RESET Attempts from LOOP");
+        Serial.println(password);
         break; //exit from while(1)
       }
     }
