@@ -533,10 +533,7 @@ input:checked + .slider:before {
             
     //onload() is mandatory, otherwise won't run the 1st fetch
     //it activates when server.on("/") function is called
-    window.onload = function () {
-
-        
-        networkFetch("/scan");        
+    window.onload = function () {     
 
         //if ESP is already connected, setup page is loaded with wifi settings greyed-out and disabled    
         fetch("/uicheck")
@@ -552,6 +549,9 @@ input:checked + .slider:before {
                 connect_but.innerHTML = "CONNECTED";
                 disable_refresh_but();
                 enable_button(update_but, "#267bbc");
+            }
+            else{
+                networkFetch("/scan");    
             }
 
             if(data.br_auto ===true){
