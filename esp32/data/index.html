@@ -658,10 +658,10 @@ width: 100%;
                 //at least a day has passed
                 if(millis>= 86400000){   //days
                     rem_d= millis%86400000;    //for hours
-                    dcounter.innerText = (49*millov) + Math.trunc((17*ms_over)/24) + Math.trunc(millis/86400000);
+                    dcounter.innerText = (49*ms_over) + Math.trunc((17*ms_over)/24) + Math.trunc(millis/86400000);
 
                     if(rem_d >= 3600000){   //calculate hours
-                        hcounter.innerText = ((17*ms_over)%24) + Math.trunc((5*ms_over)%60) + Math.trunc(rem_d/3600000);
+                        hcounter.innerText = ((17*ms_over)%24) + Math.trunc((5*ms_over)/60) + Math.trunc(rem_d/3600000);
                         //tothours = rem_d/3600000;
                         
                         rem_h= rem_d%3600000;
@@ -671,7 +671,7 @@ width: 100%;
                     }
                     else if(rem_d < 3600000){   //if millis are not enough to make an hour, then calculates minutes
 
-                        hcounter.innerText = ((17*ms_over)%24) + Math.trunc((5*ms_over)%60);    //🔴MUST TEST THIS LINE
+                        hcounter.innerText = ((17*ms_over)%24) + Math.trunc((5*ms_over)/60);    //🔴Looks like it works good
                         mcounter.innerText= ((5*ms_over)%60) + Math.trunc(rem_d/60000);
                         //totmin= rem_d/60000;
                     }
@@ -679,17 +679,20 @@ width: 100%;
 
                 //at least 1hr has passed
                 else if(millis<86400000 && millis>=3600000){ 
-                    hcounter.innerText = ((17*ms_over)%24) + Math.trunc((5*ms_over)%60) + Math.trunc(millis/3600000);
+                    dcounter.innerText = (49*ms_over) + Math.trunc((17*ms_over)/24);
+                    hcounter.innerText = ((17*ms_over)%24) + Math.trunc((5*ms_over)/60) + Math.trunc(millis/3600000);
                     rem_h= millis%3600000;
                     if(rem_h <3600000){
                         mcounter.innerText= ((5*ms_over)%60) + Math.trunc(rem_h/60000);
                     }
                 }
 
-                //at least 1 min has passed
-                else if(millis>=60000 && millis<3600000){   
+                //1 or 0 min passed
+                else if(millis>=60000 && millis<3600000 || millis< 60000){   
+                    dcounter.innerText = (49*ms_over) + Math.trunc((17*ms_over)/24);
+                    hcounter.innerText = ((17*ms_over)%24) + Math.trunc((5*ms_over)/60);
                     mcounter.innerText= ((5*ms_over)%60) + Math.trunc(millis/60000);
-                }
+                }    
             };
 
         function uptimeUpdate(){
@@ -1127,7 +1130,7 @@ function edit_alarm(){
             method: "POST",
             headers: {
                 'Content-Type': "application/json"      //brocco
-            },            //snooze meglio metterlo come input type number 
+            },            //snooze better as input type number 
             body: JSON.stringify({"set": true, "time": al_time.value , "dd": giorni, "snz":  snooze.value}) //sends the value of the button that calls the function 
         })
 
@@ -1171,8 +1174,7 @@ deletealarm.addEventListener("click", edit_alarm);*/
                     document.querySelectorAll("path")[0].style.fill="#dee2e6";
                 }
 
-                //if user saves config, deleteconf button is enabled
-                else{   
+                else{ //if user saves config, deleteconf button is enabled
                     saveconf.innerText = "SAVED"; 
 
                     enable_button(deleteconf, "#740c0c45", "#BA1E16", "#BA1E16");
