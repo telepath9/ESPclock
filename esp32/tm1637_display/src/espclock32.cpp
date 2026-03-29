@@ -306,7 +306,7 @@ void checkConfig(void){
         ntp_addr= strdup(load_cf["ntp_ad"]); 
         gmt_offset = load_cf["offset"];   
         
-        configTime(gmt_offset*3600, 3600, "ntp1.inrim.it");
+        configTime(gmt_offset*3600, 3600, ntp_addr);
   
         brightness = (uint8_t)load_cf["br"];
         mydisplay.setBrightness(brightness);
@@ -504,7 +504,7 @@ void setup() {
 
     ntp_addr = strdup(ntp_json["ntp_addr"]); 
     gmt_offset = (int)atoi(ntp_json["offset"]);
-    configTime(gmt_offset*3600, 3600, "ntp1.inrim.it"); 
+    configTime(gmt_offset*3600, 3600, ntp_addr); 
   
     if(start_NtpClient == false){
       start_NtpClient=true;
