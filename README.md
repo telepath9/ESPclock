@@ -61,7 +61,10 @@ It uses a ESP8266 (Wemos D1 mini) or ESP32 (XIAO ESP32 C3).
 - [ ] HA support
 - [ ] New display support (will be revealed soon)
 
+
 <h2>🛒 PART LIST</h2>
+<details>
+<summary><b>TM1637 Display Version</b></summary>
 <ul>
 <li>XIAO ESP32 C3 or Wemos D1 MINI (mine is V3.0.0 clone)</li>
 <li>TM1637 module https://it.aliexpress.com/item/1005001582129952.html?spm=a2g0o.order_list.order_list_main.49.370e3696i4W9Sn&gatewayAdapt=glo2ita </li>
@@ -73,16 +76,21 @@ It uses a ESP8266 (Wemos D1 mini) or ESP32 (XIAO ESP32 C3).
 <li>M2.5 nuts: x2</li>
 <li>Single row female 5pins header (for common GND): x1</li>
 </ul>
+</details>
 
 
 <h2>🔌 BOARD WIRING</h2>
-<h3> ESP32 (XIAO ESP32 C3)</h3>
+<details> 
+<summary><b>XIAO ESP32 C3</b></summary>
 <img src="https://github.com/telepath9/ESPclock/blob/fa035fd003b75fdb8b4b9cf68d04e8ba993e35fc/pics/xiao-top1.0.jpg" alt="Alt Text" width="100%" height="100%">
 <img src="https://github.com/telepath9/ESPclock/blob/ff830831e95c264ad7939fba758ce32de801831d/pics/xiao_top3_w.jpg" alt="Alt Text" width="100%" height="100%">
-<h3> ESP8266 (Wemos D1 Mini 3.0.0)</h3>
+</details>
+<details> 
+<summary><b>ESP8266 (Wemos D1 Mini 3.0.0)</b></summary> 
 <img src="https://github.com/telepath9/ESPclock/blob/0defb72bb5107271487eb4c452812158a96b2c5e/pics/top_pcb.jpg" alt="Alt Text" width="100%" height="100%">
 <img src="https://github.com/telepath9/ESPclock/blob/0defb72bb5107271487eb4c452812158a96b2c5e/pics/bottom.jpg" alt="Alt Text" width="100%" height="100%">
 <img src="https://github.com/telepath9/ESPclock/blob/ebe4f234343fb306297fa49ef42fd830830b3c9a/pics/esp8266_pinout.jpg" alt="Alt Text" width="100%" height="100%">
+</details>
 
 <h2>🪛 HOW TO ASSEMBLE ESPclock</h2>
 <img src="https://github.com/telepath9/ESPclock/blob/fc197cfd72fc6f489c0196dcbc484aab385d8b21/pics/howtoassemble.webp" alt="Alt Text" width="100%" height="100%">
