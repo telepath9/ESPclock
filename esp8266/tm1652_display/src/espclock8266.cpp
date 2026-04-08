@@ -61,6 +61,7 @@ bool colon=true;
 bool blink=true;
 bool br_auto=false;
 bool twelve=false;
+uint8_t ms_ovfl=0;
 uint8_t brightness=7;
 
 uint8_t px=4;  
@@ -376,6 +377,8 @@ void setup() {
     uicheck_json["blink"] = blink;
     uicheck_json["twelve"] = twelve;
     uicheck_json["config"] = (LittleFS.exists("/config.json")) ? 1 : 0;
+    uicheck_json["millis"] = millis();
+    uicheck_json["msovfl"] = ms_ovfl;
 
     String uc_str;
     serializeJson(uicheck_json, uc_str);
@@ -597,6 +600,10 @@ void setup() {
     request->send(200, "application/json", "{\"status\":\"updated\"}");
   });
 
+  server.on("/uptime", HTTP_GET, [](AsyncWebServerRequest *request) {
+    request->send(200, "application/json", "{\"ms\":\""+ String(millis()) +"\",\"msovfl\":\""+ String(ms_ovfl) + "\"}"); 
+  }); 
+  
   server.onNotFound(notFound);
 
   //start server
@@ -607,6 +614,10 @@ void setup() {
 void loop() {
   
   MDNS.update();
+
+  if(millis() == 4294967295){
+    ms_ovfl++;  //will reset to 0 when it reaches its max value 255, but it'll reach this value after 50days*256= 35years of activity
+  }
 
   if(newScan==true){
     wifiScan();
