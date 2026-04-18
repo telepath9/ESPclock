@@ -4,6 +4,8 @@
 
 ![GitHub Repo stars](https://img.shields.io/github/stars/telepath9/ESPclock?style=social&logo=github)
 
+![Static Badge](https://img.shields.io/badge/Mentioned_by-Hackster.io-%232E9FE6?style=flat&logo=hackster&logoColor=white&color=%232E9FE6)
+
 
 Welcome to the page of my (W.I.P.) project called 
 
@@ -113,6 +115,8 @@ It uses a ESP8266 (Wemos D1 mini) or ESP32 (XIAO ESP32 C3).
 
 <h2>🪛 HOW TO ASSEMBLE ESPclock</h2>
 <img src="https://github.com/telepath9/ESPclock/blob/fc197cfd72fc6f489c0196dcbc484aab385d8b21/pics/howtoassemble.webp" alt="Alt Text" width="100%" height="100%">
+
+
 
 <h2>🤝 CODE CONTRIBUTIONS</h2>
 This is a personal project which i'm using to learn and to improve my coding skills. So, in order to follow my own plans, I won't accept any pull request.
