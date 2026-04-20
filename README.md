@@ -4,15 +4,14 @@
 
 ![GitHub Repo stars](https://img.shields.io/github/stars/telepath9/ESPclock?style=social&logo=github)
 
-![Static Badge](https://img.shields.io/badge/Mentioned_by-Hackster.io-%232E9FE6?style=flat&logo=hackster&logoColor=white&color=%232E9FE6)
+[![Static Badge](https://img.shields.io/badge/Mentioned_by-Hackster.io-%232E9FE6?style=flat&logo=hackster&logoColor=white&color=%232E9FE6)](https://www.hackster.io/news/a-diy-retro-modern-alarm-clock-for-under-10-4e4e972345d8)
 
-
-Welcome to the page of my (W.I.P.) project called 
 
 <img src="https://github.com/telepath9/ESPclock/blob/54c39c18d9204351de640fb42218651ce3664671/pics/newfont.png" alt="Alt Text" width="100%" height="100%">
 
-which is a smart clock that connects to a NTP server to get the current time. 
-It uses a ESP8266 (Wemos D1 mini) or ESP32 (XIAO ESP32 C3).
+
+is a smart clock that connects to a NTP server to get the current time. 
+It uses a ESP8266 (Wemos D1 mini) or ESP32 (XIAO ESP32 C3)
 
 <img src="https://github.com/telepath9/ESPclock/blob/092779388d558fc8df550596075db075423a6bf2/pics/big.jpeg" alt="Alt Text" width="100%" height="100%">
 <img src="https://github.com/telepath9/ESPclock/blob/6b2b2224a42deda354a8a7220dcf724643eb9c2e/pics/pic1.jpg" alt="Alt Text" width="100%" height="100%">
