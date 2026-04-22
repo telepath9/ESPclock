@@ -181,13 +181,11 @@ body{
     border-radius: 6px 0px 0px 6px; 
     border-color:transparent;
     border-style:none; 
-    
 }
 
 ::placeholder {
   color: #adb5bd; 
 }
-
 
 .blinky{
 height:30px;
@@ -207,8 +205,7 @@ height:30px;
   height: 0;
 }
 
-/* The slider */
-.slider {
+.slider {   /* brightness slider */
   position: absolute;
   cursor: pointer;
   top: 0;
@@ -248,7 +245,7 @@ input:checked + .slider:before {
 }
 
 /* Rounded sliders */
-.slider.round {
+.slider.round { 
   border-radius: 34px;
 }
 
@@ -256,18 +253,17 @@ input:checked + .slider:before {
   border-radius: 50%;
 }
 
-/*
 input[type="time"]::-webkit-calendar-picker-indicator {
   filter: invert(1) brightness(0.77);
-}*/
+}
 
 .two_buttons{
     display:flex;
     flex-direction:row;
     margin: 0px 0px 20px 0px;
-}   
+}
 
-#saveconf_id /*, #setalarm_id*/ {
+#saveconf_id, #setalarm_id {
     border-style:solid; 
     border-width: 1px;
     cursor:pointer;
@@ -280,10 +276,10 @@ input[type="time"]::-webkit-calendar-picker-indicator {
     margin:0px 0px 0px 6px;
 }
 
-#deleteconf_id /*, #deletealarm_id*/{
+#deleteconf_id, #deletealarm_id{
     color:#BA1E16;
     background-color: #740c0c45;
-    border-color: #BA1E16;
+    border-color: currentColor;
     border-style:solid; 
     border-width: 1px;
     font-size: 15px;
@@ -295,15 +291,6 @@ input[type="time"]::-webkit-calendar-picker-indicator {
     border-radius: 8px;
     margin:0px 0px 0px 19px;
 }
-
-/*
-#alarm_co{
-width: 100%;
-}
-
-#timer_coll{
-width: 100%;
-}*/
 
 .collapsible {
   background-color: #eeeeee00;
@@ -319,11 +306,6 @@ width: 100%;
   font-weight: 750;
 }
 
-/*
-.active, .collapsible:hover {
-  background-color: #505050;
-}*/
-
 /* Style the collapsible content. Note: hidden by default */
 .content {
   display: none;
@@ -332,7 +314,7 @@ width: 100%;
 }
 
 .collapsible:after {
-  content: '\25BC'; /* Unicode character for "plus" sign (+) */
+  content: '\25BC'; /* Unicode character for "arrow down" */
   font-size: 13px;
   color: #ced4da;
   float: right;
@@ -340,10 +322,9 @@ width: 100%;
 }
 
 .active:after {
-  content: "\25B2"; /* Unicode character for "minus" sign (-) */
+  content: "\25B2"; /* Unicode character for arrow up */
 }
 
-/*
 .days{
     cursor: pointer;
     width: 30px;
@@ -354,7 +335,7 @@ width: 100%;
     border-style: none;
     border-radius: 999px;
     user-select: none;   
-}*/
+}
 
 </style>
 </head>
@@ -402,7 +383,7 @@ width: 100%;
                 </div>
         </form>
 
-            <!--  ⌚  NTP SERVER FORM ⌚ -->
+            <!--⌚  NTP SERVER FORM ⌚ -->
             <div class="ntp_form" style="background-color:#1a1a1a; text-align: left; margin-top: 6px;border-style:solid; border-color: #3c3e3f;border-radius: 12px; border-width: 1px;">     
              <!--   <h3 style="margin: 18px 0px 18px 26px;">Timezone</h3>
                 <label style="margin-left: 26px;" for="tz">Select timezone</label>
@@ -413,11 +394,11 @@ width: 100%;
 
                 <h3 style="margin: 18px 0px 18px 26px;">NTP Server Settings</h3>
                 <div class="ntp_wrapper">
-                    <input id="ntp_id" type="text" placeholder="Enter NTP address" required>
+                    <input required id="ntp_id" type="text" placeholder="Enter NTP address">
                     <input required type="number" placeholder="GMT Offset" id="gmt_offset" name="gmt_offset" min="-12" max="12">
                 </div>
             
-                <button disabled type="submit" id="update_but" value="update_but">
+                <button disabled type="submit" id="update_but">
                     UPDATE TIME
                 </button>
             </div>
@@ -457,35 +438,41 @@ width: 100%;
                     </span>
                 </div>
 
-                <!--
-                <div style="background-color:#1a1a1a;text-align: left; margin-top: 6px;border-style:solid; border-color: #3c3e3f;border-radius: 12px; border-width: 1px;">     
-                    <button type="button" id="alarm_co" class="collapsible" style="padding:18px 10px 18px 26px;">Alarm</button>
+                <div style="background-color:#1a1a1a;text-align: left;  margin-top: 6px;border-style:solid; border-color: #3c3e3f;border-radius: 12px; border-width: 1px;">     
+                        <button id="alarm_collap" type="button" class="collapsible" style="width: 100%; padding:18px 10px 18px 26px;">Alarm</button>
+
                     <div class="content">
-                        <input id="alarm_time" required type="time" style="font-size:17px;cursor:pointer; padding:0px 5px 0px 5px; color:#bec1c4;background-color: #444444;border-style: none; border-radius:8px; height: 40px; margin:2px 0px 20px 19px; width: 265px;">
-                        <p style="font-size: 17px; margin:0px 0px 18px 26px;">Days</p>
-                        <span style="width: 280px; margin: 0px 19px 18px 21px; user-select: none;">
-                            <button id="mon" value="0" class="days" style="margin: 0px 6px 18px 0px;">M</button>
-                            <button id="tue" value="0" class="days" style="margin: 0px 6px 18px 0px;">T</button>
-                            <button id="wed" value="0" class="days" style="margin: 0px 6px 18px 0px;">W</button>
-                            <button id="thu" value="0" class="days" style="margin: 0px 6px 18px 0px;">T</button>
-                            <button id="fri" value="0" class="days" style="margin: 0px 6px 18px 0px;">W</button>
-                            <button id="sat" value="0" class="days" style="margin: 0px 6px 18px 0px;">S</button>
-                            <button id="sun" value="0" class="days" style="margin: 0px 0px 18px 0px;">S</button>
-                        </span>
+                    
+                    <span style="display: flex; align-items: center; justify-content: flex-start; margin:0px 0px 0px 0px;">
+                        <div style="width: 131px; margin:0px 0px 20px 19px;">
+                            <p style="font-size: 17px; margin:0px 0px 0px 7px;">Time</p>  
+                            <input type="time" id="alarm_time" required style=" height: 40px;  width: 125px; font-size:17px; cursor:pointer; padding:0px 5px 0px 5px; color:#bec1c4;background-color: #444444;border-style: none; border-radius:8px;">
+                        </div>
 
-                        <span style="display: flex; align-items: center; justify-content: space-between;">
-                            <p style="font-size: 17px; margin:0px 0px 18px 26px;">Snooze</p> 
-                            <input type="number" pattern="\" id="snooze" name="snoo" style="margin:0px 19px 18px 0px; padding-left: 2px; color: #bec1c4;font-size: 15px; background-color: #444444;  height: 40px; width: 100px; border-radius: 6px; border-color:transparent;border-style:none;">
-                          
-                            
-                            <select id="snooze" name="snoo" style="margin:0px 19px 18px 0px; padding-left: 2px; color: #bec1c4;font-size: 15px; background-color: #444444;  height: 40px; width: 100px; border-radius: 6px; border-color:transparent;border-style:none;">
-                                 <option value="0min">Off</option>
-                                 <option value="5min">5 minutes</option>
-                                 <option value="10min">10 minutes</option>
-                                 <option value="15min">15 minutes</option>
+                        <div style="width: 131px; margin:0px 0px 20px 0px;">
+                            <p style="font-size: 17px; margin:0px 0px 0px 21px;">Snooze</p> 
+                            <select id="snooze" name="snoo" style="margin: 0px 19px 0px 14px; width: 130px;  color: #bec1c4;font-size: 15px; background-color: #444444;  height: 40px; border-radius: 8px; border-color:transparent;border-style:none;">
+                                <option id="0" value="0">Off</option>
+                                <option id="5" value="5">5 minutes</option>
+                                <option id="10" value="10">10 minutes</option>
+                                <option id="15" value="15">15 minutes</option>
+                                <option id="20" value="20">20 minutes</option>
                             </select>
+                        </div>
+                    </span>
+                       
+                        <p style="font-size: 17px; margin:0px 0px 18px 26px;">Days</p>
+                        <span style="width: 275px;display: flex; justify-content: space-between; margin: 0px 19px 18px 19px; user-select: none;">
+                            <button id="mon" value="0" class="days" style="margin: 0px 0px 18px;">M</button>
+                            <button id="tue" value="0" class="days" style="margin: 0px 0px 18px;">T</button>
+                            <button id="wed" value="0" class="days" style="margin: 0px 0px 18px;">W</button>
+                            <button id="thu" value="0" class="days" style="margin: 0px 0px 18px;">T</button>
+                            <button id="fri" value="0" class="days" style="margin: 0px 0px 18px;">F</button>
+                            <button id="sat" value="0" class="days" style="margin: 0px 0px 18px;">S</button>
+                            <button id="sun" value="0" class="days" style="margin: 0px 0px 18px;">S</button>
                         </span>
 
+                        <!--
                         <span style="display: flex; align-items: center; justify-content: space-between;">
                             <p style="font-size: 17px; margin:0px 0px 18px 26px;">Ringtone</p>
                             <select disabled id="ringtones" name="ring" style="margin:0px 19px 18px 0px; padding-left: 2px; color: #bec1c4;font-size: 15px; background-color: #444444;  height: 40px; width: 150px; border-radius: 6px; border-color:transparent;border-style:none;">
@@ -494,18 +481,16 @@ width: 100%;
                                  <option value="r3">The Godfather</option>
                                  <option value="r4">???</option>
                             </select>
-                        </span>
-                        
-                        <div class="two_buttons">
+                        </span> -->            
+                        <div class="two_buttons" style="margin: 20px 0px">
                         <button type="submit" id="deletealarm_id" value="0">DELETE</button>
                         <button type="submit" id="setalarm_id" value="1" style="border-color: #AF63E4; color: #AF63E4; background-color: #ae63e427;">SET ALARM</button>
                         </div>
                     </div>
-                </div>-->
-                
+                </div>
                 <!--
                 <div style="background-color:#1a1a1a;text-align: left; margin-top: 6px;border-style:solid; border-color: #3c3e3f;border-radius: 12px; border-width: 1px;">     
-                    <button type="button" id="timer_coll" class="collapsible" style="padding:18px 10px 18px 26px;">Timer</button>
+                    <button type="button" class="collapsible" style="width: 100%; padding:18px 10px 18px 26px;">Timer</button>
                     <div class="content">
                         <label style="margin-left: 26px;" for="mm">Minutes</label>
                         <label style="margin-left:88px;" for="ss">Seconds</label>
@@ -525,6 +510,7 @@ width: 100%;
                     <button type="button" class="collapsible" style="padding:18px 10px 18px 26px; width: 100%;">Other Settings</button>
                     <div class="content">
                         <!--<h3 style="margin:18px 10px 18px 26px;">Other Settings</h3>-->
+                        <p id="tip2" style="font-size:14px; color:#6e9cd1; margin: 0px;"></p>
                         <p style="font-size: 16px; margin:0px 0px 4px 26px;">Configuration data</p>
                         <div class="two_buttons">
                             <button type="submit" id="deleteconf_id" value="0">DELETE</button>
@@ -533,23 +519,19 @@ width: 100%;
                     </div>
                 </div>
 
-                <div class="othersettings_form" style="background-color:#1a1a1a;text-align: left; margin-top: 6px;border-style:solid; border-color: #3c3e3f;border-radius: 12px; border-width: 1px;">     
-                    <label style="display: flex; align-items: center; ">
-                            <h3 style="font-size:17px; margin:10px 0px 10px 26px;">Uptime:</h3>
-                            <p id="upt_dd" style="margin:10px 0px 10px 6px;">0</p> 
-                            <p style="margin:10px 0px 10px 6px;">days,</p>
-                            <p id="upt_hh" style="margin:10px 0px 10px 6px;">0</p> 
-                            <p style="margin:10px 0px 10px 6px;">hrs,</p>
-                            <p id="upt_mm" style="margin:10px 0px 10px 6px;">0</p> 
-                            <p style="margin:10px 0px 10px 6px;">min</p>
+                <div class="othersettings_form" style="background-color:#1a1a1a;text-align: left; margin-top: 6px;border-style:solid; border-color: #3c3e3f;border-radius: 999px; border-width: 1px;">     
+                    <label style="display: flex; align-items: center ">
+                            <h3 style="font-size:17px; margin:6px 0px 8px 26px;  ">Uptime:</h3>
+                            <p id="upt_dd" style="margin:0px 0px 0px 6px;">0</p> 
+                            <p style="margin:0px 0px 0px 6px;">days,</p>
+                            <p id="upt_hh" style="margin:0px 0px 0px 6px;">0</p> 
+                            <p style="margin:0px 0px 0px 6px;">hrs,</p>
+                            <p id="upt_mm" style="margin:0px 0px 0px 6px;">0</p> 
+                            <p style="margin:0px 0px 0px 6px;">min</p>
                     </label>
-                    <!--<label style="display: flex; align-items: center; ">
-                    <p style="margin:0px 0px 10px 26px;">Active since: </p>
-                    <p id="started" style="margin:0px 0px 10px 6px;">?</p> 
-                    </label>-->
                 </div>
-          
-            <p style="font-weight:450 ; background: linear-gradient(45deg,#a270ff,#ff0f3b);background-clip: text; margin: 4px 12px 0px 12px; ; color: transparent;">ESPclock v2.2 • A project by <strong>telepath</strong></p>
+            <p style="font-weight:450 ; background: linear-gradient(45deg,#a270ff,#ff0f3b);background-clip: text; margin: 4px 12px 0px 12px; ; color: transparent;">
+            ESPclock v2.3 • A project by <strong>telepath</strong></p>
     </div>
                
 <svg style="display: none;">
@@ -578,7 +560,7 @@ width: 100%;
 
 <script>
     let network_list;
-    
+
     function networkFetch(json_path_or_route){
         
             fetch(json_path_or_route)
@@ -645,8 +627,7 @@ width: 100%;
             button_id.style.borderColor = bordercolor;
         }
     }
-
-        
+  
     let dcounter= document.getElementById("upt_dd");
     let hcounter= document.getElementById("upt_hh");
     let mcounter= document.getElementById("upt_mm");
@@ -671,7 +652,7 @@ width: 100%;
                     }
                     else if(rem_d < 3600000){   //if millis are not enough to make an hour, then calculates minutes
 
-                        hcounter.innerText = ((17*ms_over)%24) + Math.trunc((5*ms_over)/60);    //🔴Looks like it works good
+                        hcounter.innerText = ((17*ms_over)%24) + Math.trunc((5*ms_over)/60);
                         mcounter.innerText= ((5*ms_over)%60) + Math.trunc(rem_d/60000);
                         //totmin= rem_d/60000;
                     }
@@ -687,7 +668,7 @@ width: 100%;
                     }
                 }
 
-                //1 or 0 min passed
+                //at least 1 min has passed
                 else if(millis>=60000 && millis<3600000 || millis< 60000){   
                     dcounter.innerText = (49*ms_over) + Math.trunc((17*ms_over)/24);
                     hcounter.innerText = ((17*ms_over)%24) + Math.trunc((5*ms_over)/60);
@@ -718,8 +699,7 @@ width: 100%;
             br_tag.innerText = data.bright; //display brightness value
             slider.value = data.bright;     //update slider with current brightness
                                      
-            if(data.conn === true){
-
+            if(data.conn === true){ //wifi data
                 disable_button(connect_but, "#52885d");
                 connect_but.innerHTML = "CONNECTED";
                 disable_refresh_but();
@@ -744,6 +724,7 @@ width: 100%;
             }
 
             msToUptime(data.millis, data.msovfl);  
+
             if(data.config===0){
                 //console.log("config NOT exists");
                 disable_button(deleteconf, "#1a1a1a","#9c9c9c", "#4E4E56");
@@ -754,12 +735,68 @@ width: 100%;
                 const tip1= document.getElementById("tip1");
                 tip1.innerHTML= "A configuration already exists.<br>To save a new configuration, be sure to delete the last one before.<br>Otherwise, ignore this message."
                 saveconf.innerText = "SAVED";
-
                 disable_button(saveconf, "#1a1a1a","#9c9c9c", "#4E4E56");
             }
         });
         
-        window.setInterval(uptimeUpdate, 300000);
+        fetch("/alcheck")
+            .then(data=> data.json())
+            .then(data=> {
+                
+            if(data.alarm===true){     //creare checkalarm , inoltre /config non salva più alarm
+                disable_button(setalarm, "#1a1a1a","#9c9c9c", "#4E4E56"); 
+                    
+                const alarm_collap= document.getElementById("alarm_collap");
+                alarm_collap.innerText="Alarm • "+ data.timehm;
+
+                const timehm= document.getElementById("alarm_time");
+                timehm.setAttribute("value", data.timehm);
+
+                const selsnooz= document.getElementById(data.snooze);
+                selsnooz.setAttribute("selected", "");
+
+                console.log("DAYS STRING: ", data.week);
+                
+                //in questi posso evitare l'if -->ES:  sun.setAttribute("value", data.week.charAt(0)); !!!!
+                if(data.week.charAt(0)==="1"){
+                    sun.setAttribute("value", "1"); 
+                    sun.style.backgroundColor = "#ae0423";
+                }   
+
+                if(data.week.charAt(1)==="1"){
+                    mon.setAttribute("value", "1"); 
+                    mon.style.backgroundColor = "#ae0423";
+                }
+
+                if(data.week.charAt(2)==="1"){
+                    tue.setAttribute("value", "1"); 
+                    tue.style.backgroundColor = "#ae0423";
+                }
+
+                if(data.week.charAt(3)==="1"){
+                    wed.setAttribute("value", "1"); 
+                    wed.style.backgroundColor = "#ae0423";
+                }
+
+                if(data.week.charAt(4)==="1"){
+                    thu.setAttribute("value", "1"); 
+                    thu.style.backgroundColor = "#ae0423";
+                }
+
+                if(data.week.charAt(5)==="1"){
+                    fri.setAttribute("value", "1"); 
+                    fri.style.backgroundColor = "#ae0423";
+                }
+                
+                if(data.week.charAt(6)==="1"){
+                    sat.setAttribute("value", "1"); 
+                    sat.style.backgroundColor = "#ae0423";
+                }
+            }
+
+})
+
+    window.setInterval(uptimeUpdate, 300000);
     }
 
     //-------------
@@ -841,16 +878,13 @@ width: 100%;
                         //HTTP-GET req
                         fetch("/wifi_status")
                             .then(data => data.json())
-                            .then((data) => { 
-                                
-                                console.log("data.stat:", data.stat);
+                            .then((data) => {                                 
+                                //console.log("data.stat:", data.stat);
 
                                 if(data.stat==="ok" ){
                                     //console.log("timer_deleted!");
                                     clearInterval(interval_obj);
-
                                     connected = true;
-                                    //console.log("CONNECTED! - should SHOW POPUP");
 
                                     clearInterval(asciivar);
                                     connect_but.innerHTML = "CONNECTED";
@@ -936,7 +970,7 @@ width: 100%;
             }
 
 
-            update_but.onclick = function(){
+    update_but.onclick = function(){
 
                 const ntp_input = document.getElementById("ntp_id");
                 let ntp_by_user = ntp_input.value;
@@ -949,7 +983,6 @@ width: 100%;
 
                 else{
                 //console.log("NTP addr: ", ntp_by_user, "Offset:", offset_by_user);
-
                     fetch("/updatetime", {
                         method: "POST",
                         headers: {
@@ -960,7 +993,7 @@ width: 100%;
                         body: JSON.stringify({"ntp_addr": ntp_by_user , "offset": offset_by_user })
                     })
                 }
-            }
+    }
 
             //onChange() event is used for SLIDER
             const slider = document.getElementById("brightness");
@@ -1058,15 +1091,15 @@ for (i = 0; i < coll.length; i++) {
   });
 }
 
-//--------------------------------------Alarm 
-/*
-let mon = document.getElementById("mon");
-let tue = document.getElementById("tue");
-let wed = document.getElementById("wed");
-let thu = document.getElementById("thu");
-let fri = document.getElementById("fri");
-let sat = document.getElementById("sat");
-let sun = document.getElementById("sun");
+//--------------------------------------Alarm days
+ let mon = document.getElementById("mon");
+ let tue = document.getElementById("tue");
+ let wed = document.getElementById("wed");
+ let thu = document.getElementById("thu");
+ let fri = document.getElementById("fri");
+ let sat = document.getElementById("sat");
+ let sun = document.getElementById("sun");
+
 
 function days_handler(){
     if(this.value ==="0" ){
@@ -1079,6 +1112,7 @@ function days_handler(){
     }
 }
 
+
 mon.addEventListener("click", days_handler);
 tue.addEventListener("click", days_handler);
 wed.addEventListener("click", days_handler);
@@ -1087,26 +1121,21 @@ fri.addEventListener("click", days_handler);
 sat.addEventListener("click", days_handler);
 sun.addEventListener("click", days_handler);
 
-const al_time = document.getElementById("alarm_time");
+const timeControl = document.getElementById("alarm_time");
 const snooze = document.getElementById("snooze");
+//let snooze_value = snooze.value;
 //const ringtone = document.getElementById("");
 
 const setalarm = document.getElementById("setalarm_id");
 const deletealarm= document.getElementById("deletealarm_id");
 
+//enables/disables alarm buttons + makes POST req
 function edit_alarm(){
-
-    fetch("/alarm", {     dont delete!!
-                    method: "POST",
-                    headers: {
-                        'Content-Type': "application/json"
-                    },            
-       body: JSON.stringify({"set": ((this.value == 1) ? true : false), "hh": ore, "mm":minuti, "dd": giorni, "snz":  snooze}) //sends the value of the button that calls the function 
-    })
-
-                    
-    if(this.value == 0){
+    
+    if(this.value == 0){ //user deletes alarm
         disable_button(deletealarm, "#1a1a1a","#9c9c9c", "#4E4E56");
+        const alarm_collap= document.getElementById("alarm_collap");
+        alarm_collap.innerHTML="Alarm";
 
         fetch("/alarm", {
             method: "POST",
@@ -1120,28 +1149,33 @@ function edit_alarm(){
         setalarm.innerText = "SET ALARM";            
     }
 
-    //if user saves config, deleteconf button is enabled
-    else{   
+    else{   //user SETS alarm
+
+        const alarm_collap= document.getElementById("alarm_collap");
+        alarm_collap.innerHTML="Alarm • "+ timeControl.value;
+
         disable_button(setalarm, "#1a1a1a","#9c9c9c", "#4E4E56"); 
         setalarm.innerText = "ALARM SET"; 
         enable_button(deletealarm, "#740c0c45", "#BA1E16", "#BA1E16"); 
-        
-        fetch("/alarm", {
+        //console.log(sun.value, mon.value, tue.value, wed.value, thu.value, fri.value, sat.value );
+
+        fetch("/alarm", {     
             method: "POST",
             headers: {
-                'Content-Type': "application/json"      //brocco
-            },            //snooze better as input type number 
-            body: JSON.stringify({"set": true, "time": al_time.value , "dd": giorni, "snz":  snooze.value}) //sends the value of the button that calls the function 
-        })
-
-        
-    } 
-        
+            'Content-Type': "application/json"
+            },            
+            body: JSON.stringify({"set": ((this.value == 1) ? true : false), "timehm": timeControl.value, "mon": mon.value,
+            "tue": tue.value, "wed": wed.value, "thu": thu.value, "fri":fri.value, "sat": sat.value, "sun": sun.value, "snooze": snooze.value}) //sends the value of the button that calls the function 
+        }
+    )  
+    }   
 }
-setalarm.addEventListener("click", edit_alarm);
-deletealarm.addEventListener("click", edit_alarm);*/
 
-//-----------------------------------------Configuration
+
+setalarm.addEventListener("click", edit_alarm);
+deletealarm.addEventListener("click", edit_alarm);
+
+//-----------------------------------------
             const saveconf = document.getElementById("saveconf_id");
             //deleteconf reference is up
 
@@ -1159,9 +1193,12 @@ deletealarm.addEventListener("click", edit_alarm);*/
                     body: JSON.stringify({"save": ((this.value == 1) ? true : false)}) //sends the value of the button that calls the function 
                 })
 
+                const tip2= document.getElementById("tip2");
                 //if user deleted config, then only saveconf button must be enabled
                 if(this.value == 0){    
-
+                    
+                    tip2.innerText="ESPclock is now disconnected. To connect ESPclock to a new wifi, connect your device to ESPclock AP, then go to http://192.168.4.1 and insert new wifi credentials";
+                    tip2.style.margin = "0px 26px 18px 26px";
                     enable_button(saveconf, "#1440616e", "#51A0DB", "#51A0DB");
                     disable_button(update_but, "#627D9E");
                     saveconf.innerText = "SAVE";
@@ -1174,10 +1211,12 @@ deletealarm.addEventListener("click", edit_alarm);*/
                     document.querySelectorAll("path")[0].style.fill="#dee2e6";
                 }
 
-                else{ //if user saves config, deleteconf button is enabled
+                //if user saves config, deleteconf button is enabled
+                else{   
                     saveconf.innerText = "SAVED"; 
-
                     enable_button(deleteconf, "#740c0c45", "#BA1E16", "#BA1E16");
+                    tip2.innerText="";
+                    tip2.style.margin = "0px";
                 }
             }
            
