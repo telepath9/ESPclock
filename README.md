@@ -45,7 +45,7 @@ It uses a ESP8266 (Wemos D1 mini) or ESP32 (XIAO ESP32 C3)
 </details>
 
 <h2>📱 WEB UI </h2>
-<img src="https://github.com/telepath9/ESPclock/blob/0129184b364e81b9ba27bd0f2a37386c2fa2500b/pics/v2.2.1.jpg" alt="Alt Text" width="100%" height="100%">
+<img src="https://github.com/telepath9/ESPclock/blob/75c0e4a328f5dd66489c7768a3a315b4569b2892/pics/2.3.0.jpg" alt="Alt Text" width="100%" height="100%">
 
 <h2>🤖 CURRENT FEATURES</h2>
 
@@ -59,10 +59,11 @@ It uses a ESP8266 (Wemos D1 mini) or ESP32 (XIAO ESP32 C3)
 - [x] Replace NTPclient.h with time.h library
 - [x] ESPmDNS
 - [x] 12-Hour clock mode
-- [ ] Alarm clock mode with buzzer
+- [x] Alarm clock mode with buzzer
+- [x] Snooze feature for Alarm clock mode
 - [x] Display Uptime in webUI
 - [ ] Timezone Support
-- [ ] Adding 1 or 2 buttons to the case
+- [x] Added 1 button to the case (TTP223 Touch button)
 - [ ] ESPhome or Homeassistant integration
 - [ ] HA support
 - [x] TM1652 0.8" display support	
@@ -80,6 +81,8 @@ It uses a ESP8266 (Wemos D1 mini) or ESP32 (XIAO ESP32 C3)
 <li>M2.5 screws: x10</li>
 <li>M2.5 nuts: x2</li>
 <li>Single row female 5pins header (for common GND): x1</li>
+<li>Passive Buzzer: x1</li>
+<li>(optional) TTP223 Touch button: x1</li>
 </ul></details>
 
 <details>
@@ -95,11 +98,13 @@ It uses a ESP8266 (Wemos D1 mini) or ESP32 (XIAO ESP32 C3)
 <li>M2.5 screws: x6</li>
 <li>M2.5 nuts: x2</li>
 <li>Single row female 5pins header (for common GND): x1</li>
+<li>Passive Buzzer: x1</li>
+<li>(optional) TTP223 Touch button: x1</li>
 </ul>
 </details>
 
 
-<h2>🔌 BOARD WIRING</h2>
+<h2>🔌 BOARD WIRING (buzzer and TTP223 coming soon...)</h2>
 <details> 
 <summary><b>XIAO ESP32 C3 - TM1637</b></summary>
 <img src="https://github.com/telepath9/ESPclock/blob/fa035fd003b75fdb8b4b9cf68d04e8ba993e35fc/pics/xiao-top1.0.jpg" alt="Alt Text" width="100%" height="100%">
