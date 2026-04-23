@@ -45,7 +45,7 @@ It uses a ESP8266 (Wemos D1 mini) or ESP32 (XIAO ESP32 C3)
 </details>
 
 <h2>📱 WEB UI </h2>
-<img src="https://github.com/telepath9/ESPclock/blob/75c0e4a328f5dd66489c7768a3a315b4569b2892/pics/2.3.0.jpg" alt="Alt Text" width="100%" height="100%">
+<img src="https://github.com/telepath9/ESPclock/blob/669b48f9ad6c6df066c71207a9129f1ba0dcdb98/pics/2.3.0.webp" alt="Alt Text" width="100%" height="100%">
 
 <h2>🤖 CURRENT FEATURES</h2>
 
@@ -63,7 +63,7 @@ It uses a ESP8266 (Wemos D1 mini) or ESP32 (XIAO ESP32 C3)
 - [x] Snooze feature for Alarm clock mode
 - [x] Display Uptime in webUI
 - [ ] Timezone Support
-- [x] Added 1 button to the case (TTP223 Touch button)
+- [x] Added TTP223 Touch button
 - [ ] ESPhome or Homeassistant integration
 - [ ] HA support
 - [x] TM1652 0.8" display support	
