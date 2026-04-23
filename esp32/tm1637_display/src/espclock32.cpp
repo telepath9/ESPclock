@@ -18,7 +18,6 @@
 
 //NON-blocking timer function (delay() is EVIL). only accepts milliseconds
 unsigned long myTimer(unsigned long everywhen){ //millis overflow-safe!
-
         static unsigned long t1, diff_time;
         bool ret=0;
         diff_time= millis() - t1;
@@ -341,7 +340,7 @@ unsigned long snoozeTimer;
 
 void alarm_ring(){
   if(tone_var){
-    tone(BUZZER_PIN, 5000, 900);
+    tone(BUZZER_PIN, 2000, 900);
     tone_var=0;
   }
 
@@ -536,21 +535,33 @@ void setup() {
     }
   });
 
+  //"empty input" check: [OK]
   server.on("/updatetime", HTTP_POST, [](AsyncWebServerRequest *request){}, NULL, [](AsyncWebServerRequest *request, uint8_t *data, size_t len, size_t index, size_t total){
 
     JsonDocument ntp_json;
     deserializeJson(ntp_json, data);
+    String ntp_str_test = strdup(ntp_json["ntp_addr"]);//used this cuz ntp_addr is const char* and i don't want to change it to String type
+    ntp_str_test.trim();
 
+    if(ntp_str_test=="" || ntp_json["offset"]==""){  //beware of multiple whitespaces though (e.g. "    ")
+      Serial.println("NTP address or Offset==NULL");
+      request->send(200, "application/json", "{\"ntp\":\"FAIL\"}");
+      return;
+    }
+
+    //POST/GET values are never null. The best they can be is an empty string, which you can convert to null/'NULL'.
+    else{
     ntp_addr = strdup(ntp_json["ntp_addr"]); 
     gmt_offset = (int)atoi(ntp_json["offset"]);
     configTime(gmt_offset*3600, 3600, ntp_addr); 
-    //Serial.println("NTP server: " + String(ntp_addr));
-    //Serial.println("OFFSET: " + String(gmt_offset));
+    Serial.println("NTP server: " + String(ntp_addr));
+    Serial.println("OFFSET: " + String(gmt_offset));
     if(start_NtpClient == false){
       start_NtpClient=true;
     }
     
     request->send(200, "application/json", "{\"ntp\":\"OK\"}");
+    }
   });
 
 
@@ -625,41 +636,50 @@ void setup() {
     alarm_status= doc["set"]; //alarm status ==1 if there's an alarm saved
     
     //user wants to save alarm
-    if(!LittleFS.exists("/alarm.json") && alarm_status==1){    
-
-      timehm= strdup(doc["timehm"]);
-      alarm_hour= (uint8_t)timehm.substring(0, 2).toInt(); //e.g. time is 12:45 --> extracts "12"
-      alarm_min= (uint8_t)timehm.substring(3, 5).toInt(); //--> extracts "45"
+    if(!LittleFS.exists("/alarm.json") && alarm_status==1){  
       
-      days[0]= (uint8_t)doc["sun"];
-      days[1]= (uint8_t)doc["mon"];
-      days[2]= (uint8_t)doc["tue"];
-      days[3]= (uint8_t)doc["wed"];
-      days[4]= (uint8_t)doc["thu"];
-      days[5]= (uint8_t)doc["fri"];
-      days[6]= (uint8_t)doc["sat"];
-      snooze= (uint8_t)doc["snooze"];
-
-      JsonDocument alarmjson; 
-      alarmjson[F("alarm")] = alarm_status;  
-      alarmjson[F("timehm")]= timehm; //sends timehm with the format "hh:mm" 
-      alarmjson[F("alarm_hour")] = alarm_hour; 
-      alarmjson[F("alarm_min")] = alarm_min;
-      alarmjson[F("snooze")] = snooze;
-
-      String wwd= "";
-      for(uint8_t z=0; z<7; z++){
-        wwd+= days[z];
+      if(doc["timehm"]==""){    
+        Serial.println("Alarm Time value is NULL");
+        request->send(200, "application/json", "{\"alarm\":\"FAIL\"}");
+        return;
       }
 
-      alarmjson[F("week")] = wwd;
-      alarmjson.shrinkToFit();
-      File fa = LittleFS.open("/alarm.json", "w+");   //creates alarm.json file
+      else{
 
-      //serializes json and passes it to "fc" var, in order to store it in FS 
-      serializeJsonPretty(alarmjson, fa);
-      fa.close();
-      Serial.println("\nALARM SAVED");
+        timehm= strdup(doc["timehm"]);
+        alarm_hour= (uint8_t)timehm.substring(0, 2).toInt(); //e.g. time is 12:45 --> extracts "12"
+        alarm_min= (uint8_t)timehm.substring(3, 5).toInt(); //--> extracts "45"
+        
+        days[0]= (uint8_t)doc["sun"];
+        days[1]= (uint8_t)doc["mon"];
+        days[2]= (uint8_t)doc["tue"];
+        days[3]= (uint8_t)doc["wed"];
+        days[4]= (uint8_t)doc["thu"];
+        days[5]= (uint8_t)doc["fri"];
+        days[6]= (uint8_t)doc["sat"];
+        snooze= (uint8_t)doc["snooze"];
+
+        JsonDocument alarmjson; 
+        alarmjson[F("alarm")] = alarm_status;  
+        alarmjson[F("timehm")]= timehm; //sends timehm with the format "hh:mm" 
+        alarmjson[F("alarm_hour")] = alarm_hour; 
+        alarmjson[F("alarm_min")] = alarm_min;
+        alarmjson[F("snooze")] = snooze;
+
+        String wwd= "";
+        for(uint8_t z=0; z<7; z++){
+          wwd+= days[z];
+        }
+
+        alarmjson[F("week")] = wwd;
+        alarmjson.shrinkToFit();
+        File fa = LittleFS.open("/alarm.json", "w+");   //creates alarm.json file
+
+        //serializes json and passes it to "fc" var, in order to store it in FS 
+        serializeJsonPretty(alarmjson, fa);
+        fa.close();
+        Serial.println("\nALARM SAVED");
+      }
     }
     
     else if(LittleFS.exists("/alarm.json") && alarm_status==0){

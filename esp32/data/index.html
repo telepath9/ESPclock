@@ -272,7 +272,7 @@ input[type="time"]::-webkit-calendar-picker-indicator {
     width: 174px; /*135px;*/
     height: 40px;
     font-weight: 550;
-    border-radius: 8px;
+    border-radius: 999px;
     margin:0px 0px 0px 6px;
 }
 
@@ -288,7 +288,7 @@ input[type="time"]::-webkit-calendar-picker-indicator {
     width: 95px;/*135px;*/
     height: 40px;
     font-weight: 550;
-    border-radius: 8px;
+    border-radius: 999px;
     margin:0px 0px 0px 19px;
 }
 
@@ -392,10 +392,10 @@ input[type="time"]::-webkit-calendar-picker-indicator {
                                 border-radius: 6px 6px 6px 6px; border-color:transparent;border-style:none; 
                                 "></select>-->
 
-                <h3 style="margin: 18px 0px 18px 26px;">NTP Server Settings</h3>
+                <h3 style="margin: 18px 0px 18px 26px;">NTP Server Settings</h3> 
                 <div class="ntp_wrapper">
                     <input required id="ntp_id" type="text" placeholder="Enter NTP address">
-                    <input required type="number" placeholder="GMT Offset" id="gmt_offset" name="gmt_offset" min="-12" max="12">
+                    <input required type="number" placeholder="GMT Offset" id="gmt_offset"  name="gmt_offset" min="-12" max="12">
                 </div>
             
                 <button disabled type="submit" id="update_but">
@@ -446,7 +446,7 @@ input[type="time"]::-webkit-calendar-picker-indicator {
                     <span style="display: flex; align-items: center; justify-content: flex-start; margin:0px 0px 0px 0px;">
                         <div style="width: 131px; margin:0px 0px 20px 19px;">
                             <p style="font-size: 17px; margin:0px 0px 0px 7px;">Time</p>  
-                            <input type="time" id="alarm_time" required style=" height: 40px;  width: 125px; font-size:17px; cursor:pointer; padding:0px 5px 0px 5px; color:#bec1c4;background-color: #444444;border-style: none; border-radius:8px;">
+                            <input type="time" id="alarm_time" value="08:00" required style=" height: 40px;  width: 125px; font-size:17px; cursor:pointer; padding:0px 5px 0px 5px; color:#bec1c4;background-color: #444444;border-style: none; border-radius:8px;">
                         </div>
 
                         <div style="width: 131px; margin:0px 0px 20px 0px;">
@@ -521,7 +521,7 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 
                 <div class="othersettings_form" style="background-color:#1a1a1a;text-align: left; margin-top: 6px;border-style:solid; border-color: #3c3e3f;border-radius: 999px; border-width: 1px;">     
                     <label style="display: flex; align-items: center ">
-                            <h3 style="font-size:17px; margin:6px 0px 8px 26px;  ">Uptime:</h3>
+                            <h3 style="font-size:17px; margin:8px 0px 8px 26px;  ">Uptime:</h3>
                             <p id="upt_dd" style="margin:0px 0px 0px 6px;">0</p> 
                             <p style="margin:0px 0px 0px 6px;">days,</p>
                             <p id="upt_hh" style="margin:0px 0px 0px 6px;">0</p> 
@@ -531,7 +531,7 @@ input[type="time"]::-webkit-calendar-picker-indicator {
                     </label>
                 </div>
             <p style="font-weight:450 ; background: linear-gradient(45deg,#a270ff,#ff0f3b);background-clip: text; margin: 4px 12px 0px 12px; ; color: transparent;">
-            ESPclock v2.3 • A project by <strong>telepath</strong></p>
+            ESPclock v2.3.0 • A project by <strong>telepath</strong></p>
     </div>
                
 <svg style="display: none;">
@@ -745,7 +745,8 @@ input[type="time"]::-webkit-calendar-picker-indicator {
                 
             if(data.alarm===true){     //creare checkalarm , inoltre /config non salva più alarm
                 disable_button(setalarm, "#1a1a1a","#9c9c9c", "#4E4E56"); 
-                    
+                setalarm.innerText = "ALARM SET";   
+                 
                 const alarm_collap= document.getElementById("alarm_collap");
                 alarm_collap.innerText="Alarm • "+ data.timehm;
 
@@ -971,28 +972,37 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 
 
     update_but.onclick = function(){
-
+    
                 const ntp_input = document.getElementById("ntp_id");
                 let ntp_by_user = ntp_input.value;
 
                 let offset_by_user = document.getElementById("gmt_offset").value;
-                
-                if(offset_by_user > 12 || offset_by_user < -12){
-                     alert("🔴GMT/UTC Offset must be a number from -12 to +12!!");
+
+                if(ntp_by_user==="" || offset_by_user===""){
+                    alert("🔴Please fill NTP address/GMT offset fields!");
                 }
 
                 else{
-                //console.log("NTP addr: ", ntp_by_user, "Offset:", offset_by_user);
-                    fetch("/updatetime", {
-                        method: "POST",
-                        headers: {
-                            'Content-Type': "application/json"
-                        },
+                    if(offset_by_user > 12 || offset_by_user < -12){
+                        alert("🔴GMT/UTC Offset must be a number from -12 to +12!!");
+                    }
 
-                        //puts ntp data in json format, inside http POST req body
-                        body: JSON.stringify({"ntp_addr": ntp_by_user , "offset": offset_by_user })
-                    })
-                }
+                    else{
+
+                
+                    
+                        fetch("/updatetime", {
+                            method: "POST",
+                            headers: {
+                                'Content-Type': "application/json"
+                            },
+
+                            //puts ntp data in json format, inside http POST req body
+                            body: JSON.stringify({"ntp_addr": ntp_by_user , "offset": offset_by_user })
+                        })
+                    }
+
+            }
     }
 
             //onChange() event is used for SLIDER
@@ -1102,6 +1112,7 @@ for (i = 0; i < coll.length; i++) {
 
 
 function days_handler(){
+    
     if(this.value ==="0" ){
         this.style.backgroundColor = "#ae0423";
         this.setAttribute("value", "1"); 
@@ -1131,8 +1142,32 @@ const deletealarm= document.getElementById("deletealarm_id");
 
 //enables/disables alarm buttons + makes POST req
 function edit_alarm(){
-    
-    if(this.value == 0){ //user deletes alarm
+
+    if(this.value==1){//if user SETS alarm
+        if(sun.value==="1" || mon.value==="1" || tue.value==="1" || wed.value==="1" || thu.value==="1" || fri.value==="1" || sat.value==="1" ){
+            const alarm_collap= document.getElementById("alarm_collap");
+            alarm_collap.innerHTML="Alarm • "+ timeControl.value;
+
+            disable_button(setalarm, "#1a1a1a","#9c9c9c", "#4E4E56"); 
+            setalarm.innerText = "ALARM SET"; 
+            enable_button(deletealarm, "#740c0c45", "#BA1E16", "#BA1E16"); 
+            //console.log(sun.value, mon.value, tue.value, wed.value, thu.value, fri.value, sat.value );
+
+            fetch("/alarm", {     
+                method: "POST",
+                headers: {
+                'Content-Type': "application/json"
+                },            
+                body: JSON.stringify({"set": ((this.value == 1) ? true : false), "timehm": timeControl.value, "mon": mon.value,
+                "tue": tue.value, "wed": wed.value, "thu": thu.value, "fri":fri.value, "sat": sat.value, "sun": sun.value, "snooze": snooze.value}) //sends the value of the button that calls the function 
+            })  
+        }
+        else{
+            alert("🔴Please select at least 1 day!");
+        }        
+    }
+
+    else{ //user deletes alarm
         disable_button(deletealarm, "#1a1a1a","#9c9c9c", "#4E4E56");
         const alarm_collap= document.getElementById("alarm_collap");
         alarm_collap.innerHTML="Alarm";
@@ -1148,27 +1183,6 @@ function edit_alarm(){
         enable_button(setalarm, "#ae63e427", "#AF63E4", "#AF63E4");
         setalarm.innerText = "SET ALARM";            
     }
-
-    else{   //user SETS alarm
-
-        const alarm_collap= document.getElementById("alarm_collap");
-        alarm_collap.innerHTML="Alarm • "+ timeControl.value;
-
-        disable_button(setalarm, "#1a1a1a","#9c9c9c", "#4E4E56"); 
-        setalarm.innerText = "ALARM SET"; 
-        enable_button(deletealarm, "#740c0c45", "#BA1E16", "#BA1E16"); 
-        //console.log(sun.value, mon.value, tue.value, wed.value, thu.value, fri.value, sat.value );
-
-        fetch("/alarm", {     
-            method: "POST",
-            headers: {
-            'Content-Type': "application/json"
-            },            
-            body: JSON.stringify({"set": ((this.value == 1) ? true : false), "timehm": timeControl.value, "mon": mon.value,
-            "tue": tue.value, "wed": wed.value, "thu": thu.value, "fri":fri.value, "sat": sat.value, "sun": sun.value, "snooze": snooze.value}) //sends the value of the button that calls the function 
-        }
-    )  
-    }   
 }
 
 
