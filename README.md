@@ -25,7 +25,7 @@ It uses a ESP8266 (Wemos D1 mini) or ESP32 (XIAO ESP32 C3)
 
 2. Install PIOarduino extension on VSCode/VSCodium;
 
-3. Download the latest .zip file that you can find in the "Release" section, extract it, then open in VSCode/VSCodium the ESPclock project directory;
+3. Download the latest .zip file that you can find in the <a href="https://github.com/telepath9/ESPclock/releases">Release</a> section, extract it, then open in VSCode/VSCodium the ESPclock project directory;
 
 4. Select the PIOarduino extension in VSCode/VSCodium, then you have to store the html page into the esp8266 flash memory in two steps:
 	1. Platform -> Build filesystem image
