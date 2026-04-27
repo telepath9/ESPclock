@@ -11,6 +11,7 @@
 #include <TM1652.h>
 #include <TM16xxDisplay.h>
 
+
 //JSON optimizations
 #define ARDUINOJSON_SLOT_ID_SIZE 1
 #define ARDUINOJSON_STRING_LENGTH_SIZE 1
@@ -46,9 +47,10 @@ uint8_t attempts = 0; //connection attempts --> when it's set to 0 again, it mea
 
 AsyncWebServer server(80);
 
-//TM1652 DISPLAY SETUP
+#define BUZZER_PIN 5
 
-TM1652 module(6, 4);                 //module(GPIOpin, n_ofdigits); --> creates the low-level driver object for the TM1652 chip
+//TM1652 DISPLAY SETUP
+TM1652 module(10, 4);                 //module(GPIOpin, n_ofdigits); --> creates the low-level driver object for the TM1652 chip
 TM16xxDisplay display(&module, 4);   //TM16xxDisplay display(&module, n_ofdigits);
 
 // 7-segment character map (A-F, 0-9, space, dash)
@@ -82,6 +84,11 @@ uint8_t brightness=7;
 uint8_t ms_ovfl=0;
 
 uint8_t px=4;  
+bool alarm_status=false; 
+String timehm = "";
+bool alarm_stop=0;  //when 0, alarm is active.
+uint8_t alarm_hour;
+uint8_t alarm_min;
 bool forw = true;               //used by displayAnim()
 
 void displayAnim(void){
@@ -90,6 +97,7 @@ void displayAnim(void){
           display.clear();
           module.setSegments(0x40, px);
           --px;          
+          
           if(px==0){
             forw=false;
           }
@@ -99,7 +107,7 @@ void displayAnim(void){
           display.clear();
           module.setSegments(0x40, px);
           ++px;          
-
+          
           if(px==3){
             forw= true;
           }
@@ -110,15 +118,13 @@ void displayAnim(void){
 
 //NTP SETUP
 struct tm timeinfo;
-/*
-void printLocalTime(){
-    struct tm timeinfo;
 
+/*void printLocalTime(){
+    struct tm timeinfo;
     if(!getLocalTime(&timeinfo)){
       Serial.println("Failed to obtain time 1");
       return;
     }
-
     Serial.println(&timeinfo, "%H:%M:%S zone %Z %z ");
     //Serial.println(timeinfo.tm_hour); //access to single time vars
 }*/
@@ -130,31 +136,10 @@ bool start_NtpClient = false;
 uint8_t hh, mm; //hour and minutes
 
 //all entries are initialized to 0
-bool days[7] = {0};   //in this case mon=days[0], tue=days[1], wed=days[2], thu=days[3], fri=days[4], sat=days[5], sun=days[6]
-
-/*should i use 
-  switch(currentday)
-    case ???*/
-
-/*
-arrays are guaranteed to be contiguous.(there's no gap between elements) 
-while structs are not, so it may be that a struct wastes more memory.
-THEN, ARRAY WINS.
-oppure creare un struttura days con dentro i giorni (less confusing to handle than array)
-struct week{
-  bool mon=0;
-  bool tue=0;
-  bool wed=0;
-  bool thu=0;
-  bool fri=0;
-  bool sat=0;
-  bool sun=0;
-}
-*/
-
+bool days[7] = {0};   //in this case sun=days[0], mon=days[1], tue=days[2], ...
+bool tone_var=0;
 uint8_t snooze;
 //uint8_t ringtone;
-
 
 void wifiScan(){
     //---------------------------------------------x
@@ -163,12 +148,11 @@ void wifiScan(){
 
     byte n = WiFi.scanNetworks();
     Serial.print(n);
-    Serial.println(" network(s) found. Displaying the first 5");
+    Serial.println(" networks found. Displaying the first 5");
 
     //---------------------------------------------x
     //SSIDs found are stored in json
-    //arduinoJson7 doesn't use static/dynamicJsonDocument anymore, but it only uses JsonDocument
-    //---------------------------------------------x    
+    //arduinoJson7 doesn't use static/dynamicJsonDocument anymore, but it uses only JsonDocument
       
     //If json doesn't exists yet, it creates it
     if(!LittleFS.exists("/network_list.json")){
@@ -204,7 +188,6 @@ void wifiScan(){
 
       //---------------------------------------------x
       //After creating JSON file (jsondocument), it must be stored in FS
-      //---------------------------------------------x
       File fx = LittleFS.open("/network_list.json", "w");
 
       //serializes json and passes it to "fx" var
@@ -216,7 +199,7 @@ void wifiScan(){
     //---------EXISTING JSON---------------------
     //2. IF JSON ALREADY EXISTS: access to json, reset it, then add new networks to it
     else{
-      //Serial.println("Network list already exists! Updating it..."); 🟠
+      //Serial.println("Network list already exists! Updating it..."); 
       JsonDocument net_listUp;
      
       //1. fetch and open json from FS, then deserializes it
@@ -262,7 +245,7 @@ void wifiScan(){
 void checkConfig(void){
 
     if(LittleFS.exists("/config.json")){
-      Serial.println(F("config esists, trying to restore it"));
+      Serial.println("Restoring data");
       creds_available=true;
 
       File fld = LittleFS.open("/config.json", "r");
@@ -272,7 +255,7 @@ void checkConfig(void){
 
       if (error) {
         fld.close();
-        Serial.print(F("deserializeJson() failed: "));
+        Serial.print("deserializeJson() failed: ");
         Serial.println(error.f_str());
         return;
       }
@@ -290,22 +273,19 @@ void checkConfig(void){
           display.setDisplayToString("trY", 0, 0);
 
         if(myTimer(3000)){  
-          
           ++attempts;
           module.setDisplayDigit(attempts,3,false);  // show number 7 at position 1 with dot: 7.
-         
         }
 
         else if(attempts==4){
           attempts=0;
           creds_available = false;
-          //Serial.println(F("Can't connect. Goto webUI"));
+          fld.close(); 
           break;
         }
       }
 
       if(WiFi.status() == WL_CONNECTED){
-
         attempts=0;
         connected=true;
         Serial.println("WIFI RESTORED");
@@ -313,9 +293,9 @@ void checkConfig(void){
         start_NtpClient=true;
         ntp_addr= strdup(load_cf["ntp_ad"]); 
         gmt_offset = load_cf["offset"]; 
+        configTime(gmt_offset*3600, 3600, ntp_addr);
         //Serial.println("NTP server: " + String(ntp_addr));
         //Serial.println("OFFSET: " + String(gmt_offset));
-        configTime(gmt_offset*3600, 3600, ntp_addr);
   
         brightness = (uint8_t)load_cf["br"];
         module.setupDisplay(true, brightness, 6);
@@ -329,14 +309,84 @@ void checkConfig(void){
   }
   return;
 }
+void checkAlarm(){
+  if(LittleFS.exists("/alarm.json")){
 
-//this is called when you request resources from esp webserver that don't exists
+    File fla = LittleFS.open("/alarm.json", "r");
+    JsonDocument load_al;
+    DeserializationError error = deserializeJson(load_al, fla);
+
+    if (error) {
+      fla.close();
+      Serial.print(F("deserializeJson() failed: "));
+      Serial.println(error.f_str());
+      return;
+    }
+
+    alarm_status= load_al[F("alarm")];
+
+    //if alarm is set, edit JSON in order to update UI
+    if(alarm_status==true){
+
+      timehm= strdup(load_al[F("timehm")]);
+      Serial.println("timehm > " + timehm);
+
+      alarm_hour= load_al[F("alarm_hour")];
+      alarm_min= load_al[F("alarm_min")];
+      snooze= load_al[F("snooze")];
+
+      String week= strdup(load_al[F("week")]);
+      fla.close();
+   
+      for(uint8_t n=0; n<7; n++){
+        (week.charAt(n)=='1') ? (days[n]= 1) : (days[n] = 0);
+      }
+    }
+  }
+}
+
+bool snoozeOn=0;
+bool snoozeRing=0;
+bool snoozeMsStart=0;
+unsigned long snoozeTimer;
+
+void alarm_ring(){
+  if(tone_var){
+    tone(BUZZER_PIN, 2000, 900);
+    tone_var=0;
+  }
+
+  else{
+    tone(BUZZER_PIN, 0, 500);
+    //noTone(BUZZER_PIN);
+    tone_var=1;
+  }
+}
+
+//TTP223 DEBOUNCE
+unsigned long prevMillis = 0;     // Previous millis
+unsigned long elapsedMillis = 0;      // Elapesed millis since touch
+unsigned long debounceTime = 800;              // Debounce time for the touch sensor
+
+void alarm_off(){
+  elapsedMillis = millis() - prevMillis;
+  if(alarm_stop==0 && elapsedMillis > debounceTime){
+    alarm_stop=1;
+    snoozeOn=0;
+    Serial.println("Alarm OFF");
+  }
+  prevMillis = millis();
+  snoozeMsStart=0;
+}
+
+//this is called when user requests resources from esp webserver that don't exists
 void notFound(AsyncWebServerRequest *request){
     request->send(404, "text/plain", "NOT FOUND");
 }
 
 void initMDNS(){
-   MDNS.end();
+  MDNS.end();
+
   if (MDNS.begin("espclock")) {
     MDNS.addService("http", "tcp", 80);
   } else {
@@ -345,9 +395,11 @@ void initMDNS(){
 }
 
 void setup() {
-  
   Serial.begin(115200);
   module.begin(true, 4, 6);   //4=brightness level
+  pinMode(BUZZER_PIN, OUTPUT); 
+  pinMode(9, INPUT_PULLUP);   //TTP223 Touch button
+  attachInterrupt(digitalPinToInterrupt(9), alarm_off, RISING);
 
   //LittleFS.format();
 
@@ -355,7 +407,7 @@ void setup() {
   if(!LittleFS.begin()){
     display.setDisplayToString("Err", 0, 0);
     module.setDisplayDigit(0,3,false);
-    Serial.println("An Error has occurred while mounting LittleFS");
+    //Serial.println("An Error has occurred while mounting LittleFS");
     delay(10000);
     return;
   }
@@ -364,16 +416,16 @@ void setup() {
   if(!LittleFS.exists("/index.html")){
     display.setDisplayToString("Err", 0, 0);
     module.setDisplayDigit(1,3,false);
-    Serial.println("\nSetup Html page NOT FOUND!");
+    //Serial.println("\nSetup Html page NOT FOUND!");
     delay(10000);
     return;
   }
   
   checkConfig();
+  checkAlarm();   
   
-  //PHASE1 - AP_STA_MODE + WIFI SCAN
+  //PHASE1 - AP_STA_MODE + WIFI SCAN ---------------------------x
   //here scans for networks, and as already said, networks are then stored in json
-
   WiFi.mode(WIFI_AP_STA);   
   WiFi.setAutoReconnect(true);
   initMDNS();
@@ -383,13 +435,8 @@ void setup() {
     wifiScan();
   }
   
-  //---------------------------------------------x
-  //PHASE 2: here user choose its ssid and enters pw
+  //PHASE 2: here user choose its ssid and enters pw ---------------------------x
   WiFi.softAP(esp_ssid, esp_password, false, 2);     //Starting AP on given credential
-
-  //Serial.print("AP IP address: ");  🟠
-  //Serial.println(WiFi.softAPIP());  🟠           //Default AP-IP is 192.168.4.1
-  //Serial.println(esp_ssid);         🟠
 
   //Route for root index.html
   server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){ 
@@ -400,19 +447,18 @@ void setup() {
   //this is triggered when entering to the webUI after the clock is set. It checks the status of all of the UI elements and updates it
   server.on("/uicheck", HTTP_GET, [](AsyncWebServerRequest *request){
        
-    JsonDocument uicheck_json;
+    JsonDocument uc_json;
 
-    uicheck_json["conn"] = connected;
-    uicheck_json["bright"]= brightness; 
-    uicheck_json["br_auto"] = br_auto;
-    uicheck_json["blink"] = blink;
-    uicheck_json["twelve"] = twelve;
-    uicheck_json["config"] = (LittleFS.exists("/config.json")) ? 1 : 0;
-    uicheck_json["millis"] = millis();
-    uicheck_json["msovfl"] = ms_ovfl;
-
+    uc_json["conn"] = connected;
+    uc_json["bright"]= brightness; 
+    uc_json["br_auto"] = br_auto;
+    uc_json["blink"]= blink;
+    uc_json["twelve"]= twelve;
+    uc_json["config"]= (LittleFS.exists("/config.json")) ? 1 : 0;
+    uc_json["millis"]= millis();
+    uc_json["msovfl"]= ms_ovfl;
     String uc_str;
-    serializeJson(uicheck_json, uc_str);
+    serializeJson(uc_json, uc_str);
 
     request->send(200,  "application/json", uc_str);
   });
@@ -478,17 +524,14 @@ void setup() {
           
     if(attempts == 4){
       creds_available = false;
-      //attempts=0;
-      Serial.println(password);
-      Serial.println(F("handler says: 5 attempts->WRONG PASSWORD - RESET attempts to 0"));
+      //Serial.println(password);
+      Serial.println("handler: 5 attempts-WRONG PASSWORD- RESET attempts to 0");
       request->send(200, "application/json", "{\"stat\":\"fail\"}");
     }
 
     else{
       ++attempts;
       if(WiFi.status() == WL_CONNECTED){
-        //attempts=0;
-        Serial.println(password);
         request->send(200, "application/json", "{\"stat\":\"ok\"}");
       }
 
@@ -503,28 +546,36 @@ void setup() {
 
     JsonDocument ntp_json;
     deserializeJson(ntp_json, data);
+    String ntp_str_test = strdup(ntp_json["ntp_addr"]);//used this cuz ntp_addr is const char* and i don't want to change it to String type
+    ntp_str_test.trim();
 
+    if(ntp_str_test=="" || ntp_json["offset"]==""){  //beware of multiple whitespaces though (e.g. "    ")
+      Serial.println("NTP address or Offset==NULL");
+      request->send(200, "application/json", "{\"ntp\":\"FAIL\"}");
+      return;
+    }
+
+    //POST/GET values are never null. The best they can be is an empty string, which you can convert to null/'NULL'.
+    else{
     ntp_addr = strdup(ntp_json["ntp_addr"]); 
     gmt_offset = (int)atoi(ntp_json["offset"]);
     configTime(gmt_offset*3600, 3600, ntp_addr); 
-    
-      Serial.println("NTP server: " + String(ntp_addr));
-        Serial.println("OFFSET: " + String(gmt_offset));
-
+    //Serial.println("NTP server: " + String(ntp_addr));
+    //Serial.println("OFFSET: " + String(gmt_offset));
     if(start_NtpClient == false){
       start_NtpClient=true;
     }
     
     request->send(200, "application/json", "{\"ntp\":\"OK\"}");
+    }
   });
 
   server.on("/slider", HTTP_POST, [](AsyncWebServerRequest *request){}, NULL, [](AsyncWebServerRequest *request, uint8_t *data, size_t len, size_t index, size_t total){
           
-          //optimization: maybe i shouldn't use JSON for this (?)
           JsonDocument bgt_json;
           deserializeJson(bgt_json, data);
 
-          //extract light value
+          //extract brightness value
           brightness =(uint8_t)atoi(bgt_json["bgt"]);
           module.setupDisplay(true, brightness, 6);
           //display.setIntensity(brightness);
@@ -584,10 +635,94 @@ void setup() {
             request->send(200, "application/json", "{\"status\":\"updated\"}");
   });
 
-  /*
   server.on("/alarm", HTTP_POST, [](AsyncWebServerRequest *request){}, NULL, [](AsyncWebServerRequest *request, uint8_t *data, size_t len, size_t index, size_t total){
-  
-  });*/
+    
+    JsonDocument doc;
+    deserializeJson(doc, data);
+    alarm_status= doc["set"]; //alarm status ==1 if there's an alarm saved
+    
+    //user wants to save alarm
+    if(!LittleFS.exists("/alarm.json") && alarm_status==1){      
+      if(doc["timehm"]==""){    
+        Serial.println("Alarm Time value is NULL");
+        request->send(200, "application/json", "{\"alarm\":\"FAIL\"}");
+        return;
+      }
+
+      else{
+
+        timehm= strdup(doc["timehm"]);
+        alarm_hour= (uint8_t)timehm.substring(0, 2).toInt(); //e.g. time is 12:45 --> extracts "12"
+        alarm_min= (uint8_t)timehm.substring(3, 5).toInt(); //--> extracts "45"
+        
+        days[0]= (uint8_t)doc["sun"];
+        days[1]= (uint8_t)doc["mon"];
+        days[2]= (uint8_t)doc["tue"];
+        days[3]= (uint8_t)doc["wed"];
+        days[4]= (uint8_t)doc["thu"];
+        days[5]= (uint8_t)doc["fri"];
+        days[6]= (uint8_t)doc["sat"];
+        snooze= (uint8_t)doc["snooze"];
+
+        JsonDocument alarmjson; 
+        alarmjson[F("alarm")] = alarm_status;  
+        alarmjson[F("timehm")]= timehm; //sends timehm with the format "hh:mm" 
+        alarmjson[F("alarm_hour")] = alarm_hour; 
+        alarmjson[F("alarm_min")] = alarm_min;
+        alarmjson[F("snooze")] = snooze;
+
+        String wwd= "";
+        for(uint8_t z=0; z<7; z++){
+          wwd+= days[z];
+        }
+
+        alarmjson[F("week")] = wwd;
+        alarmjson.shrinkToFit();
+        File fa = LittleFS.open("/alarm.json", "w+");   //creates alarm.json file
+
+        //serializes json and passes it to "fc" var, in order to store it in FS 
+        serializeJsonPretty(alarmjson, fa);
+        fa.close();
+        Serial.println("\nALARM SAVED");
+      }
+    }
+    
+    else if(LittleFS.exists("/alarm.json") && alarm_status==0){
+      LittleFS.remove("/alarm.json");
+      for(uint8_t i=0; i<7; i++){
+        days[i]= 0; 
+      }
+
+      snooze=0;
+      Serial.println("Alarm deleted");
+    }
+
+    request->send(200, "application/json", "{\"alarm\":\"updated\"}");
+  });
+
+  server.on("/alcheck", HTTP_GET, [](AsyncWebServerRequest *request){
+    JsonDocument al_json;   //creates a json to send to client
+
+    al_json["alarm"]= alarm_status;
+    Serial.println(timehm);
+    al_json["timehm"]= timehm;
+    al_json["snooze"]= snooze;
+    String sk="";
+    
+    for(uint8_t j=0; j<7; j++){
+       sk+= String(days[j]);
+    }
+
+    al_json["week"]=sk;
+    Serial.println(timehm);
+    Serial.println("alcheck STRING > " + sk);
+    Serial.println("Snooze > " + String(snooze));
+
+    String al_str;
+    serializeJson(al_json, al_str);
+
+    request->send(200,  "application/json", al_str);
+  });
 
   /*
   server.on("/timer", HTTP_POST, [](AsyncWebServerRequest *request){}, NULL, [](AsyncWebServerRequest *request, uint8_t *data, size_t len, size_t index, size_t total){
@@ -618,20 +753,18 @@ void setup() {
       //serializes json and passes it to "fc" var, in order to store it in FS 
       serializeJsonPretty(config, fc);
       fc.close();
-      Serial.println(F("\nCONFIG SAVED"));
+      Serial.println("\nCONFIG SAVED");
     }
 
                 
     else if(LittleFS.exists("/config.json") && saveconfig==0){     //if user wants to delete config
               
       LittleFS.remove("/config.json");
-     
       WiFi.disconnect();
       connected=false;
       creds_available = false;
       start_NtpClient=false;
       attempts=0;
-      Serial.println(password);
       Serial.println(F("\n*Config.json DELETED*"));
     }
 
@@ -639,27 +772,19 @@ void setup() {
   });
 
   server.on("/uptime", HTTP_GET, [](AsyncWebServerRequest *request) {
-    /*
-    String json= "{";
-    json+= "\"ms\":\"" + String(millis()) + "\",";
-    json += "\"msovfl\":\""+ String(ms_ovfl) +"\"";
-    json += "}";
-    request->send(200, "application/json", json); */
     request->send(200, "application/json", "{\"ms\":\""+ String(millis()) +"\",\"msovfl\":\""+ String(ms_ovfl) + "\"}"); 
   });
 
   server.onNotFound(notFound);
-
-  //start server
   server.begin();
+  //Serial.println("CLOCK SPEED: " + String(getCpuFrequencyMhz()));
 }
 
-char hour[2];
-char minutes[2];
+
 
 void loop() {
-  
-  if(millis() == 4294967295){
+  // Serial.println(esp_clk_get_cpu_freq_mhz());
+  if(millis() == 4294967295UL){
     ms_ovfl++;  //can lead to a bug because uint8_t max value is 255, but it'll reach this value after 50days*256= 35years of activity
   }
 
@@ -682,11 +807,51 @@ void loop() {
 
     if(myTimer(1000)){
         //printLocalTime();
+       if(alarm_status==1){
+
+          //1- alarm rings at the right time
+          if(days[timeinfo.tm_wday]==true && alarm_stop==0){ //wrap this in a function
+
+            //RING at the exact time entered by user
+            if(timeinfo.tm_hour == alarm_hour && timeinfo.tm_min == alarm_min){
+              //Serial.println("alarm_min > " + String(alarm_min));
+              //Serial.println("timeinfo.tm_min > " + String(timeinfo.tm_min));
+
+              alarm_ring();
+
+              if(snooze>0 && snoozeMsStart==0){  //activated Once, to start snoozetimer VAR
+                snoozeMsStart=1; 
+                //Serial.println("FROM alarm time> snoozeOn=1");
+              }
+            }
+          }
+
+          //2- after alarm time passes, enables snoozetimer adn snooze 
+          if(timeinfo.tm_min != alarm_min && alarm_stop==0 && snoozeMsStart==1){
+            snoozeMsStart=0;  // this makes the code access to this "if" once
+            snoozeOn=1; 
+            snoozeTimer= millis();
+          }
+
+          //RESTORES ALARM FOR NEXT DAY
+          else if(timeinfo.tm_min != alarm_min && alarm_stop==1){  //questo ferma il primo allarme ma NON lo snooze (per ora)
+            
+            if(snooze==0){
+              alarm_stop=0;
+            }
+            else if(millis() - snoozeTimer >= (snooze+3)*60*1000UL){  //alarm stop viene restored dopo un certo intervallo di tempo ()SBAGLAITO!!!
+              alarm_stop=0;
+              snoozeRing=0;
+            }
+          }
+        }
+
+        if(snoozeRing==1 && alarm_stop==0){
+          alarm_ring(); 
+        }
 
         if(br_auto==true){
-             
             switch(timeinfo.tm_hour){
-    
               case 0 || 00: 
               brightness=0;
               module.setupDisplay(true, brightness, 6);
@@ -708,7 +873,6 @@ void loop() {
               break;
             }
         }   
-           
         
         if(blink==1){
             if(colon==true){   //colon is ON
@@ -732,11 +896,11 @@ void loop() {
               colon=false;  
           }
 
-          else if(colon==false){  //colon is OFF
+          else if(colon==false){//colon is OFF
 
               if(!twelve){
                 //module.setDisplayToDecNumber((timeinfo.tm_hour*100)+timeinfo.tm_min, 0, false);
-                display.setDisplayToDecNumber((timeinfo.tm_hour*100)+timeinfo.tm_min, 0, false);
+                display.setDisplayToDecNumber((timeinfo.tm_hour*100)+timeinfo.tm_min, 0, true);
               }
 
               //if 12hr mode is active
@@ -755,9 +919,7 @@ void loop() {
           }
         }
         
-        //if blink==0
-        else{
-
+      else{ //when blink==0
           if(!twelve){
             display.setDisplayToDecNumber((timeinfo.tm_hour*100)+timeinfo.tm_min, 0x04, true);
           }
@@ -771,9 +933,20 @@ void loop() {
                 else{
                   display.setDisplayToDecNumber(((timeinfo.tm_hour-12)*100)+timeinfo.tm_min, 0x04, true);
                 }
-              }
+            }
+          }
+        }
+      if(snoozeOn==1 && alarm_stop==0){ 
+    
+        if(snoozeRing==0 && millis() - snoozeTimer >=  snooze*60*1000UL){   //rings for 1 min... 
+          snoozeRing=1; //makes the alarm ring for snooze
         }
         
+        //intervallo di stop    //test
+        if(snoozeRing==1 && millis() - snoozeTimer >= (snooze+1)*60*1000UL){  //...then stops
+          snoozeOn=0;
+          snoozeRing=0;
+        }
     }
   }     
 
@@ -790,7 +963,6 @@ void loop() {
     while(1){
 
       displayAnim();
-            
       //cycles here until it's connected to wifi
       if (WiFi.status() != WL_CONNECTED && creds_available==true){
           delay(200);
@@ -807,7 +979,7 @@ void loop() {
       else if(attempts == 4){
         attempts=0;  //reset "attempts", so it can try a new connection
         creds_available=false;
-        Serial.println("RESET Attempts from LOOP");
+        Serial.println("LOOP:attempts reset");
         Serial.println(password);
         break; //exit from while(1)
       }
