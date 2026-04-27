@@ -106,12 +106,16 @@ It uses a ESP8266 (Wemos D1 mini) or ESP32 (XIAO ESP32 C3)
 
 <h2>🔌 BOARD WIRING (buzzer and TTP223 coming soon...)</h2>
 <details> 
-<summary><b>XIAO ESP32 C3 - TM1637</b></summary>
+<summary><b>XIAO ESP32 C3 - TM1652 0.8" Display</b></summary>
+<img src="https://github.com/telepath9/ESPclock/blob/cab8b1194b71c58ab70c8662392b62cac567df08/pics/espclock_xiao%2Btm1652%2Bbuzzer%2Bttp223.webp" alt="Alt Text" width="100%" height="100%">
+</details>
+<details> 
+<summary><b>XIAO ESP32 C3 - TM1637 0.56" Display</b></summary>
 <img src="https://github.com/telepath9/ESPclock/blob/fa035fd003b75fdb8b4b9cf68d04e8ba993e35fc/pics/xiao-top1.0.jpg" alt="Alt Text" width="100%" height="100%">
 <img src="https://github.com/telepath9/ESPclock/blob/ff830831e95c264ad7939fba758ce32de801831d/pics/xiao_top3_w.jpg" alt="Alt Text" width="100%" height="100%">
 </details>
 <details> 
-<summary><b>ESP8266 (Wemos D1 Mini 3.0.0) - TM1637</b></summary> 
+<summary><b>ESP8266 (Wemos D1 Mini 3.0.0) - TM1637 0.56" Display</b></summary> 
 <img src="https://github.com/telepath9/ESPclock/blob/0defb72bb5107271487eb4c452812158a96b2c5e/pics/top_pcb.jpg" alt="Alt Text" width="100%" height="100%">
 <img src="https://github.com/telepath9/ESPclock/blob/0defb72bb5107271487eb4c452812158a96b2c5e/pics/bottom.jpg" alt="Alt Text" width="100%" height="100%">
 <img src="https://github.com/telepath9/ESPclock/blob/ebe4f234343fb306297fa49ef42fd830830b3c9a/pics/esp8266_pinout.jpg" alt="Alt Text" width="100%" height="100%">
@@ -133,6 +137,7 @@ If you liked the project and want to financially contribute, you can buy me a co
 [![Paypal Badge](https://img.shields.io/badge/Donate-PayPal-blue?logo=paypal)](https://www.paypal.com/donate/?hosted_button_id=NBJ3VHSWGQK7A)
 [![Static Badge](https://img.shields.io/badge/Donate-LiberaPay-%23f6c915?style=flat&logo=liberapay&link=https%3A%2F%2Fliberapay.com%2Ftelepath%2Fdonate)](https://liberapay.com/telepath/donate)
 
+
 <details> 
 <summary><h2>⚠️ TROUBLESHOOTING</h2></summary>
 There are (at the moment) two errors that can be displayed from the 7-segment display:
@@ -142,3 +147,5 @@ There are (at the moment) two errors that can be displayed from the 7-segment di
 </ul>
 </details>
 
+<h2>🙋🏽 SPECIAL THANKS</h2>
+To maxint-rd and his <a href="https://github.com/maxint-rd/TM16xx">TM16xx</a> library, the "swiss knife" for TM16xx chips.
