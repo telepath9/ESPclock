@@ -6,6 +6,10 @@
 
 [![Static Badge](https://img.shields.io/badge/Mentioned_by-Hackster.io-%232E9FE6?style=flat&logo=hackster&logoColor=white&color=%232E9FE6)](https://www.hackster.io/news/a-diy-retro-modern-alarm-clock-for-under-10-4e4e972345d8)
 
+<h2>⭐ BEFORE WE START...</h2>
+If you find ESPclock an interesting project, please consider to  <b>star</b> ⭐ the repository!<br>
+And if you don't want to miss the next updates and releases, be sure to click on the  <b>watch</b> 👁️ button!<br><br><br>
+
 
 <img src="https://github.com/telepath9/ESPclock/blob/54c39c18d9204351de640fb42218651ce3664671/pics/newfont.png" alt="Alt Text" width="100%" height="100%">
 
