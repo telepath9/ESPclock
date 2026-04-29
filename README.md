@@ -93,7 +93,7 @@ It uses a ESP8266 (Wemos D1 mini) or ESP32 (XIAO ESP32 C3)
 <summary><b>TM1652 Display Version</b></summary>
 <ul>
 <li>XIAO ESP32 C3 or Wemos D1 MINI (mine is V3.0.0 clone)</li>
-<li>TM1652 display https://it.aliexpress.com/item/1005007337668399.html?spm=a2g0o.order_list.order_list_main.10.47683696Rt836v&gatewayAdapt=glo2ita</li>
+<li>TM1652 display https://it.aliexpress.com/item/1005007337668399.html</li>
 <li>Dupont wires</li>
 <li>DG308 7pins terminal block (for XIAO) OR DG308 8pins terminal block (for WEMOS): x2</li>
 <li>Female 7pins header(for XIAO) OR Female 8pins header (for WEMOS): x2</li>
