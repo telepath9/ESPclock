@@ -1,10 +1,11 @@
-[![Static Badge](https://img.shields.io/badge/SLIM_case-MakerWorld-%2308bf08?style=flat&logo=bambulab)](https://makerworld.com/it/models/1594116-espclock-digital-clock#profileId-2069321)
-[![Static Badge](https://img.shields.io/badge/BOLD_case-MakerWorld-%2308bf08?style=flat&logo=bambulab)](https://makerworld.com/it/models/2405754-espclock-bold-digital-clock)
-[![Static Badge](https://img.shields.io/badge/BIG_case-MakerWorld-%2308bf08?style=flat&logo=bambulab)](https://makerworld.com/it/models/2616382-espclock-big-digital-clock#profileId-2887323)
+[![Static Badge](https://img.shields.io/badge/SLIM%20case-Makerworld-08bf08?style=for-the-badge&logo=bambulab)](https://makerworld.com/it/models/1594116-espclock-digital-clock#profileId-2069321)
+[![Static Badge](https://img.shields.io/badge/BOLD%20case-Makerworld-08bf08?style=for-the-badge&logo=bambulab)](https://makerworld.com/it/models/2405754-espclock-bold-digital-clock)
+[![Static Badge](https://img.shields.io/badge/BIG%20case-Makerworld-08bf08?style=for-the-badge&logo=bambulab)](https://makerworld.com/it/models/2616382-espclock-big-digital-clock#profileId-2887323)
 
-![GitHub Repo stars](https://img.shields.io/github/stars/telepath9/ESPclock?style=social&logo=github)
 
-[![Static Badge](https://img.shields.io/badge/Mentioned_by-Hackster.io-%232E9FE6?style=flat&logo=hackster&logoColor=white&color=%232E9FE6)](https://www.hackster.io/news/a-diy-retro-modern-alarm-clock-for-under-10-4e4e972345d8)
+![GitHub Repo stars](https://img.shields.io/github/stars/telepath9/ESPclock?style=for-the-badge&logo=github)
+
+[![Static Badge](https://img.shields.io/badge/Mentioned_by-Hackster.io-%232E9FE6?style=for-the-badge&logo=hackster&logoColor=white&color=%232E9FE6)](https://www.hackster.io/news/a-diy-retro-modern-alarm-clock-for-under-10-4e4e972345d8)
 
 <h2>⭐ BEFORE WE START...</h2>
 If you find ESPclock an interesting project, please consider to  <b>star</b> ⭐ the repository!<br>
@@ -70,6 +71,7 @@ It uses a ESP8266 (Wemos D1 mini) or ESP32 (XIAO ESP32 C3)
 - [x] Added TTP223 Touch button
 - [ ] ESPhome or Homeassistant integration
 - [ ] HA support
+- [ ] Display Temperature
 - [x] TM1652 0.8" display support	
 
 <h2>🛒 PART LIST</h2>
@@ -136,11 +138,7 @@ If you have any suggestion/advice/feedback, you can open an issue.
 Forks are encouranged too, and i'm eager to see new changes that people can add to this project! 
 
 <h2>❤️ SUPPORT</h2>
-If you liked the project and want to financially contribute, you can buy me a coffee! <br><br>
-
-[![Paypal Badge](https://img.shields.io/badge/Donate-PayPal-blue?logo=paypal)](https://www.paypal.com/donate/?hosted_button_id=NBJ3VHSWGQK7A)
-[![Static Badge](https://img.shields.io/badge/Donate-LiberaPay-%23f6c915?style=flat&logo=liberapay&link=https%3A%2F%2Fliberapay.com%2Ftelepath%2Fdonate)](https://liberapay.com/telepath/donate)
-
+If you liked the project and want to financially contribute, contact me.
 
 <details> 
 <summary><h2>⚠️ TROUBLESHOOTING</h2></summary>
