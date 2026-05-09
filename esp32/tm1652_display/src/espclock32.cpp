@@ -10,7 +10,7 @@
 #include <ArduinoJson.h>
 #include <TM1652.h>
 #include <TM16xxDisplay.h>
-
+#include "esp_sntp.h"
 
 //JSON optimizations
 #define ARDUINOJSON_SLOT_ID_SIZE 1
@@ -148,7 +148,7 @@ void wifiScan(){
 
     byte n = WiFi.scanNetworks();
     Serial.print(n);
-    Serial.println(" networks found. Displaying the first 5");
+    Serial.println(" networks found");
 
     //---------------------------------------------x
     //SSIDs found are stored in json
@@ -156,38 +156,19 @@ void wifiScan(){
       
     //If json doesn't exists yet, it creates it
     if(!LittleFS.exists("/network_list.json")){
-        JsonDocument net_list;
-        //Serial.println("Network list doesn't exists. Creating it now..."); 🟠
+      JsonDocument net_list;
+      //Serial.println("Network list doesn't exists. Creating it now...");  
+      net_list["found"] = n;
+      JsonArray network = net_list["network"].to<JsonArray>();
 
-        //if the number of networks found is <5 (so from [0-4])...
-        if(n<5){
-            
-            //stores number of found networks in json
-            net_list["found"] = n;
-            JsonArray network = net_list["network"].to<JsonArray>();
-
-            for(byte j = 0; j < n; j++){
-              JsonArray network_n_credentials = network[j]["credentials"].to<JsonArray>();
-              network_n_credentials.add(WiFi.SSID(j));
-              network_n_credentials.add("");
-            }
-        }
-
-        //if it finds >5 networks, it will display only the top five networks, with index: [0-4]
-        else{
-          
-          net_list["found"] = 5;
-          JsonArray network = net_list["network"].to<JsonArray>();
-
-          for(byte j = 0; j < 5; j++){
-              JsonArray network_n_credentials = network[j]["credentials"].to<JsonArray>();
-              network_n_credentials.add(WiFi.SSID(j));
-              network_n_credentials.add("");
-          }
+      for(byte j = 0; j < n+1; j++){
+        JsonArray network_n_credentials = network[j]["credentials"].to<JsonArray>();
+        network_n_credentials.add(WiFi.SSID(j));
+        network_n_credentials.add("");
       }
-
+      
       //---------------------------------------------x
-      //After creating JSON file (jsondocument), it must be stored in FS
+      //After creating JSON file (jsondocument) it stores it in FS
       File fx = LittleFS.open("/network_list.json", "w");
 
       //serializes json and passes it to "fx" var
@@ -206,36 +187,20 @@ void wifiScan(){
       File fxup = LittleFS.open("/network_list.json", "w+");
       deserializeJson(net_listUp, fxup);
 
-      //if there are n<5 networks
-      if(n<5){
-        //updates the values of the entries of the older one
-        net_listUp["found"] = n;
-        JsonArray network = net_listUp["network"].to<JsonArray>();
-
-        for(byte k = 0; k < n; k++){
-            JsonArray network_n_credentials = network[k]["credentials"].to<JsonArray>();
-            network_n_credentials.add(WiFi.SSID(k));
-            network_n_credentials.add("");    //
-        }
-      }
-
-      //if there are n>5 networks -> it truncates the list to only 5 ssids
-      else{
-            net_listUp["found"] = 5;
-            JsonArray network = net_listUp["network"].to<JsonArray>();
+      net_listUp["found"] = n;
+      JsonArray network = net_listUp["network"].to<JsonArray>();
             
-            for(byte k = 0; k < 5; k++){
-              //dynamically adds, to each entry "k", a new array to the main array "network"
-              JsonArray network_n_credentials = network[k]["credentials"].to<JsonArray>();
+      for(byte k = 0; k < n+1; k++){
+        //dynamically adds, to each entry "k", a new array to the main array "network"
+        JsonArray network_n_credentials = network[k]["credentials"].to<JsonArray>();
 
-              //adds SSID name to the entry[k][0]
-              network_n_credentials.add(WiFi.SSID(k));
+        //adds SSID name to the entry[k][0]
+        network_n_credentials.add(WiFi.SSID(k));
 
-              //adds pw field (initially empty) to entry[k][1] 
-              network_n_credentials.add("");
-            }
+        //adds pw field (initially empty) to entry[k][1] 
+        network_n_credentials.add("");
       }
-
+      
       //3. serializing
       serializeJsonPretty(net_listUp, fxup);
       fxup.close();
@@ -309,6 +274,7 @@ void checkConfig(void){
   }
   return;
 }
+
 void checkAlarm(){
   if(LittleFS.exists("/alarm.json")){
 
@@ -395,11 +361,16 @@ void initMDNS(){
 }
 
 void setup() {
+
   Serial.begin(115200);
+  //Serial.println("SNTP Interval: " + String(sntp_get_sync_interval()));
+  sntp_set_sync_interval(21600000UL); //time syncs with ntp servers every 6 hours
+
   module.begin(true, 4, 6);   //4=brightness level
   pinMode(BUZZER_PIN, OUTPUT); 
-  pinMode(9, INPUT_PULLUP);   //TTP223 Touch button
-  attachInterrupt(digitalPinToInterrupt(9), alarm_off, RISING);
+
+  pinMode(3, INPUT_PULLUP);   //TTP223 Touch button
+  attachInterrupt(digitalPinToInterrupt(3), alarm_off, RISING);
 
   //LittleFS.format();
 
@@ -559,7 +530,7 @@ void setup() {
     else{
     ntp_addr = strdup(ntp_json["ntp_addr"]); 
     gmt_offset = (int)atoi(ntp_json["offset"]);
-    configTime(gmt_offset*3600, 3600, ntp_addr); 
+    configTime(gmt_offset*3600, 3600, ntp_addr);  //arduino core function
     //Serial.println("NTP server: " + String(ntp_addr));
     //Serial.println("OFFSET: " + String(gmt_offset));
     if(start_NtpClient == false){
@@ -781,6 +752,9 @@ void setup() {
 }
 
 
+//[facoltativo] follow this to update to SNTP -->  time interval between NTP polling call is every 2 hours
+//https://werner.rothschopf.net/microcontroller/202103_arduino_esp32_ntp_en.htm
+//ESP officail SNTP https://docs.espressif.com/projects/esp-idf/en/stable/esp32/api-reference/system/system_time.html
 
 void loop() {
   // Serial.println(esp_clk_get_cpu_freq_mhz());
@@ -799,13 +773,14 @@ void loop() {
     (with the default value being 5 seconds).  This timeout value is used in case there
     is an NTP server request being made in the background
     (for example when you just called the configTime() function before calling the getLocalTime()
-    function like in this example sketch).   getLocalTime(&timeinfo, 5000);
+    function).   getLocalTime(&timeinfo, 5000);
 
     If needed, the getLocalTime() function will
     wait until either a valid system time is received or until the timeout occurs.  The function will return false, if no valid system time was received before the timeout duration occurs.*/
     getLocalTime(&timeinfo);
 
     if(myTimer(1000)){
+
         //printLocalTime();
        if(alarm_status==1){
 

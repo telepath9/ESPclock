@@ -9,6 +9,7 @@
 #include <TM1637Display.h>
 #include <ESPmDNS.h>
 #include <ArduinoJson.h>
+#include "esp_sntp.h"
 
 //JSON optimizations
 #define ARDUINOJSON_SLOT_ID_SIZE 1
@@ -43,10 +44,11 @@ uint8_t attempts = 0; //connection attempts --> when it's set to 0 again, it mea
 
 AsyncWebServer server(80);
 
+#define BUZZER_PIN 3
+
 //TM1637 DISPLAY SETUP
 #define CLK 9  //previously gpio2
 #define DIO 10 //previously gpio3
-#define BUZZER_PIN 3
 
 TM1637Display mydisplay(CLK, DIO);
 bool colon=true;
@@ -134,12 +136,11 @@ uint8_t snooze;
 void wifiScan(){
     //---------------------------------------------x
     //start wifiSCAN
-    //Serial.println("PHASE 1.1: scanning in STA_MODE ");
     WiFi.disconnect();
 
     byte n = WiFi.scanNetworks();
     Serial.print(n);
-    Serial.println(" networks found. Displaying the first 5");
+    Serial.println(" networks found");
 
     //---------------------------------------------x
     //SSIDs found are stored in json
@@ -147,38 +148,19 @@ void wifiScan(){
       
     //If json doesn't exists yet, it creates it
     if(!LittleFS.exists("/network_list.json")){
-        JsonDocument net_list;
-        //Serial.println("Network list doesn't exists. Creating it now..."); 🟠
+      JsonDocument net_list;
+      //Serial.println("Network list doesn't exists. Creating it now...");  
+      net_list["found"] = n;
+      JsonArray network = net_list["network"].to<JsonArray>();
 
-        //if the number of networks found is <5 (so from [0-4])...
-        if(n<5){
-            
-            //stores number of found networks in json
-            net_list["found"] = n;
-            JsonArray network = net_list["network"].to<JsonArray>();
-
-            for(byte j = 0; j < n; j++){
-              JsonArray network_n_credentials = network[j]["credentials"].to<JsonArray>();
-              network_n_credentials.add(WiFi.SSID(j));
-              network_n_credentials.add("");
-            }
-        }
-
-        //if it finds >5 networks, it will display only the top five networks, with index: [0-4]
-        else{
-          
-          net_list["found"] = 5;
-          JsonArray network = net_list["network"].to<JsonArray>();
-
-          for(byte j = 0; j < 5; j++){
-              JsonArray network_n_credentials = network[j]["credentials"].to<JsonArray>();
-              network_n_credentials.add(WiFi.SSID(j));
-              network_n_credentials.add("");
-          }
+      for(byte j = 0; j < n+1; j++){
+        JsonArray network_n_credentials = network[j]["credentials"].to<JsonArray>();
+        network_n_credentials.add(WiFi.SSID(j));
+        network_n_credentials.add("");
       }
-
+      
       //---------------------------------------------x
-      //After creating JSON file (jsondocument), it must be stored in FS
+      //After creating JSON file (jsondocument) it stores it in FS
       File fx = LittleFS.open("/network_list.json", "w");
 
       //serializes json and passes it to "fx" var
@@ -197,36 +179,20 @@ void wifiScan(){
       File fxup = LittleFS.open("/network_list.json", "w+");
       deserializeJson(net_listUp, fxup);
 
-      //if there are n<5 networks
-      if(n<5){
-        //updates the values of the entries of the older one
-        net_listUp["found"] = n;
-        JsonArray network = net_listUp["network"].to<JsonArray>();
-
-        for(byte k = 0; k < n; k++){
-            JsonArray network_n_credentials = network[k]["credentials"].to<JsonArray>();
-            network_n_credentials.add(WiFi.SSID(k));
-            network_n_credentials.add("");    //
-        }
-      }
-
-      //if there are n>5 networks -> it truncates the list to only 5 ssids
-      else{
-            net_listUp["found"] = 5;
-            JsonArray network = net_listUp["network"].to<JsonArray>();
+      net_listUp["found"] = n;
+      JsonArray network = net_listUp["network"].to<JsonArray>();
             
-            for(byte k = 0; k < 5; k++){
-              //dynamically adds, to each entry "k", a new array to the main array "network"
-              JsonArray network_n_credentials = network[k]["credentials"].to<JsonArray>();
+      for(byte k = 0; k < n+1; k++){
+        //dynamically adds, to each entry "k", a new array to the main array "network"
+        JsonArray network_n_credentials = network[k]["credentials"].to<JsonArray>();
 
-              //adds SSID name to the entry[k][0]
-              network_n_credentials.add(WiFi.SSID(k));
+        //adds SSID name to the entry[k][0]
+        network_n_credentials.add(WiFi.SSID(k));
 
-              //adds pw field (initially empty) to entry[k][1] 
-              network_n_credentials.add("");
-            }
+        //adds pw field (initially empty) to entry[k][1] 
+        network_n_credentials.add("");
       }
-
+      
       //3. serializing
       serializeJsonPretty(net_listUp, fxup);
       fxup.close();
@@ -292,6 +258,7 @@ void checkConfig(void){
         blink=  load_cf[F("blink")];
         br_auto = load_cf[F("br_auto")];
         twelve= load_cf[F("twelve")];
+        fld.close();
       }
   }
   return;
@@ -382,10 +349,10 @@ void initMDNS(){
   }
 }
 
-
 void setup() {
-
   Serial.begin(115200);
+  sntp_set_sync_interval(21600000UL); //time syncs with ntp servers every 6 hours
+  
   mydisplay.setBrightness(7); 
   mydisplay.clear();
   pinMode(BUZZER_PIN, OUTPUT); 
@@ -554,8 +521,8 @@ void setup() {
     ntp_addr = strdup(ntp_json["ntp_addr"]); 
     gmt_offset = (int)atoi(ntp_json["offset"]);
     configTime(gmt_offset*3600, 3600, ntp_addr); 
-    Serial.println("NTP server: " + String(ntp_addr));
-    Serial.println("OFFSET: " + String(gmt_offset));
+    //Serial.println("NTP server: " + String(ntp_addr));
+    //Serial.println("OFFSET: " + String(gmt_offset));
     if(start_NtpClient == false){
       start_NtpClient=true;
     }
@@ -636,8 +603,7 @@ void setup() {
     alarm_status= doc["set"]; //alarm status ==1 if there's an alarm saved
     
     //user wants to save alarm
-    if(!LittleFS.exists("/alarm.json") && alarm_status==1){  
-      
+    if(!LittleFS.exists("/alarm.json") && alarm_status==1){      
       if(doc["timehm"]==""){    
         Serial.println("Alarm Time value is NULL");
         request->send(200, "application/json", "{\"alarm\":\"FAIL\"}");
@@ -816,7 +782,6 @@ void loop() {
                 //Serial.println("FROM alarm time> snoozeOn=1");
               }
             }
-            
           }
 
           //2- after alarm time passes, enables snoozetimer adn snooze 
@@ -889,7 +854,7 @@ void loop() {
               colon=false;  
           }
 
-          else if(colon==false){  //colon is OFF
+          else if(colon==false){//colon is OFF
 
               if(!twelve){
                 mydisplay.showNumberDecEx(timeinfo.tm_hour, 0, true, 2, 0);
@@ -919,21 +884,19 @@ void loop() {
                 mydisplay.showNumberDecEx(timeinfo.tm_min, 0b01000000, true, 2, 2);
         }
 
-        else{
+        else{//if 12hr mode is active
+
                   if(timeinfo.tm_hour <= 12){
                     mydisplay.showNumberDecEx(timeinfo.tm_hour, 0b01000000, true, 2, 0);
-                  
                   }
 
                   else{
                     mydisplay.showNumberDecEx(timeinfo.tm_hour-12, 0b01000000, true, 2, 0);
                   }
-
                   mydisplay.showNumberDecEx(timeinfo.tm_min, 0b01000000, true, 2, 2);
         }
       }    
     }
-
 
     if(snoozeOn==1 && alarm_stop==0){ 
     
