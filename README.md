@@ -1,10 +1,15 @@
-[![Static Badge](https://img.shields.io/badge/SLIM_case-MakerWorld-%2308bf08?style=flat&logo=bambulab)](https://makerworld.com/it/models/1594116-espclock-digital-clock#profileId-2069321)
-[![Static Badge](https://img.shields.io/badge/BOLD_case-MakerWorld-%2308bf08?style=flat&logo=bambulab)](https://makerworld.com/it/models/2405754-espclock-bold-digital-clock)
-[![Static Badge](https://img.shields.io/badge/BIG_case-MakerWorld-%2308bf08?style=flat&logo=bambulab)](https://makerworld.com/it/models/2616382-espclock-big-digital-clock#profileId-2887323)
+[![Static Badge](https://img.shields.io/badge/SLIM%20case-Makerworld-08bf08?style=for-the-badge&logo=bambulab)](https://makerworld.com/it/models/1594116-espclock-digital-clock#profileId-2069321)
+[![Static Badge](https://img.shields.io/badge/BOLD%20case-Makerworld-08bf08?style=for-the-badge&logo=bambulab)](https://makerworld.com/it/models/2405754-espclock-bold-digital-clock)
+[![Static Badge](https://img.shields.io/badge/BIG%20case-Makerworld-08bf08?style=for-the-badge&logo=bambulab)](https://makerworld.com/it/models/2616382-espclock-big-digital-clock#profileId-2887323)
 
-![GitHub Repo stars](https://img.shields.io/github/stars/telepath9/ESPclock?style=social&logo=github)
 
-[![Static Badge](https://img.shields.io/badge/Mentioned_by-Hackster.io-%232E9FE6?style=flat&logo=hackster&logoColor=white&color=%232E9FE6)](https://www.hackster.io/news/a-diy-retro-modern-alarm-clock-for-under-10-4e4e972345d8)
+![GitHub Repo stars](https://img.shields.io/github/stars/telepath9/ESPclock?style=for-the-badge&logo=github)
+
+[![Static Badge](https://img.shields.io/badge/Mentioned_by-Hackster.io-%232E9FE6?style=for-the-badge&logo=hackster&logoColor=white&color=%232E9FE6)](https://www.hackster.io/news/a-diy-retro-modern-alarm-clock-for-under-10-4e4e972345d8)
+
+<h2>⭐ BEFORE WE START...</h2>
+If you find ESPclock an interesting project, please consider to  <b>star</b> ⭐ the repository!<br>
+And if you don't want to miss the next updates and releases, be sure to click on the  <b>watch</b> 👁️ button!<br><br><br>
 
 
 <img src="https://github.com/telepath9/ESPclock/blob/54c39c18d9204351de640fb42218651ce3664671/pics/newfont.png" alt="Alt Text" width="100%" height="100%">
@@ -66,6 +71,7 @@ It uses a ESP8266 (Wemos D1 mini) or ESP32 (XIAO ESP32 C3)
 - [x] Added TTP223 Touch button
 - [ ] ESPhome or Homeassistant integration
 - [ ] HA support
+- [ ] Display Temperature
 - [x] TM1652 0.8" display support	
 
 <h2>🛒 PART LIST</h2>
@@ -89,7 +95,7 @@ It uses a ESP8266 (Wemos D1 mini) or ESP32 (XIAO ESP32 C3)
 <summary><b>TM1652 Display Version</b></summary>
 <ul>
 <li>XIAO ESP32 C3 or Wemos D1 MINI (mine is V3.0.0 clone)</li>
-<li>TM1652 display https://it.aliexpress.com/item/1005007337668399.html?spm=a2g0o.order_list.order_list_main.10.47683696Rt836v&gatewayAdapt=glo2ita</li>
+<li>TM1652 display https://it.aliexpress.com/item/1005007337668399.html</li>
 <li>Dupont wires</li>
 <li>DG308 7pins terminal block (for XIAO) OR DG308 8pins terminal block (for WEMOS): x2</li>
 <li>Female 7pins header(for XIAO) OR Female 8pins header (for WEMOS): x2</li>
@@ -132,11 +138,7 @@ If you have any suggestion/advice/feedback, you can open an issue.
 Forks are encouranged too, and i'm eager to see new changes that people can add to this project! 
 
 <h2>❤️ SUPPORT</h2>
-If you liked the project and want to financially contribute, you can buy me a coffee! <br><br>
-
-[![Paypal Badge](https://img.shields.io/badge/Donate-PayPal-blue?logo=paypal)](https://www.paypal.com/donate/?hosted_button_id=NBJ3VHSWGQK7A)
-[![Static Badge](https://img.shields.io/badge/Donate-LiberaPay-%23f6c915?style=flat&logo=liberapay&link=https%3A%2F%2Fliberapay.com%2Ftelepath%2Fdonate)](https://liberapay.com/telepath/donate)
-
+If you liked the project and want to financially contribute, contact me.
 
 <details> 
 <summary><h2>⚠️ TROUBLESHOOTING</h2></summary>
