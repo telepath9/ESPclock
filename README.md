@@ -3,14 +3,15 @@
 [![Static Badge](https://img.shields.io/badge/BIG%20case-Makerworld-08bf08?style=for-the-badge&logo=bambulab)](https://makerworld.com/it/models/2616382-espclock-big-digital-clock#profileId-2887323)
 
 
-![GitHub Repo stars](https://img.shields.io/github/stars/telepath9/ESPclock?style=for-the-badge&logo=github)
+![GitHub Repo stars](https://img.shields.io/github/stars/telepath9/ESPclock?style=for-the-badge&logo=github&color=A02ADB	)
 
 [![Static Badge](https://img.shields.io/badge/Mentioned_by-Hackster.io-%232E9FE6?style=for-the-badge&logo=hackster&logoColor=white&color=%232E9FE6)](https://www.hackster.io/news/a-diy-retro-modern-alarm-clock-for-under-10-4e4e972345d8)
 
 <h2>⭐ BEFORE WE START...</h2>
 If you find ESPclock an interesting project, please consider to  <b>star</b> ⭐ the repository!<br>
-And if you don't want to miss the next updates and releases, be sure to click on the  <b>watch</b> 👁️ button!<br><br><br>
+And if you don't want to miss the next updates and releases, be sure to click on the  <b>watch</b> 👁️ button!
 
+---
 
 <img src="https://github.com/telepath9/ESPclock/blob/54c39c18d9204351de640fb42218651ce3664671/pics/newfont.png" alt="Alt Text" width="100%" height="100%">
 
@@ -113,7 +114,7 @@ It uses a ESP8266 (Wemos D1 mini) or ESP32 (XIAO ESP32 C3)
 <h2>🔌 BOARD WIRING (buzzer and TTP223 coming soon...)</h2>
 <details> 
 <summary><b>XIAO ESP32 C3 - TM1652 0.8" Display</b></summary>
-<img src="https://github.com/telepath9/ESPclock/blob/cab8b1194b71c58ab70c8662392b62cac567df08/pics/espclock_xiao%2Btm1652%2Bbuzzer%2Bttp223.webp" alt="Alt Text" width="100%" height="100%">
+<img src="https://github.com/telepath9/ESPclock/blob/6bbb8ae9d9ef8253ffe0cd3a842053a82619ac4d/pics/wiring_2.3.0.webp" alt="Alt Text" width="100%" height="100%">
 </details>
 <details> 
 <summary><b>XIAO ESP32 C3 - TM1637 0.56" Display</b></summary>
