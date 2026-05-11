@@ -7,10 +7,6 @@
 
 [![Static Badge](https://img.shields.io/badge/Mentioned_by-Hackster.io-%232E9FE6?style=for-the-badge&logo=hackster&logoColor=white&color=%232E9FE6)](https://www.hackster.io/news/a-diy-retro-modern-alarm-clock-for-under-10-4e4e972345d8)
 
-<h2>⭐ BEFORE WE START...</h2>
-If you find ESPclock an interesting project, please consider to  <b>star</b> ⭐ the repository!<br>
-And if you don't want to miss the next updates and releases, be sure to click on the  <b>watch</b> 👁️ button!
-
 ---
 
 <img src="https://github.com/telepath9/ESPclock/blob/54c39c18d9204351de640fb42218651ce3664671/pics/newfont.png" alt="Alt Text" width="100%" height="100%">
@@ -82,6 +78,7 @@ It uses a ESP8266 (Wemos D1 mini) or ESP32 (XIAO ESP32 C3)
 <li>XIAO ESP32 C3 or Wemos D1 MINI (mine is V3.0.0 clone)</li>
 <li>TM1637 module https://it.aliexpress.com/item/1005001582129952.html?spm=a2g0o.order_list.order_list_main.49.370e3696i4W9Sn&gatewayAdapt=glo2ita </li>
 <li>Dupont wires</li>
+<li>100 Ohm resistor: x1</li>
 <li>DG308 7pins terminal block (for XIAO) OR DG308 8pins terminal block (for WEMOS): x2</li>
 <li>Female 7pins header(for XIAO) OR Female 8pins header (for WEMOS): x2</li>
 <li>7x3cm perfboard: x1</li>
@@ -98,6 +95,7 @@ It uses a ESP8266 (Wemos D1 mini) or ESP32 (XIAO ESP32 C3)
 <li>XIAO ESP32 C3 or Wemos D1 MINI (mine is V3.0.0 clone)</li>
 <li>TM1652 display https://it.aliexpress.com/item/1005007337668399.html</li>
 <li>Dupont wires</li>
+<li>100 Ohm resistor: x1</li>
 <li>DG308 7pins terminal block (for XIAO) OR DG308 8pins terminal block (for WEMOS): x2</li>
 <li>Female 7pins header(for XIAO) OR Female 8pins header (for WEMOS): x2</li>
 <li>7x3cm perfboard: x1</li>
@@ -114,7 +112,7 @@ It uses a ESP8266 (Wemos D1 mini) or ESP32 (XIAO ESP32 C3)
 <h2>🔌 BOARD WIRING (buzzer and TTP223 coming soon...)</h2>
 <details> 
 <summary><b>XIAO ESP32 C3 - TM1652 0.8" Display</b></summary>
-<img src="https://github.com/telepath9/ESPclock/blob/6bbb8ae9d9ef8253ffe0cd3a842053a82619ac4d/pics/wiring_2.3.0.webp" alt="Alt Text" width="100%" height="100%">
+<img src="https://github.com/telepath9/ESPclock/blob/1d05fa707535ed9df221d80e062bd623caf88a3e/pics/wiring_2.3.0.jpg" alt="Alt Text" width="100%" height="100%">
 </details>
 <details> 
 <summary><b>XIAO ESP32 C3 - TM1637 0.56" Display</b></summary>
@@ -139,7 +137,9 @@ If you have any suggestion/advice/feedback, you can open an issue.
 Forks are encouranged too, and i'm eager to see new changes that people can add to this project! 
 
 <h2>❤️ SUPPORT</h2>
-If you liked the project and want to financially contribute, contact me.
+If you find ESPclock an interesting project, please consider to  <b>star</b> ⭐ the repository!<br>
+And if you don't want to miss the next updates and releases, be sure to click on the  <b>watch</b> 👁️ button!
+If you want to financially contribute, contact me.
 
 <details> 
 <summary><h2>⚠️ TROUBLESHOOTING</h2></summary>
