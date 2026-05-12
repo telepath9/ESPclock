@@ -12,6 +12,8 @@
 #include <TM16xxDisplay.h>
 #include "esp_sntp.h"
 
+//internal temp sensor--> https://docs.espressif.com/projects/esp-idf/en/stable/esp32c3/api-reference/peripherals/temp_sensor.html
+
 //JSON optimizations
 #define ARDUINOJSON_SLOT_ID_SIZE 1
 #define ARDUINOJSON_STRING_LENGTH_SIZE 1
@@ -80,6 +82,7 @@ bool colon=true;
 bool blink=true;
 bool br_auto=false;
 bool twelve=false;
+bool leadingzero=false;
 uint8_t brightness=7;
 uint8_t ms_ovfl=0;
 
@@ -269,6 +272,7 @@ void checkConfig(void){
         blink=  load_cf[F("blink")];
         br_auto = load_cf[F("br_auto")];
         twelve= load_cf[F("twelve")];
+        leadingzero=load_cf[F("lz")];
         fld.close();
       }
   }
@@ -295,13 +299,13 @@ void checkAlarm(){
     if(alarm_status==true){
 
       timehm= strdup(load_al[F("timehm")]);
-      Serial.println("timehm > " + timehm);
+      //Serial.println("timehm > " + timehm);
 
-      alarm_hour= load_al[F("alarm_hour")];
-      alarm_min= load_al[F("alarm_min")];
-      snooze= load_al[F("snooze")];
+      alarm_hour= load_al[("alarm_hour")];
+      alarm_min= load_al[("alarm_min")];
+      snooze= load_al[("snooze")];
 
-      String week= strdup(load_al[F("week")]);
+      String week= strdup(load_al[("week")]);
       fla.close();
    
       for(uint8_t n=0; n<7; n++){
@@ -428,6 +432,8 @@ void setup() {
     uc_json["config"]= (LittleFS.exists("/config.json")) ? 1 : 0;
     uc_json["millis"]= millis();
     uc_json["msovfl"]= ms_ovfl;
+    uc_json["lz"]= leadingzero;
+
     String uc_str;
     serializeJson(uc_json, uc_str);
 
@@ -606,6 +612,13 @@ void setup() {
             request->send(200, "application/json", "{\"status\":\"updated\"}");
   });
 
+  server.on("/lead0", HTTP_POST, [](AsyncWebServerRequest *request){}, NULL, [](AsyncWebServerRequest *request, uint8_t *data, size_t len, size_t index, size_t total){
+            JsonDocument leadz_json;
+            deserializeJson(leadz_json, data);
+            leadingzero = (uint8_t)leadz_json["lz"];  //update leading zero var
+            request->send(200, "application/json", "{\"status\":\"updated\"}");
+  });
+
   server.on("/alarm", HTTP_POST, [](AsyncWebServerRequest *request){}, NULL, [](AsyncWebServerRequest *request, uint8_t *data, size_t len, size_t index, size_t total){
     
     JsonDocument doc;
@@ -674,8 +687,8 @@ void setup() {
   server.on("/alcheck", HTTP_GET, [](AsyncWebServerRequest *request){
     JsonDocument al_json;   //creates a json to send to client
 
+    //Serial.println("alarm @" +String(timehm));
     al_json["alarm"]= alarm_status;
-    Serial.println(timehm);
     al_json["timehm"]= timehm;
     al_json["snooze"]= snooze;
     String sk="";
@@ -685,10 +698,6 @@ void setup() {
     }
 
     al_json["week"]=sk;
-    Serial.println(timehm);
-    Serial.println("alcheck STRING > " + sk);
-    Serial.println("Snooze > " + String(snooze));
-
     String al_str;
     serializeJson(al_json, al_str);
 
@@ -717,6 +726,7 @@ void setup() {
       config[F("br")] = brightness;       //uint8_t
       config[F("blink")] = blink;        //bool as 1 or 0
       config[F("twelve")] = twelve;      
+      config[F("lz")] = leadingzero;
       config.shrinkToFit();
               
       File fc = LittleFS.open("/config.json", "w+");
@@ -789,9 +799,7 @@ void loop() {
 
             //RING at the exact time entered by user
             if(timeinfo.tm_hour == alarm_hour && timeinfo.tm_min == alarm_min){
-              //Serial.println("alarm_min > " + String(alarm_min));
-              //Serial.println("timeinfo.tm_min > " + String(timeinfo.tm_min));
-
+              
               alarm_ring();
 
               if(snooze>0 && snoozeMsStart==0){  //activated Once, to start snoozetimer VAR
@@ -852,20 +860,20 @@ void loop() {
         if(blink==1){
             if(colon==true){   //colon is ON
               if(!twelve){  
-                //module.setDisplayToDecNumber((timeinfo.tm_hour*100)+timeinfo.tm_min, 0x04, true);
-                display.setDisplayToDecNumber((timeinfo.tm_hour*100)+timeinfo.tm_min, 0x04, true);
+                //module.setDisplayToDecNumber((timeinfo.tm_hour*100)+timeinfo.tm_min, 0x04, true <- leading zero);
+                display.setDisplayToDecNumber((timeinfo.tm_hour*100)+timeinfo.tm_min, 0x04, leadingzero);
               }
 
               //12hr format is on
               else{
                 if(timeinfo.tm_hour <= 12){
                   //module.setDisplayToDecNumber((timeinfo.tm_hour*100)+timeinfo.tm_min, 0x04, true);
-                  display.setDisplayToDecNumber((timeinfo.tm_hour*100)+timeinfo.tm_min, 0x04, true);
+                  display.setDisplayToDecNumber((timeinfo.tm_hour*100)+timeinfo.tm_min, 0x04, leadingzero);
                 }
 
                 else{
                  // module.setDisplayToDecNumber(((timeinfo.tm_hour-12)*100)+timeinfo.tm_min, 0x04, true);
-                  display.setDisplayToDecNumber(((timeinfo.tm_hour-12)*100)+timeinfo.tm_min, 0x04, true);
+                  display.setDisplayToDecNumber(((timeinfo.tm_hour-12)*100)+timeinfo.tm_min, 0x04, leadingzero);
                 }
               }
               colon=false;  
@@ -875,18 +883,18 @@ void loop() {
 
               if(!twelve){
                 //module.setDisplayToDecNumber((timeinfo.tm_hour*100)+timeinfo.tm_min, 0, false);
-                display.setDisplayToDecNumber((timeinfo.tm_hour*100)+timeinfo.tm_min, 0, true);
+                display.setDisplayToDecNumber((timeinfo.tm_hour*100)+timeinfo.tm_min, 0, leadingzero);
               }
 
               //if 12hr mode is active
               else{ 
                 if(timeinfo.tm_hour <= 12){
-                  display.setDisplayToDecNumber((timeinfo.tm_hour*100)+timeinfo.tm_min, 0, true);
+                  display.setDisplayToDecNumber((timeinfo.tm_hour*100)+timeinfo.tm_min, 0, leadingzero);
                   //module.setDisplayToDecNumber((timeinfo.tm_hour*100)+timeinfo.tm_min, 0, true);
                 }
                 else{
                   //module.setDisplayToDecNumber(((timeinfo.tm_hour-12)*100)+timeinfo.tm_min, 0, true);
-                  display.setDisplayToDecNumber(((timeinfo.tm_hour-12)*100)+timeinfo.tm_min, 0, true);
+                  display.setDisplayToDecNumber(((timeinfo.tm_hour-12)*100)+timeinfo.tm_min, 0, leadingzero);
                 }
               }
 
@@ -896,17 +904,17 @@ void loop() {
         
       else{ //when blink==0
           if(!twelve){
-            display.setDisplayToDecNumber((timeinfo.tm_hour*100)+timeinfo.tm_min, 0x04, true);
+            display.setDisplayToDecNumber((timeinfo.tm_hour*100)+timeinfo.tm_min, 0x04, leadingzero);
           }
 
           //if 12hr mode is active
               else{ 
                 if(timeinfo.tm_hour <= 12){
-                  display.setDisplayToDecNumber((timeinfo.tm_hour*100)+timeinfo.tm_min, 0x04, true);
+                  display.setDisplayToDecNumber((timeinfo.tm_hour*100)+timeinfo.tm_min, 0x04, leadingzero);
                 }
                 
                 else{
-                  display.setDisplayToDecNumber(((timeinfo.tm_hour-12)*100)+timeinfo.tm_min, 0x04, true);
+                  display.setDisplayToDecNumber(((timeinfo.tm_hour-12)*100)+timeinfo.tm_min, 0x04, leadingzero);
                 }
             }
           }

@@ -1,14 +1,11 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-
 <title>ESPclock by telepath</title>
-
 <meta charset="UTF-8" />
 <!--<meta> tag makes your web page responsive in any browser (laptop, tablet or smartphone)-->
 <!-- maximum-scale=1.0, user-scalable=no-->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="icon" href="data:,">
 <style>
 
 body{
@@ -436,6 +433,15 @@ input[type="time"]::-webkit-calendar-picker-indicator {
                             <span class="slider round"></span>
                         </label>
                     </span>
+
+                    <span style="display: flex; align-items: center; justify-content: space-between; margin:4px 0px 20px 0px;" class="blinky">
+                        <p style="font-size: 17px; margin:0px 0px 2px 26px;">Leading zero</p>
+                        <label class="switch">
+                            <input id="lead0_togg" type="checkbox"> 
+                            <span class="slider round"></span>
+                        </label>
+                    </span>
+
                 </div>
 
                 <div style="background-color:#1a1a1a;text-align: left;  margin-top: 6px;border-style:solid; border-color: #3c3e3f;border-radius: 12px; border-width: 1px;">     
@@ -701,7 +707,7 @@ input[type="time"]::-webkit-calendar-picker-indicator {
                                      
             if(data.conn === true){ //wifi data
                 disable_button(connect_but, "#52885d");
-                connect_but.innerHTML = "CONNECTED";
+                connect_but.innerText = "CONNECTED";
                 disable_refresh_but();
                 enable_button(update_but, "#267bbc");
             }
@@ -721,6 +727,10 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 
             if(data.twelve=== true){
                 twelve.setAttribute("checked", "");
+            }
+
+            if(data.lz===true){
+                document.getElementById("lead0_togg").setAttribute("checked", "");
             }
 
             msToUptime(data.millis, data.msovfl);  
@@ -793,6 +803,10 @@ input[type="time"]::-webkit-calendar-picker-indicator {
                     sat.setAttribute("value", "1"); 
                     sat.style.backgroundColor = "#ae0423";
                 }
+            }
+
+            else{
+                disable_button(deletealarm, "#1a1a1a","#9c9c9c", "#4E4E56");
             }
 
 })
@@ -868,7 +882,7 @@ input[type="time"]::-webkit-calendar-picker-indicator {
                         }
 
                         else{
-                            connect_but.innerHTML = ascii_anim[cti];
+                            connect_but.innerText = ascii_anim[cti];
                             cti++;
                         }
                     }, 500);
@@ -888,10 +902,10 @@ input[type="time"]::-webkit-calendar-picker-indicator {
                                     connected = true;
 
                                     clearInterval(asciivar);
-                                    connect_but.innerHTML = "CONNECTED";
+                                    connect_but.innerText = "CONNECTED";
                                     connect_but.style.backgroundColor ="#52885d";
 
-                                    popup_span_elem.innerHTML = "CONNECTED✅";
+                                    popup_span_elem.innerText = "CONNECTED✅";
                                     popup_span_elem.classList.add("show");
 
                                     enable_button(update_but, "#267bbc");
@@ -910,7 +924,7 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 
                                     connect_but.innerText = "CONNECT";
                                   
-                                    popup_span_elem.innerHTML = "WRONG PASSWORD❌";
+                                    popup_span_elem.innerText = "WRONG PASSWORD❌";
                                     popup_span_elem.classList.add("show");
 
                                     setTimeout(()=>{
@@ -1007,7 +1021,7 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 
             //onChange() event is used for SLIDER
             const slider = document.getElementById("brightness");
-            const br_tag = document.getElementById("brp");
+            const br_tag = document.getElementById("brp");  //displays actual brightness
                
             slider.onchange= function(){
 
@@ -1047,14 +1061,14 @@ input[type="time"]::-webkit-calendar-picker-indicator {
             bright_auto.onchange = function(){      
                 
                 this.checked ? slider.setAttribute("disabled", "") : slider.removeAttribute("disabled", "");
-                let br_a = this.checked ? true : false;
+                //let br_a = this.checked ? true : false;
                 
                 fetch("/br_auto", {
                     method: "POST",
                     headers: {
                         'Content-Type': "application/json"
                     },            
-                    body: JSON.stringify({"br": br_a}) 
+                    body: JSON.stringify({"br": this.checked ? true : false}) 
                 })
 
                 .then(response => response.json())
@@ -1065,17 +1079,16 @@ input[type="time"]::-webkit-calendar-picker-indicator {
             }
 
             const twelve= document.getElementById("twelve");
-
-             twelve.onchange = function(){      
+            twelve.onchange = function(){      
                 
-                let twhr = this.checked ? true : false;
+                //let twhr = this.checked ? true : false;
                 
                 fetch("/twelve", {
                     method: "POST",
                     headers: {
                         'Content-Type': "application/json"
                     },            
-                    body: JSON.stringify({"tw": twhr}) 
+                    body: JSON.stringify({"tw": this.checked ? true : false}) 
                 })
 
                 .then(response => response.json())
@@ -1084,6 +1097,27 @@ input[type="time"]::-webkit-calendar-picker-indicator {
                     console.log(response.status);
                 });        
             }
+
+            //leading zero > if off, it displays hours like 09:30 as 9:30
+            //const leadzero= document.getElementById("lead0_togg");
+            document.getElementById("lead0_togg").onchange = function(){      
+                
+                //let lead0 = this.checked ? true : false;
+                fetch("/lead0", {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': "application/json"
+                    },            
+                    body: JSON.stringify({"lz": this.checked ? true : false}) 
+                })
+
+                .then(response => response.json())
+                .then((response)=> {
+                       
+                    console.log(response.status);
+                });        
+            }
+
 //-----------------------------------------
 
 var coll = document.getElementsByClassName("collapsible");
@@ -1146,7 +1180,7 @@ function edit_alarm(){
     if(this.value==1){//if user SETS alarm
         if(sun.value==="1" || mon.value==="1" || tue.value==="1" || wed.value==="1" || thu.value==="1" || fri.value==="1" || sat.value==="1" ){
             const alarm_collap= document.getElementById("alarm_collap");
-            alarm_collap.innerHTML="Alarm • "+ timeControl.value;
+            alarm_collap.innerText="Alarm • "+ timeControl.value;
 
             disable_button(setalarm, "#1a1a1a","#9c9c9c", "#4E4E56"); 
             setalarm.innerText = "ALARM SET"; 
@@ -1170,7 +1204,7 @@ function edit_alarm(){
     else{ //user deletes alarm
         disable_button(deletealarm, "#1a1a1a","#9c9c9c", "#4E4E56");
         const alarm_collap= document.getElementById("alarm_collap");
-        alarm_collap.innerHTML="Alarm";
+        alarm_collap.innerText="Alarm";
 
         fetch("/alarm", {
             method: "POST",
@@ -1210,6 +1244,11 @@ deletealarm.addEventListener("click", edit_alarm);
                 const tip2= document.getElementById("tip2");
                 //if user deleted config, then only saveconf button must be enabled
                 if(this.value == 0){    
+                    const tip1= document.getElementById("tip1");
+                    if(tip1.innerText!==""){
+                        tip1.innerText= "";
+                    }
+                    
                     
                     tip2.innerText="ESPclock is now disconnected. To connect ESPclock to a new wifi, connect your device to ESPclock AP, then go to http://192.168.4.1 and insert new wifi credentials";
                     tip2.style.margin = "0px 26px 18px 26px";

@@ -44,7 +44,7 @@ uint8_t attempts = 0; //connection attempts --> when it's set to 0 again, it mea
 
 AsyncWebServer server(80);
 
-#define BUZZER_PIN 3
+#define BUZZER_PIN 5
 
 //TM1637 DISPLAY SETUP
 #define CLK 9  //previously gpio2
@@ -55,6 +55,7 @@ bool colon=true;
 bool blink=true;
 bool br_auto=false;
 bool twelve=false;
+bool leadingzero=false;
 uint8_t brightness=7;
 uint8_t ms_ovfl=0;
 
@@ -128,7 +129,6 @@ uint8_t hh, mm; //hour and minutes
 
 //all entries are initialized to 0
 bool days[7] = {0};   //in this case sun=days[0], mon=days[1], tue=days[2], ...
-
 bool tone_var=0;
 uint8_t snooze;
 //uint8_t ringtone;
@@ -321,7 +321,7 @@ void alarm_ring(){
 //TTP223 DEBOUNCE
 unsigned long prevMillis = 0;     // Previous millis
 unsigned long elapsedMillis = 0;      // Elapesed millis since touch
-int debounceTime = 800;              // Debounce time for the touch sensor
+unsigned long debounceTime = 800;              // Debounce time for the touch sensor
 
 void alarm_off(){
   elapsedMillis = millis() - prevMillis;
@@ -358,7 +358,7 @@ void setup() {
   pinMode(BUZZER_PIN, OUTPUT); 
 
   pinMode(4, INPUT_PULLUP);   //TTP223 Touch button
-  attachInterrupt(digitalPinToInterrupt(4), alarm_off, RISING);
+  attachInterrupt(digitalPinToInterrupt(3), alarm_off, RISING);
 
  //LittleFS.format();
 
@@ -416,6 +416,7 @@ void setup() {
     uc_json["config"]= (LittleFS.exists("/config.json")) ? 1 : 0;
     uc_json["millis"]= millis();
     uc_json["msovfl"]= ms_ovfl;
+    uc_json["lz"]= leadingzero;
     String uc_str;
     serializeJson(uc_json, uc_str);
 
@@ -441,7 +442,6 @@ void setup() {
     }
   });
 
-  //---------------------------------------------x
   //client(JS) sends http POST req with wifi credentials (inside the body) to server
   server.on("/sendcreds", HTTP_POST, [](AsyncWebServerRequest *request) {}, NULL, [](AsyncWebServerRequest *request, uint8_t *data, size_t len, size_t index, size_t total) {
            
@@ -595,6 +595,13 @@ void setup() {
     request->send(200, "application/json", "{\"status\":\"updated\"}");
   });
 
+  server.on("/lead0", HTTP_POST, [](AsyncWebServerRequest *request){}, NULL, [](AsyncWebServerRequest *request, uint8_t *data, size_t len, size_t index, size_t total){
+            JsonDocument leadz_json;
+            deserializeJson(leadz_json, data);
+            leadingzero = (uint8_t)leadz_json["lz"];  //update leading zero var
+            request->send(200, "application/json", "{\"status\":\"updated\"}");
+  });
+
   /*this saves alarm data on memory and in json too*/
   server.on("/alarm", HTTP_POST, [](AsyncWebServerRequest *request){}, NULL, [](AsyncWebServerRequest *request, uint8_t *data, size_t len, size_t index, size_t total){
     
@@ -675,9 +682,9 @@ void setup() {
     }
 
     al_json["week"]=sk;
-    Serial.println(timehm);
-    Serial.println("alcheck STRING > " + sk);
-    Serial.println("Snooze > " + String(snooze));
+    //Serial.println(timehm);
+    //Serial.println("alcheck STRING > " + sk);
+    //Serial.println("Snooze > " + String(snooze));
 
     String al_str;
     serializeJson(al_json, al_str);
@@ -707,7 +714,8 @@ void setup() {
       config[F("br_auto")] = br_auto;     //bool as 1 or 0
       config[F("br")] = brightness;       //uint8_t
       config[F("blink")] = blink;        //bool as 1 or 0
-      config[F("twelve")] = twelve;           
+      config[F("twelve")] = twelve;     
+      config[F("lz")] = leadingzero;      
       config.shrinkToFit();
               
       File fc = LittleFS.open("/config.json", "w+");
@@ -835,21 +843,21 @@ void loop() {
         if(blink==1){
             if(colon==true){   //colon is ON
               if(!twelve){
-                mydisplay.showNumberDecEx(timeinfo.tm_hour, 0b01000000, true, 2, 0);
-                mydisplay.showNumberDecEx(timeinfo.tm_min, 0b01000000, true, 2, 2);
+                mydisplay.showNumberDecEx(timeinfo.tm_hour, 0b01000000, leadingzero, 2, 0);
+                mydisplay.showNumberDecEx(timeinfo.tm_min, 0b01000000, leadingzero, 2, 2);
               }
 
               else{
                 if(timeinfo.tm_hour <= 12){
-                  mydisplay.showNumberDecEx(timeinfo.tm_hour, 0b01000000, true, 2, 0);
+                  mydisplay.showNumberDecEx(timeinfo.tm_hour, 0b01000000, leadingzero, 2, 0);
                  
                 }
 
                 else{
-                  mydisplay.showNumberDecEx(timeinfo.tm_hour-12, 0b01000000, true, 2, 0);
+                  mydisplay.showNumberDecEx(timeinfo.tm_hour-12, 0b01000000, leadingzero, 2, 0);
                 }
 
-                mydisplay.showNumberDecEx(timeinfo.tm_min, 0b01000000, true, 2, 2);
+                mydisplay.showNumberDecEx(timeinfo.tm_min, 0b01000000, leadingzero, 2, 2);
               }
               colon=false;  
           }
@@ -857,20 +865,20 @@ void loop() {
           else if(colon==false){//colon is OFF
 
               if(!twelve){
-                mydisplay.showNumberDecEx(timeinfo.tm_hour, 0, true, 2, 0);
-                mydisplay.showNumberDecEx(timeinfo.tm_min, 0, true, 2, 2);
+                mydisplay.showNumberDecEx(timeinfo.tm_hour, 0, leadingzero, 2, 0);
+                mydisplay.showNumberDecEx(timeinfo.tm_min, 0, leadingzero, 2, 2);
               }
 
               else{ //if 12hr mode is active
                 if(timeinfo.tm_hour <= 12){
-                  mydisplay.showNumberDecEx(timeinfo.tm_hour, 0, true, 2, 0);
+                  mydisplay.showNumberDecEx(timeinfo.tm_hour, 0, leadingzero, 2, 0);
                 }
                 
                 else{
-                  mydisplay.showNumberDecEx(timeinfo.tm_hour-12, 0, true, 2, 0);
+                  mydisplay.showNumberDecEx(timeinfo.tm_hour-12, 0, leadingzero, 2, 0);
                 }
 
-                mydisplay.showNumberDecEx(timeinfo.tm_min, 0, true, 2, 2);
+                mydisplay.showNumberDecEx(timeinfo.tm_min, 0, leadingzero, 2, 2);
               }
 
             colon=true;
@@ -880,20 +888,20 @@ void loop() {
         	
       else{ //when blink==0
         if(!twelve){
-                mydisplay.showNumberDecEx(timeinfo.tm_hour, 0b01000000, true, 2, 0);
-                mydisplay.showNumberDecEx(timeinfo.tm_min, 0b01000000, true, 2, 2);
+                mydisplay.showNumberDecEx(timeinfo.tm_hour, 0b01000000, leadingzero, 2, 0);
+                mydisplay.showNumberDecEx(timeinfo.tm_min, 0b01000000, leadingzero, 2, 2);
         }
 
         else{//if 12hr mode is active
 
                   if(timeinfo.tm_hour <= 12){
-                    mydisplay.showNumberDecEx(timeinfo.tm_hour, 0b01000000, true, 2, 0);
+                    mydisplay.showNumberDecEx(timeinfo.tm_hour, 0b01000000, leadingzero, 2, 0);
                   }
 
                   else{
-                    mydisplay.showNumberDecEx(timeinfo.tm_hour-12, 0b01000000, true, 2, 0);
+                    mydisplay.showNumberDecEx(timeinfo.tm_hour-12, 0b01000000, leadingzero, 2, 0);
                   }
-                  mydisplay.showNumberDecEx(timeinfo.tm_min, 0b01000000, true, 2, 2);
+                  mydisplay.showNumberDecEx(timeinfo.tm_min, 0b01000000, leadingzero, 2, 2);
         }
       }    
     }
