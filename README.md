@@ -6,8 +6,7 @@
 ![GitHub Repo stars](https://img.shields.io/github/stars/telepath9/ESPclock?style=for-the-badge&logo=github&color=A02ADB	)
 
 [![Static Badge](https://img.shields.io/badge/Mentioned_by-Hackster.io-%232E9FE6?style=for-the-badge&logo=hackster&logoColor=white&color=%232E9FE6)](https://www.hackster.io/news/a-diy-retro-modern-alarm-clock-for-under-10-4e4e972345d8)
-
-[![Static Badge](https://img.shields.io/badge/Mentioned_by-SeeedStudio-%232E9FE6?style=for-the-badge&color=rgb(0,58,74))](https://www.facebook.com/seeedstudiosz/posts/seeedxiao-what-if-your-desk-clock-could-sync-time-over-wi-fi-and-be-fully-custom/1339124548253141/)
+[![Static Badge](https://img.shields.io/badge/Mentioned_by-SeeedStudio-%232E9FE6?style=for-the-badge&color=rgb(0,58,74))](https://www.linkedin.com/posts/seeedstudio_seeedxiao-xiao-esp32-activity-7438192154243493888-qwSJ)
 
 
 
