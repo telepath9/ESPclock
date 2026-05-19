@@ -164,7 +164,7 @@ void wifiScan(){
       net_list["found"] = n;
       JsonArray network = net_list["network"].to<JsonArray>();
 
-      for(byte j = 0; j < n+1; j++){
+      for(byte j = 0; j < n; j++){
         JsonArray network_n_credentials = network[j]["credentials"].to<JsonArray>();
         network_n_credentials.add(WiFi.SSID(j));
         network_n_credentials.add("");
@@ -193,7 +193,8 @@ void wifiScan(){
       net_listUp["found"] = n;
       JsonArray network = net_listUp["network"].to<JsonArray>();
             
-      for(byte k = 0; k < n+1; k++){
+      for(byte k = 0; k < n; k++){  //this must be n not n+1 🟠🟠🟠 on esp8266 n+1 creates a corrupted entry for a ssid that doesn't exists
+
         //dynamically adds, to each entry "k", a new array to the main array "network"
         JsonArray network_n_credentials = network[k]["credentials"].to<JsonArray>();
 
@@ -212,7 +213,7 @@ void wifiScan(){
 
 void checkConfig(void){
 
-    if(LittleFS.exists("/config.json")){
+    //if(LittleFS.exists("/config.json")){
       Serial.println("Restoring data");
       creds_available=true;
 
@@ -237,7 +238,6 @@ void checkConfig(void){
       //if it can't restore wifi, then user must go to webUI to make a new config
       while(WiFi.status() != WL_CONNECTED){
           delay(50);
-          //Serial.print("+");
           display.setDisplayToString("trY", 0, 0);
 
         if(myTimer(3000)){  
@@ -275,7 +275,7 @@ void checkConfig(void){
         leadingzero=load_cf[F("lz")];
         fld.close();
       }
-  }
+  //}
   return;
 }
 
@@ -340,6 +340,7 @@ unsigned long debounceTime = 800;              // Debounce time for the touch se
 
 void alarm_off(){
   elapsedMillis = millis() - prevMillis;
+
   if(alarm_stop==0 && elapsedMillis > debounceTime){
     alarm_stop=1;
     snoozeOn=0;
@@ -347,6 +348,8 @@ void alarm_off(){
   }
   prevMillis = millis();
   snoozeMsStart=0;
+
+  //if(ssid && ssid[0]!='\0'){}     //checks if ssid pointer is NULL. then checks if the 1st char is '\0' 
 }
 
 //this is called when user requests resources from esp webserver that don't exists
@@ -396,7 +399,10 @@ void setup() {
     return;
   }
   
-  checkConfig();
+  if(LittleFS.exists("/config.json")){
+    checkConfig();
+  }
+
   checkAlarm();   
   
   //PHASE1 - AP_STA_MODE + WIFI SCAN ---------------------------x
@@ -539,7 +545,7 @@ void setup() {
     configTime(gmt_offset*3600, 3600, ntp_addr);  //arduino core function
     //Serial.println("NTP server: " + String(ntp_addr));
     //Serial.println("OFFSET: " + String(gmt_offset));
-    if(start_NtpClient == false){
+    if(start_NtpClient==false){
       start_NtpClient=true;
     }
     
@@ -766,8 +772,27 @@ void setup() {
 //https://werner.rothschopf.net/microcontroller/202103_arduino_esp32_ntp_en.htm
 //ESP officail SNTP https://docs.espressif.com/projects/esp-idf/en/stable/esp32/api-reference/system/system_time.html
 
-void loop() {
+
+unsigned long acPrevMillis=0; //used by autoConnect
+unsigned long acElapsedMillis=0;  //used by autoConnect
+
+//🟢🟢NEW🟢🟢resilient wifi-connection: when POWER OUTAGE HAPPENS, it will retry the connection every (about) 2.5min
+bool autoConnect(void){
+    acElapsedMillis = millis() - acPrevMillis;
+    bool retval=0;
+    if(acElapsedMillis >= 150000){
+      //checkConfig();
+      acPrevMillis=millis();
+      retval=1;
+    }
+    return retval;
+  }
+
+
+
+  void loop() {
   // Serial.println(esp_clk_get_cpu_freq_mhz());
+
   if(millis() == 4294967295UL){
     ms_ovfl++;  //can lead to a bug because uint8_t max value is 255, but it'll reach this value after 50days*256= 35years of activity
   }
@@ -777,6 +802,11 @@ void loop() {
     newScan=false;
   }
 
+    //Serial.println(WiFi.status());                     
+  if(LittleFS.exists("/config.json") && start_NtpClient==false && autoConnect()){ 
+    checkConfig();
+  }
+  
   if(start_NtpClient==true){
 
     /*The getLocalTime() function has an optional timeout parameter in milliseconds 
@@ -934,11 +964,13 @@ void loop() {
   }     
 
   else{
+    
     displayAnim();
+    //Serial.println("looping form else1");
   }
 
   //optimization: instead of using "bool connected", i can only use WL_CONNECTED
-  if(connected == false && creds_available == true ){
+  if(connected == false && creds_available == true){
     
     displayAnim();
     WiFi.begin(ssid, password);
