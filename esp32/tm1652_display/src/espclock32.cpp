@@ -344,7 +344,6 @@ void alarm_off(){
   if(alarm_stop==0 && elapsedMillis > debounceTime){
     alarm_stop=1;
     snoozeOn=0;
-    Serial.println("Alarm OFF");
   }
   prevMillis = millis();
   snoozeMsStart=0;
