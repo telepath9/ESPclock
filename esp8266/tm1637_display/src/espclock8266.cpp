@@ -6,9 +6,8 @@
 #include <ESP8266mDNS.h>   //https://tttapa.github.io/ESP8266/Chap08%20-%20mDNS.html
 #include <FS.h>            //for file handling
 #include <LittleFS.h>      //to access to filesystem
+#include "TM1637Display.h"
 #include <time.h>
-#include <TM1652.h>
-#include <TM16xxDisplay.h>
 
 //JSON optimizations
 #define ARDUINOJSON_SLOT_ID_SIZE 1
@@ -51,48 +50,61 @@ uint8_t attempts = 0;
 //creating an Asyncwebserver object
 AsyncWebServer server(80);
 
-//TM1652 DISPLAY SETUP
+//TM1637 DISPLAY SETUP
+#define CLK 5 //D1 pin 5
+#define DIO 4 //D2 pin 4
 
-TM1652 module(4, 4);                 //module(GPIOpin, n_ofdigits); --> creates the low-level driver object for the TM1652 chip
-TM16xxDisplay display(&module, 4);   //TM16xxDisplay display(&module, n_ofdigits);
-
-
+TM1637Display mydisplay(CLK, DIO);
 bool colon=true;
 bool blink=true;
 bool br_auto=false;
 bool twelve=false;
-uint8_t ms_ovfl=0;
 uint8_t brightness=7;
+uint8_t ms_ovfl=0;
 
-uint8_t px=4;  
+const uint8_t SEG_try[]={
+  SEG_D | SEG_E | SEG_F | SEG_G,  //t
+  SEG_E | SEG_G,                  //r
+  SEG_B | SEG_C | SEG_D | SEG_F | SEG_G  //Y
+};
+
+const uint8_t SEG_Err[]={
+  SEG_A | SEG_D | SEG_E | SEG_F | SEG_G, //E
+  SEG_E | SEG_G, SEG_E | SEG_G          //rr
+};
+
+uint8_t px=4;                   //used by displayAnim()
+const uint8_t SEG_WAIT[] = {     //used by displayAnim()
+	 SEG_G
+};
+
 bool forw = true;               //used by displayAnim()
 
 void displayAnim(void){
    if(myTimer(500)){
         if(forw==true){ // 4 -> 0
-          display.clear();
-          module.setSegments(0x40, px);
-          --px;          
-          
-          if(px==0){
-            forw=false;
-          }
+            mydisplay.clear();
+            mydisplay.setSegments(SEG_WAIT, 1, px); 
+            --px;          
+
+            if(px==0){
+              forw=false;
+            }
         }
 
         else if(forw==false){ //0 -> 4
-          display.clear();
-          module.setSegments(0x40, px);
-          ++px;          
-          
-          if(px==3){
+
+            mydisplay.clear();
+            mydisplay.setSegments(SEG_WAIT, 1, px); 
+            ++px;          
+
+            if(px==3){
             forw= true;
-            
-          }
+            }
         }
   }
   return;
 }
-
 //END TM1637 DISPLAY SETUP
 
 //NTP SETUP
@@ -126,48 +138,27 @@ void wifiScan(){
 
     byte n = WiFi.scanNetworks();
     Serial.print(n);
-    Serial.println(" network(s) found. Displaying the first 5");
+    Serial.println(" networks found");
 
     //---------------------------------------------x
     //SSIDs found are stored in json
     //arduinoJson7 doesn't use static/dynamicJsonDocument anymore, but it uses only JsonDocument
-    //---------------------------------------------x    
       
     //If json doesn't exists yet, it creates it
     if(!LittleFS.exists("/network_list.json")){
-        JsonDocument net_list;
-        //Serial.println("Network list doesn't exists. Creating it now..."); 🟠
+      JsonDocument net_list;
+        //Serial.println("Network list doesn't exists. Creating it now...");
+      net_list["found"] = n;
+      JsonArray network = net_list["network"].to<JsonArray>();
 
-        //if the number of networks found is <5 (so from [0-4])...
-        if(n<5){
-            
-            //stores number of found networks in json
-            net_list["found"] = n;
-            JsonArray network = net_list["network"].to<JsonArray>();
-
-            for(byte j = 0; j < n; j++){
-              JsonArray network_n_credentials = network[j]["credentials"].to<JsonArray>();
-              network_n_credentials.add(WiFi.SSID(j));
-              network_n_credentials.add("");
-            }
-        }
-
-        //if it finds >5 networks, it will display only the top five networks, with index: [0-4]
-        else{
-          
-          net_list["found"] = 5;
-          JsonArray network = net_list["network"].to<JsonArray>();
-
-          for(byte j = 0; j < 5; j++){
-              JsonArray network_n_credentials = network[j]["credentials"].to<JsonArray>();
-              network_n_credentials.add(WiFi.SSID(j));
-              network_n_credentials.add("");
-          }
+      for(byte j = 0; j < n; j++){
+        JsonArray network_n_credentials = network[j]["credentials"].to<JsonArray>();
+        network_n_credentials.add(WiFi.SSID(j));
+        network_n_credentials.add("");
       }
 
       //---------------------------------------------x
-      //After creating JSON file (jsondocument), it must be stored in FS
-      //---------------------------------------------x
+      //After creating JSON file (jsondocument) it stores it in FS
       File fx = LittleFS.open("/network_list.json", "w");
 
       //serializes json and passes it to "fx" var
@@ -175,45 +166,27 @@ void wifiScan(){
       fx.close();
     }
 
-
-    //---------EXISTING JSON---------------------
     //2. IF JSON ALREADY EXISTS: access to json, reset it, then add new networks to it
     else{
-      //Serial.println("Network list already exists! Updating it..."); 🟠
+      //Serial.println("Network list already exists! Updating it..."); 
       JsonDocument net_listUp;
      
       //1. fetch and open json from FS, then deserializes it
       File fxup = LittleFS.open("/network_list.json", "w+");
       deserializeJson(net_listUp, fxup);
 
-      //if there are n<5 networks
-      if(n<5){
-        //updates the values of the entries of the older one
-        net_listUp["found"] = n;
-        JsonArray network = net_listUp["network"].to<JsonArray>();
-
-        for(byte k = 0; k < n; k++){
-            JsonArray network_n_credentials = network[k]["credentials"].to<JsonArray>();
-            network_n_credentials.add(WiFi.SSID(k));
-            network_n_credentials.add("");    //
-        }
-      }
-
-      //if there are n>5 networks -> it truncates the list to only 5 ssids
-      else{
-            net_listUp["found"] = 5;
-            JsonArray network = net_listUp["network"].to<JsonArray>();
+      net_listUp["found"] = n;
+      JsonArray network = net_listUp["network"].to<JsonArray>();
             
-            for(byte k = 0; k < 5; k++){
-              //dynamically adds, to each entry "k", a new array to the main array "network"
-              JsonArray network_n_credentials = network[k]["credentials"].to<JsonArray>();
+      for(byte k = 0; k < n; k++){
+        //dynamically adds, to each entry "k", a new array to the main array "network"
+        JsonArray network_n_credentials = network[k]["credentials"].to<JsonArray>();
 
-              //adds SSID name to the entry[k][0]
-              network_n_credentials.add(WiFi.SSID(k));
+        //adds SSID name to the entry[k][0]
+        network_n_credentials.add(WiFi.SSID(k));
 
-              //adds pw field (initially empty) to entry[k][1] 
-              network_n_credentials.add("");
-            }
+        //adds pw field (initially empty) to entry[k][1] 
+        network_n_credentials.add("");
       }
 
       //3. serializing
@@ -225,7 +198,7 @@ void wifiScan(){
 void checkConfig(void){
 
     if(LittleFS.exists("/config.json")){
-      Serial.println(F("config esists, trying to restore it"));
+      Serial.println("Restoring data");
       creds_available=true;
 
       File fld = LittleFS.open("/config.json", "r");
@@ -235,7 +208,7 @@ void checkConfig(void){
 
       if (error) {
         fld.close();
-        Serial.print(F("deserializeJson() failed: "));
+        Serial.print("deserializeJson() failed: ");
         Serial.println(error.f_str());
         return;
       }
@@ -248,12 +221,14 @@ void checkConfig(void){
       //if it restores wifi connection, then it restore the other settings too
       //if it can't restore wifi, then user must go to webUI to make a new config
       while(WiFi.status() != WL_CONNECTED){
-          delay(50);
-          display.setDisplayToString("trY", 0, 0);
+          delay(100);
+          mydisplay.setSegments(SEG_try, 3, 0);
+          //Serial.print("+");
 
         if(myTimer(3000)){  
+          
           ++attempts;
-          module.setDisplayDigit(attempts,3,false);  // show number 7 at position 1 with dot: 7.
+          mydisplay.showNumberDec(attempts, true, 1, 3);
         }
 
         else if(attempts==4){
@@ -272,12 +247,12 @@ void checkConfig(void){
 
         start_NtpClient=true;
         ntp_addr= strdup(load_cf["ntp_ad"]); 
-        gmt_offset = load_cf["offset"]; 
-        configTime(gmt_offset*3600, 3600, ntp_addr);
-        brightness = (uint8_t)load_cf["br"];
-        module.setupDisplay(true, brightness, 6);
-        //display.setIntensity(brightness);
+        gmt_offset = load_cf["offset"];   
         
+        configTime(gmt_offset*3600, 3600, ntp_addr);
+  
+        brightness = (uint8_t)load_cf["br"];
+        mydisplay.setBrightness(brightness);
         blink=  load_cf[F("blink")];
         br_auto = load_cf[F("br_auto")];
         twelve= load_cf[F("twelve")];
@@ -304,25 +279,27 @@ void initMDNS(){
 
 void setup() {
   Serial.begin(115200);
-  //Serial.println("CPU freq: "+ String(ESP.getCpuFreqMHz()));
-  module.begin(true, 4, 6);   //4=brightness level
+  
+  //display
+  mydisplay.setBrightness(7); 
+  mydisplay.clear();
 
+  //to format FS
   //LittleFS.format();
-
-  //Begin LittleFS can throw Err0
-  if(!LittleFS.begin()){
-    display.setDisplayToString("Err", 0, 0);
-    module.setDisplayDigit(0,3,false);
-    Serial.println("An Error has occurred while mounting LittleFS");
+  
+  if(!LittleFS.begin()){  //LittleFS.begin() can throw Err0
+    mydisplay.setSegments(SEG_Err, 3, 0);
+    mydisplay.showNumberDec(0, false, 1, 3);
+    //Serial.println("An Error has occurred while mounting LittleFS");
     delay(10000);
     return;
   }
   
   //can throw Err1
   if(!LittleFS.exists("/index.html")){
-    display.setDisplayToString("Err", 0, 0);
-    module.setDisplayDigit(1,3,false);
-    Serial.println("\nSetup Html page NOT FOUND!");
+    mydisplay.setSegments(SEG_Err, 3, 0);
+    mydisplay.showNumberDec(1, false, 1, 3);
+    //Serial.println("\nSetup Html page NOT FOUND!");
     delay(10000);
     return;
   }
@@ -483,7 +460,7 @@ void setup() {
   });
 
 
- server.on("/slider", HTTP_POST, [](AsyncWebServerRequest *request){}, NULL, [](AsyncWebServerRequest *request, uint8_t *data, size_t len, size_t index, size_t total){
+  server.on("/slider", HTTP_POST, [](AsyncWebServerRequest *request){}, NULL, [](AsyncWebServerRequest *request, uint8_t *data, size_t len, size_t index, size_t total){
           
           //optimization: maybe i shouldn't use JSON for this (?)
           JsonDocument bgt_json;
@@ -491,8 +468,8 @@ void setup() {
 
           //extract light value
           brightness =(uint8_t)atoi(bgt_json["bgt"]);
-          module.setupDisplay(true, brightness, 6);
-          //display.setIntensity(brightness);
+          mydisplay.setBrightness(brightness); 
+          //Serial.println((uint8_t)atoi(bgt_json["bgt"]));
           request->send(200, "application/json", "{\"status\":\"BGT OK\"}");
   });
 
@@ -502,6 +479,7 @@ void setup() {
             JsonDocument br_auto_json;
             deserializeJson(br_auto_json, data);
             br_auto = br_auto_json["br"];
+
             /*to get single time vars 
             Serial.println("Time variables");
             char timeHour[3];
@@ -510,25 +488,25 @@ void setup() {
             //optimization: should i replace it with a switch-case (?)
             if(timeinfo.tm_hour >= 0 && timeinfo.tm_hour < 9){
               brightness=0;
-              module.setupDisplay(true, brightness, 6);
+              mydisplay.setBrightness(0);
               request->send(200, "application/json", "{\"status\":\"0\"}");
             }
 
             else if(timeinfo.tm_hour >= 7 && timeinfo.tm_hour < 17){
               brightness=6;
-              module.setupDisplay(true, brightness, 6);
+              mydisplay.setBrightness(6);
               request->send(200, "application/json", "{\"status\":\"6\"}");
             }
 
             else if(timeinfo.tm_hour >= 17 && timeinfo.tm_hour < 20){
               brightness=3;
-              module.setupDisplay(true, brightness, 6);
+              mydisplay.setBrightness(3);
               request->send(200, "application/json", "{\"status\":\"3\"}");
             }
 
             else if(timeinfo.tm_hour >= 20){
               brightness=2;
-              module.setupDisplay(true, brightness, 6);
+              mydisplay.setBrightness(2);
               request->send(200, "application/json", "{\"status\":\"2\"}");
             }
   });
@@ -593,12 +571,12 @@ void setup() {
     }
 
     request->send(200, "application/json", "{\"status\":\"updated\"}");
-  });
+    });
 
-  server.on("/uptime", HTTP_GET, [](AsyncWebServerRequest *request) {
+     server.on("/uptime", HTTP_GET, [](AsyncWebServerRequest *request) {
     request->send(200, "application/json", "{\"ms\":\""+ String(millis()) +"\",\"msovfl\":\""+ String(ms_ovfl) + "\"}"); 
   }); 
-  
+
   server.onNotFound(notFound);
 
   //start server
@@ -609,7 +587,6 @@ void setup() {
 void loop() {
   
   MDNS.update();
-
   if(millis() == 4294967295){
     ms_ovfl++;  //will reset to 0 when it reaches its max value 255, but it'll reach this value after 50days*256= 35years of activity
   }
@@ -624,28 +601,28 @@ void loop() {
    
     if(myTimer(1000)){
         //printLocalTime();
-         if(br_auto==true){
+        if(br_auto==true){
              
             switch(timeinfo.tm_hour){
     
               case 0 || 00: 
               brightness=0;
-              module.setupDisplay(true, brightness, 6);
+              mydisplay.setBrightness(0);
               break;
 
               case 9:
               brightness=6;
-              module.setupDisplay(true, brightness, 6);
+              mydisplay.setBrightness(6);
               break;
 
               case 17:
               brightness=3;
-              module.setupDisplay(true, brightness, 6);
+              mydisplay.setBrightness(3);
               break;
 
               case 20: //maybe i can remove this one and put brightness=2 at 17:00
               brightness=2; 
-              module.setupDisplay(true, brightness, 6);
+              mydisplay.setBrightness(2);
               break;
             }
         }   
@@ -653,68 +630,72 @@ void loop() {
         
         if(blink==1){
             if(colon==true){   //colon is ON
-              if(!twelve){  
-                //module.setDisplayToDecNumber((timeinfo.tm_hour*100)+timeinfo.tm_min, 0x04, true);
-                display.setDisplayToDecNumber((timeinfo.tm_hour*100)+timeinfo.tm_min, 0x04, true);
+              if(!twelve){
+                mydisplay.showNumberDecEx(timeinfo.tm_hour, 0b01000000, true, 2, 0);
+                mydisplay.showNumberDecEx(timeinfo.tm_min, 0b01000000, true, 2, 2);
               }
 
-              //12hr format is on
               else{
                 if(timeinfo.tm_hour <= 12){
-                  //module.setDisplayToDecNumber((timeinfo.tm_hour*100)+timeinfo.tm_min, 0x04, true);
-                  display.setDisplayToDecNumber((timeinfo.tm_hour*100)+timeinfo.tm_min, 0x04, true);
+                  mydisplay.showNumberDecEx(timeinfo.tm_hour, 0b01000000, true, 2, 0);
+                 
                 }
 
                 else{
-                 // module.setDisplayToDecNumber(((timeinfo.tm_hour-12)*100)+timeinfo.tm_min, 0x04, true);
-                  display.setDisplayToDecNumber(((timeinfo.tm_hour-12)*100)+timeinfo.tm_min, 0x04, true);
+                  mydisplay.showNumberDecEx(timeinfo.tm_hour-12, 0b01000000, true, 2, 0);
                 }
+
+                mydisplay.showNumberDecEx(timeinfo.tm_min, 0b01000000, true, 2, 2);
               }
+
+           
               colon=false;  
           }
 
-          else if(colon==false){  //colon is OFF
-
+          else if(colon==false){
+            //colon is OFF
+            
               if(!twelve){
-                //module.setDisplayToDecNumber((timeinfo.tm_hour*100)+timeinfo.tm_min, 0, false);
-                display.setDisplayToDecNumber((timeinfo.tm_hour*100)+timeinfo.tm_min, 0, true);
+                mydisplay.showNumberDecEx(timeinfo.tm_hour, 0, true, 2, 0);
+                mydisplay.showNumberDecEx(timeinfo.tm_min, 0, true, 2, 2);
               }
 
-              //if 12hr mode is active
-              else{ 
+              else{ //if 12hr mode is active
                 if(timeinfo.tm_hour <= 12){
-                  display.setDisplayToDecNumber((timeinfo.tm_hour*100)+timeinfo.tm_min, 0, true);
-                  //module.setDisplayToDecNumber((timeinfo.tm_hour*100)+timeinfo.tm_min, 0, true);
+                  mydisplay.showNumberDecEx(timeinfo.tm_hour, 0, true, 2, 0);
                 }
+                
                 else{
-                  //module.setDisplayToDecNumber(((timeinfo.tm_hour-12)*100)+timeinfo.tm_min, 0, true);
-                  display.setDisplayToDecNumber(((timeinfo.tm_hour-12)*100)+timeinfo.tm_min, 0, true);
+                  mydisplay.showNumberDecEx(timeinfo.tm_hour-12, 0, true, 2, 0);
                 }
+
+                mydisplay.showNumberDecEx(timeinfo.tm_min, 0, true, 2, 2);
               }
 
             colon=true;
           }
         }
         
-        //if blink==0
+        	//if blink==0
         else{
-
           if(!twelve){
-            display.setDisplayToDecNumber((timeinfo.tm_hour*100)+timeinfo.tm_min, 0x04, true);
+                  mydisplay.showNumberDecEx(timeinfo.tm_hour, 0b01000000, true, 2, 0);
+                  mydisplay.showNumberDecEx(timeinfo.tm_min, 0b01000000, true, 2, 2);
           }
 
-          //if 12hr mode is active
-              else{ 
+          else{
                 if(timeinfo.tm_hour <= 12){
-                  display.setDisplayToDecNumber((timeinfo.tm_hour*100)+timeinfo.tm_min, 0x04, true);
+                  mydisplay.showNumberDecEx(timeinfo.tm_hour, 0b01000000, true, 2, 0);
+                 
                 }
-                
+
                 else{
-                  display.setDisplayToDecNumber(((timeinfo.tm_hour-12)*100)+timeinfo.tm_min, 0x04, true);
+                  mydisplay.showNumberDecEx(timeinfo.tm_hour-12, 0b01000000, true, 2, 0);
                 }
-              }
+
+                mydisplay.showNumberDecEx(timeinfo.tm_min, 0b01000000, true, 2, 2);
+          }
         }
-        
     }
   }     
 
@@ -722,22 +703,15 @@ void loop() {
     displayAnim();
   }
 
-
   //optimization: instead of using "bool connected", i can only use WL_CONNECTED
   if(connected == false && creds_available == true ){
     
     displayAnim();
-    /* Serial.print("SSID chosen: ");
-    Serial.println(ssid);
-    Serial.print("PW is: ");
-    Serial.println(password); */
-
     WiFi.begin(ssid, password);
     
     while(1){
 
       displayAnim();
-            
       //cycles here until it's connected to wifi
       if (WiFi.status() != WL_CONNECTED && creds_available==true){
           delay(200);

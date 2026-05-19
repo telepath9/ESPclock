@@ -116,7 +116,6 @@ const char *ntp_addr;
 int gmt_offset;
 bool start_NtpClient = false;
 
-
 void wifiScan(){
     //---------------------------------------------x
     //start wifiSCAN
@@ -126,48 +125,27 @@ void wifiScan(){
 
     byte n = WiFi.scanNetworks();
     Serial.print(n);
-    Serial.println(" network(s) found. Displaying the first 5");
+    Serial.println(" networks found");
 
     //---------------------------------------------x
     //SSIDs found are stored in json
     //arduinoJson7 doesn't use static/dynamicJsonDocument anymore, but it uses only JsonDocument
-    //---------------------------------------------x    
       
     //If json doesn't exists yet, it creates it
     if(!LittleFS.exists("/network_list.json")){
-        JsonDocument net_list;
-        //Serial.println("Network list doesn't exists. Creating it now..."); 🟠
+      JsonDocument net_list;
+        //Serial.println("Network list doesn't exists. Creating it now...");
+      net_list["found"] = n;
+      JsonArray network = net_list["network"].to<JsonArray>();
 
-        //if the number of networks found is <5 (so from [0-4])...
-        if(n<5){
-            
-            //stores number of found networks in json
-            net_list["found"] = n;
-            JsonArray network = net_list["network"].to<JsonArray>();
-
-            for(byte j = 0; j < n; j++){
-              JsonArray network_n_credentials = network[j]["credentials"].to<JsonArray>();
-              network_n_credentials.add(WiFi.SSID(j));
-              network_n_credentials.add("");
-            }
-        }
-
-        //if it finds >5 networks, it will display only the top five networks, with index: [0-4]
-        else{
-          
-          net_list["found"] = 5;
-          JsonArray network = net_list["network"].to<JsonArray>();
-
-          for(byte j = 0; j < 5; j++){
-              JsonArray network_n_credentials = network[j]["credentials"].to<JsonArray>();
-              network_n_credentials.add(WiFi.SSID(j));
-              network_n_credentials.add("");
-          }
+      for(byte j = 0; j < n; j++){
+        JsonArray network_n_credentials = network[j]["credentials"].to<JsonArray>();
+        network_n_credentials.add(WiFi.SSID(j));
+        network_n_credentials.add("");
       }
 
       //---------------------------------------------x
-      //After creating JSON file (jsondocument), it must be stored in FS
-      //---------------------------------------------x
+      //After creating JSON file (jsondocument) it stores it in FS
       File fx = LittleFS.open("/network_list.json", "w");
 
       //serializes json and passes it to "fx" var
@@ -175,45 +153,27 @@ void wifiScan(){
       fx.close();
     }
 
-
-    //---------EXISTING JSON---------------------
     //2. IF JSON ALREADY EXISTS: access to json, reset it, then add new networks to it
     else{
-      //Serial.println("Network list already exists! Updating it..."); 🟠
+      //Serial.println("Network list already exists! Updating it..."); 
       JsonDocument net_listUp;
      
       //1. fetch and open json from FS, then deserializes it
       File fxup = LittleFS.open("/network_list.json", "w+");
       deserializeJson(net_listUp, fxup);
 
-      //if there are n<5 networks
-      if(n<5){
-        //updates the values of the entries of the older one
-        net_listUp["found"] = n;
-        JsonArray network = net_listUp["network"].to<JsonArray>();
-
-        for(byte k = 0; k < n; k++){
-            JsonArray network_n_credentials = network[k]["credentials"].to<JsonArray>();
-            network_n_credentials.add(WiFi.SSID(k));
-            network_n_credentials.add("");    //
-        }
-      }
-
-      //if there are n>5 networks -> it truncates the list to only 5 ssids
-      else{
-            net_listUp["found"] = 5;
-            JsonArray network = net_listUp["network"].to<JsonArray>();
+      net_listUp["found"] = n;
+      JsonArray network = net_listUp["network"].to<JsonArray>();
             
-            for(byte k = 0; k < 5; k++){
-              //dynamically adds, to each entry "k", a new array to the main array "network"
-              JsonArray network_n_credentials = network[k]["credentials"].to<JsonArray>();
+      for(byte k = 0; k < n; k++){
+        //dynamically adds, to each entry "k", a new array to the main array "network"
+        JsonArray network_n_credentials = network[k]["credentials"].to<JsonArray>();
 
-              //adds SSID name to the entry[k][0]
-              network_n_credentials.add(WiFi.SSID(k));
+        //adds SSID name to the entry[k][0]
+        network_n_credentials.add(WiFi.SSID(k));
 
-              //adds pw field (initially empty) to entry[k][1] 
-              network_n_credentials.add("");
-            }
+        //adds pw field (initially empty) to entry[k][1] 
+        network_n_credentials.add("");
       }
 
       //3. serializing
