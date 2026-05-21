@@ -12,7 +12,7 @@
 
 ---
 
-<img src="https://github.com/telepath9/ESPclock/blob/54c39c18d9204351de640fb42218651ce3664671/pics/newfont.png" alt="Alt Text" width="100%" height="100%">
+<img src="https://github.com/telepath9/ESPclock/blob/c8962d9d60bd66b8d1a29307634a9b0ace0f77dc/pics/font3.webp" alt="Alt Text" width="100%" height="100%">
 
 
 is a smart clock that connects to a NTP server to get the current time. 
@@ -141,7 +141,7 @@ Forks are encouranged too, and i'm eager to see new changes that people can add 
 
 <h2>❤️ SUPPORT</h2>
 If you find ESPclock an interesting project, please consider to  <b>star</b> ⭐ the repository!<br>
-And if you don't want to miss the next updates and releases, be sure to click on the  <b>watch</b> 👁️ button!
+To not miss the next updates and releases, be sure to click on the  <b>watch</b> 👁️ button!
 If you want to financially contribute, contact me.
 
 <details> 
