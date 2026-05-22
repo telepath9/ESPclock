@@ -12,7 +12,7 @@
 
 ---
 
-<img src="https://github.com/telepath9/ESPclock/blob/c8962d9d60bd66b8d1a29307634a9b0ace0f77dc/pics/font3.webp" alt="Alt Text" width="100%" height="100%">
+<img src="https://github.com/telepath9/ESPclock/blob/cb65eefd7f321586202e2b84a2ed587d0e3370f0/pics/font3.webp" alt="Alt Text" width="100%" height="100%">
 
 
 is a smart clock that connects to a NTP server to get the current time. 
