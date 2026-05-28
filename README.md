@@ -30,7 +30,7 @@ It uses a ESP8266 (Wemos D1 mini) or ESP32 (XIAO ESP32 C3)
 
 2. Install PIOarduino extension on VSCode/VSCodium;
 
-3. Download the latest .zip file that you can find in the <a href="https://github.com/telepath9/ESPclock/releases">Release</a> section, extract it, then open in VSCode/VSCodium the ESPclock project directory;
+3. Download the latest .zip file that you can find in the <a href="https://github.com/telepath9/ESPclock/releases"><b>Release</b></a> section, extract it, then open in VSCode/VSCodium the ESPclock project directory;
 
 4. Select the PIOarduino extension in VSCode/VSCodium, then you have to store the html page into the esp8266 flash memory in two steps:
 	1. Platform -> Build filesystem image
@@ -62,7 +62,7 @@ It uses a ESP8266 (Wemos D1 mini) or ESP32 (XIAO ESP32 C3)
 - [x] Blinking colon toggle
 - [x] ESP32 port
 - [x] Replace NTPclient.h with time.h library
-- [x] ESPmDNS
+- [x] ESPmDNS: web UI can be accessed by simply pasting "espclock.local" in the address bar of the browser.
 - [x] 12-Hour clock mode
 - [x] Alarm clock mode with buzzer
 - [x] Snooze feature for Alarm clock mode
@@ -73,6 +73,9 @@ It uses a ESP8266 (Wemos D1 mini) or ESP32 (XIAO ESP32 C3)
 - [ ] HA support
 - [ ] Display Temperature
 - [x] TM1652 0.8" display support	
+
+> [!NOTE]
+> About ESPmDNS: if more ESPclocks are connected to the same network, to access the web UI of second one, user must use "espclock.local-2", and so on...
 
 <h2>🛒 PART LIST</h2>
 <details>
