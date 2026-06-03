@@ -8,12 +8,19 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
 
+@font-face {
+  font-family: Neuropol; /* set name */
+  src: url("/NRX.ttf") format('truetype'); /* url of the font  --> meglio svg??*/
+}
+
 body{
     color: #ced4da;
     background-color:  #101011;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
     margin: 3px 3px 3px 3px;
 }
+
+
 
 /*parent div, where all elements are placed*/
 .flex_container {
@@ -48,7 +55,7 @@ body{
 
 #connect{
     cursor: pointer;
-    font-size: 15px;
+    font-size: 16px;
     font-weight: 550;
     width: 275px;
     height: 40px;
@@ -110,7 +117,7 @@ body{
     cursor:not-allowed;
     color:#ced4da;
     background-color: #627D9E; /*new: #627D9E; old: #5d84b1*/
-    font-size: 15px;
+    font-size: 16px;
     /*line-height: 40px; -->on linux this centers text in Y, but not on windows. Maybe is a font issue (?)*/
     width: 275px;
     height: 40px;
@@ -257,20 +264,46 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 .two_buttons{
     display:flex;
     flex-direction:row;
-    margin: 0px 0px 20px 0px;
+    margin: 2px 0px 10px;
 }
 
 #saveconf_id, #setalarm_id {
     border-style:solid; 
     border-width: 1px;
     cursor:pointer;
-    font-size: 15px;
+    font-size: 16px;
     /*line-height: 40px; -->on linux this centers text in Y, but not on windows. Maybe is a font issue (?)*/
-    width: 174px; /*135px;*/
+    /*135px;*/
     height: 40px;
     font-weight: 550;
     border-radius: 999px;
-    margin:0px 0px 0px 6px;
+    width: 170px;
+    margin:0px 0px 0px 10px;
+}
+
+@keyframes onoff{
+    0%  {border-color: transparent;  background-color: #F3576F; color:#101011;}
+    50% {border-color: #F3576F; background-color:#f3576e0f ; color:#F3576F;}
+    100% {border-color: transparent;  background-color: #F3576F; color:#101011; }
+}
+
+#mute_id{
+    border-color:#4e4e56;
+    background-color: #1a1a1a;
+    color: #9c9c9c;
+    border-style:solid; 
+    border-width: 1px;
+    cursor:not-allowed;
+    font-size: 16px;
+    /*line-height: 40px; -->on linux this centers text in Y, but not on windows. Maybe is a font issue (?)*/
+    width: 275px;
+    height: 40px;
+    font-weight: 550;
+    border-radius: 999px;
+    margin:0px 0px 20px 19px;
+    animation-name: none;
+    animation-duration: 2s;
+    animation-iteration-count: infinite;
 }
 
 #deleteconf_id, #deletealarm_id{
@@ -279,7 +312,7 @@ input[type="time"]::-webkit-calendar-picker-indicator {
     border-color: currentColor;
     border-style:solid; 
     border-width: 1px;
-    font-size: 15px;
+    font-size: 16px;
     cursor:pointer;
     /*line-height: 40px; -->on linux this centers text in Y, but not on windows. Maybe is a font issue (?)*/
     width: 95px;/*135px;*/
@@ -301,6 +334,18 @@ input[type="time"]::-webkit-calendar-picker-indicator {
   outline: none;
   font-size: 18.72px;
   font-weight: 750;
+}
+
+@keyframes borderglow{
+    0%  {border-color: #3c3e3f; }
+    50% {border-color: #ae0423; }
+    100% {border-color: #3c3e3f;}
+}
+
+#alarm_div_id{
+    animation-name: none;
+    animation-duration: 2s;
+    animation-iteration-count: infinite;
 }
 
 /* Style the collapsible content. Note: hidden by default */
@@ -338,9 +383,10 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 </head>
 <body >
     <!--style="background: linear-gradient(45deg,#6e2fe3,#ae0423);"-->
+    
     <div class="flex_container">
-        <h2 style="margin: 8px 0px 8px 0px;">ESPclock</h2>
-        <form style=" background-color: #1a1a1a; text-align: left;border-style:solid; border-color:#3c3e3f;border-radius: 12px; border-width: 1px;">
+        <p style="font-family: Neuropol; font-size: 36px; margin: 0px;"><b><i>ESPclock</i></b></p>
+        <form style="background-color: #1a1a1a; text-align: left;border-style:solid; border-color:#3c3e3f; border-radius: 12px; border-width: 1px;">
             
                 <h3 style="margin: 18px 0px 18px 26px;">WiFi Settings</h3>
                 <p id="tip1" style="font-size:14px; margin: 0px 26px 18px 26px; color:#6e9cd1;"></p>
@@ -392,7 +438,7 @@ input[type="time"]::-webkit-calendar-picker-indicator {
                 <h3 style="margin: 18px 0px 18px 26px;">NTP Server Settings</h3> 
                 <div class="ntp_wrapper">
                     <input required id="ntp_id" type="text" placeholder="Enter NTP address">
-                    <input required type="number" placeholder="GMT Offset" id="gmt_offset"  name="gmt_offset" min="-12" max="12">
+                    <input required type="number" placeholder="GMT Offset" id="gmt_offset" name="gmt_offset" min="-12" max="12">
                 </div>
             
                 <button disabled type="submit" id="update_but">
@@ -403,10 +449,10 @@ input[type="time"]::-webkit-calendar-picker-indicator {
                 <div class="brightness_form" style="background-color:#1a1a1a;text-align: left; margin-top: 6px;border-style:solid; border-color: #3c3e3f;border-radius: 12px; border-width: 1px;">     
                     <h3 style="margin:18px 10px 0px 26px;">Display Settings</h3>
 
-                     <label style="display: flex; align-items: center; ">
+                     <span style="display: flex; align-items: center; ">
                     <p style="font-size: 17px; margin:18px 0px 2px 26px;">Brightness: </p>
                     <p id="brp" style="margin:18px 0px 2px 6px;"></p> <!--displays actual brightness value-->
-                    </label>
+                     </span>
 
                     <input style=" margin:0px 0px 2px 20px;width: 275px; height: 40px;" type="range" id="brightness" name="brightness" min="0" max="7">
                     
@@ -437,14 +483,14 @@ input[type="time"]::-webkit-calendar-picker-indicator {
                     <span style="display: flex; align-items: center; justify-content: space-between; margin:4px 0px 20px 0px;" class="blinky">
                         <p style="font-size: 17px; margin:0px 0px 2px 26px;">Leading zero</p>
                         <label class="switch">
-                            <input id="lead0_togg" type="checkbox"> 
+                            <input id="lead0_togg" type="checkbox" checked> 
                             <span class="slider round"></span>
                         </label>
                     </span>
 
                 </div>
 
-                <div style="background-color:#1a1a1a;text-align: left;  margin-top: 6px;border-style:solid; border-color: #3c3e3f;border-radius: 12px; border-width: 1px;">     
+                <div id="alarm_div_id" style="background-color:#1a1a1a;text-align: left;  margin-top: 6px;border-style:solid; border-color: #3c3e3f;border-radius: 12px; border-width: 1px;">     
                         <button id="alarm_collap" type="button" class="collapsible" style="width: 100%; padding:18px 10px 18px 26px;">Alarm</button>
 
                     <div class="content">
@@ -488,10 +534,11 @@ input[type="time"]::-webkit-calendar-picker-indicator {
                                  <option value="r4">???</option>
                             </select>
                         </span> -->            
-                        <div class="two_buttons" style="margin: 20px 0px">
-                        <button type="submit" id="deletealarm_id" value="0">DELETE</button>
-                        <button type="submit" id="setalarm_id" value="1" style="border-color: #AF63E4; color: #AF63E4; background-color: #ae63e427;">SET ALARM</button>
+                        <div class="two_buttons" >
+                            <button type="submit" id="deletealarm_id" value="0">DELETE</button>
+                            <button type="submit" id="setalarm_id" value="1" style="border-color: #AF63E4; color: #AF63E4; background-color: #ae63e427;">SET ALARM</button>
                         </div>
+                        <button disabled type="submit" id="mute_id" value="0">MUTE ALARM</button>
                     </div>
                 </div>
                 <!--
@@ -526,7 +573,7 @@ input[type="time"]::-webkit-calendar-picker-indicator {
                 </div>
 
                 <div class="othersettings_form" style="background-color:#1a1a1a;text-align: left; margin-top: 6px;border-style:solid; border-color: #3c3e3f;border-radius: 999px; border-width: 1px;">     
-                    <label style="display: flex; align-items: center ">
+                    <span style="display: flex; align-items: center ">
                             <h3 style="font-size:17px; margin:8px 0px 8px 26px;  ">Uptime:</h3>
                             <p id="upt_dd" style="margin:0px 0px 0px 6px;">0</p> 
                             <p style="margin:0px 0px 0px 6px;">days,</p>
@@ -534,10 +581,10 @@ input[type="time"]::-webkit-calendar-picker-indicator {
                             <p style="margin:0px 0px 0px 6px;">hrs,</p>
                             <p id="upt_mm" style="margin:0px 0px 0px 6px;">0</p> 
                             <p style="margin:0px 0px 0px 6px;">min</p>
-                    </label>
+                    </span>
                 </div>
             <p style="font-weight:450 ; background: linear-gradient(45deg,#a270ff,#ff0f3b);background-clip: text; margin: 4px 12px 0px 12px; ; color: transparent;">
-            ESPclock v2.3.0 • A project by <strong>telepath</strong></p>
+            ESPclock v2.3.1 • A project by <strong>telepath</strong></p>
     </div>
                
 <svg style="display: none;">
@@ -566,6 +613,9 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 
 <script>
     let network_list;
+
+    let now; 
+    let currentTime;
 
     function networkFetch(json_path_or_route){
         
@@ -675,7 +725,7 @@ input[type="time"]::-webkit-calendar-picker-indicator {
                 }
 
                 //at least 1 min has passed
-                else if(millis>=60000 && millis<3600000 || millis< 60000){   
+                else if(millis>=60000 && millis<3600000 || millis<60000){   
                     dcounter.innerText = (49*ms_over) + Math.trunc((17*ms_over)/24);
                     hcounter.innerText = ((17*ms_over)%24) + Math.trunc((5*ms_over)/60);
                     mcounter.innerText= ((5*ms_over)%60) + Math.trunc(millis/60000);
@@ -691,12 +741,48 @@ input[type="time"]::-webkit-calendar-picker-indicator {
         }
 
     const deleteconf = document.getElementById("deleteconf_id");
-            
+    const mute_but = document.getElementById("mute_id");
+    
+    let ring_time;
+    let ringInterval;
+    let alarm_div_bord= document.getElementById("alarm_div_id");
+
+
+//🔴🔴🔴🔴🔴🔴🔴🔴🔴🔴🔴🔴🔴🔴🔴🔴🔴🔴🔴🔴🔴    RESET ALARM
+//MANCA UN CHECK CHE RIPRISTINA LE ANIMAZIONI/TASTO QUANDO PASSA L'ORA DELL'ALLARME🔴🔴🔴🔴🔴🔴🔴🔴🔴🔴🔴🔴
+let isAlarmRinging=false;
+
+function its_ringing(){
+   now=Temporal.Now.plainTimeISO(); //Temporal is the newer standard for date&time!!!
+   currentTime= now.toString().slice(0,5);
+   //toLocaleTimeString(not efficient!!)
+
+
+   if(currentTime==ring_time){ 
+     isAlarmRinging=true;
+     mute_but.style.animationName = "onoff";
+     mute_but.style.cursor= "pointer";
+     mute_but.removeAttribute("disabled", "");
+
+     alarm_div_bord.style.animationName = "borderglow";
+
+     
+   }   
+   else if(currentTime!=ring_time && isAlarmRinging==true){
+    
+    disable_button(mute_but, "#1a1a1a","#9c9c9c", "#4E4E56"); 
+    mute_but.style.animationName = "none";
+    alarm_div_bord.style.animationName = "none";
+    clearInterval(ringInterval);
+
+   }
+}
+
+
     //onload() is mandatory, otherwise won't run the 1st fetch
     //it activates when server.on("/") function is called
-    window.onload = function () {        
-        //networkFetch("/scan");        
-
+    window.onload = function () {               
+       
         //if ESP is already connected, setup page is loaded with wifi settings greyed-out and disabled    
         fetch("/uicheck")
             .then(data=> data.json())
@@ -752,21 +838,35 @@ input[type="time"]::-webkit-calendar-picker-indicator {
         fetch("/alcheck")
             .then(data=> data.json())
             .then(data=> {
-                
-            if(data.alarm===true){     //creare checkalarm , inoltre /config non salva più alarm
+
+            if(data.alarm===true){  //checks if alarm is set
                 disable_button(setalarm, "#1a1a1a","#9c9c9c", "#4E4E56"); 
                 setalarm.innerText = "ALARM SET";   
                  
                 const alarm_collap= document.getElementById("alarm_collap");
                 alarm_collap.innerText="Alarm • "+ data.timehm;
+                ring_time=data.timehm;  //this is used in its_ringing funct
 
-                const timehm= document.getElementById("alarm_time");
-                timehm.setAttribute("value", data.timehm);
+                now=Temporal.Now.plainTimeISO(); //Temporal is the newer standard for date&time!!!
+                currentTime= now.toString().slice(0,5);
+              
+                if(data.ringing===false){
+                    its_ringing();
+                }
+                
+                else if(data.ringing===true && data.timehm != currentTime){
+                    ringInterval = setInterval(its_ringing , 5000);
+                }
+                
+                //--> WHEN CLICKED: SEND POST REQ + DISABLE BUTTON
+
+                //const timehm= document.getElementById("alarm_time"); timeControl replaces alla timehm!!!
+                timeControl.setAttribute("value", data.timehm);
 
                 const selsnooz= document.getElementById(data.snooze);
                 selsnooz.setAttribute("selected", "");
 
-                console.log("DAYS STRING: ", data.week);
+                //console.log("DAYS STRING: ", data.week);
                 
                 //in questi posso evitare l'if -->ES:  sun.setAttribute("value", data.week.charAt(0)); !!!!
                 if(data.week.charAt(0)==="1"){
@@ -989,7 +1089,6 @@ input[type="time"]::-webkit-calendar-picker-indicator {
     
                 const ntp_input = document.getElementById("ntp_id");
                 let ntp_by_user = ntp_input.value;
-
                 let offset_by_user = document.getElementById("gmt_offset").value;
 
                 if(ntp_by_user==="" || offset_by_user===""){
@@ -1091,11 +1190,10 @@ input[type="time"]::-webkit-calendar-picker-indicator {
                     body: JSON.stringify({"tw": this.checked ? true : false}) 
                 })
 
-                .then(response => response.json())
+                /*.then(response => response.json())
                 .then((response)=> {
-                       
                     console.log(response.status);
-                });        
+                });        */
             }
 
             //leading zero > if off, it displays hours like 09:30 as 9:30
@@ -1111,15 +1209,13 @@ input[type="time"]::-webkit-calendar-picker-indicator {
                     body: JSON.stringify({"lz": this.checked ? true : false}) 
                 })
 
-                .then(response => response.json())
+                /*.then(response => response.json())
                 .then((response)=> {
-                       
                     console.log(response.status);
-                });        
+                });        */
             }
 
 //-----------------------------------------
-
 var coll = document.getElementsByClassName("collapsible");
 var i;
 
@@ -1136,17 +1232,15 @@ for (i = 0; i < coll.length; i++) {
 }
 
 //--------------------------------------Alarm days
- let mon = document.getElementById("mon");
- let tue = document.getElementById("tue");
- let wed = document.getElementById("wed");
- let thu = document.getElementById("thu");
- let fri = document.getElementById("fri");
- let sat = document.getElementById("sat");
- let sun = document.getElementById("sun");
-
+let mon = document.getElementById("mon");
+let tue = document.getElementById("tue");
+let wed = document.getElementById("wed");
+let thu = document.getElementById("thu");
+let fri = document.getElementById("fri");
+let sat = document.getElementById("sat");
+let sun = document.getElementById("sun");
 
 function days_handler(){
-    
     if(this.value ==="0" ){
         this.style.backgroundColor = "#ae0423";
         this.setAttribute("value", "1"); 
@@ -1157,7 +1251,6 @@ function days_handler(){
     }
 }
 
-
 mon.addEventListener("click", days_handler);
 tue.addEventListener("click", days_handler);
 wed.addEventListener("click", days_handler);
@@ -1166,7 +1259,7 @@ fri.addEventListener("click", days_handler);
 sat.addEventListener("click", days_handler);
 sun.addEventListener("click", days_handler);
 
-const timeControl = document.getElementById("alarm_time");
+const timeControl = document.getElementById("alarm_time"); 
 const snooze = document.getElementById("snooze");
 //let snooze_value = snooze.value;
 //const ringtone = document.getElementById("");
@@ -1174,18 +1267,27 @@ const snooze = document.getElementById("snooze");
 const setalarm = document.getElementById("setalarm_id");
 const deletealarm= document.getElementById("deletealarm_id");
 
-//enables/disables alarm buttons + makes POST req
 function edit_alarm(){
 
     if(this.value==1){//if user SETS alarm
+        now=Temporal.Now.plainTimeISO(); //Temporal is the newer standard for date&time!!!
+        currentTime= now.toString().slice(0,5);
+
+        if(ring_time == currentTime){
+            its_ringing();
+        }
+        else{
+            ringInterval = setInterval(its_ringing , 5000);
+        }
+
         if(sun.value==="1" || mon.value==="1" || tue.value==="1" || wed.value==="1" || thu.value==="1" || fri.value==="1" || sat.value==="1" ){
             const alarm_collap= document.getElementById("alarm_collap");
             alarm_collap.innerText="Alarm • "+ timeControl.value;
+            ring_time=timeControl.value;
 
             disable_button(setalarm, "#1a1a1a","#9c9c9c", "#4E4E56"); 
             setalarm.innerText = "ALARM SET"; 
             enable_button(deletealarm, "#740c0c45", "#BA1E16", "#BA1E16"); 
-            //console.log(sun.value, mon.value, tue.value, wed.value, thu.value, fri.value, sat.value );
 
             fetch("/alarm", {     
                 method: "POST",
@@ -1202,6 +1304,10 @@ function edit_alarm(){
     }
 
     else{ //user deletes alarm
+        disable_button(mute_but, "#1a1a1a","#9c9c9c", "#4E4E56"); 
+        mute_but.style.animationName = "none";
+        alarm_div_bord.style.animationName = "none";
+        clearInterval(ringInterval);
         disable_button(deletealarm, "#1a1a1a","#9c9c9c", "#4E4E56");
         const alarm_collap= document.getElementById("alarm_collap");
         alarm_collap.innerText="Alarm";
@@ -1223,58 +1329,74 @@ function edit_alarm(){
 setalarm.addEventListener("click", edit_alarm);
 deletealarm.addEventListener("click", edit_alarm);
 
+
+function mute(){
+    disable_button(mute_but, "#1a1a1a","#9c9c9c", "#4E4E56"); 
+    mute_but.style.animationName = "none";
+    alarm_div_bord.style.animationName = "none";
+    clearInterval(ringInterval);
+
+    fetch("/mute" , {
+        method:"POST",
+        headers: {
+                'Content-Type': "application/json"
+        },   
+        body:JSON.stringify({"mute": true})
+    })
+}
+
+mute_but.addEventListener("click", mute);
+
+
 //-----------------------------------------
-            const saveconf = document.getElementById("saveconf_id");
-            //deleteconf reference is up
+const saveconf = document.getElementById("saveconf_id");
 
-            //this must be called ONLY from saveconf and deleteconf buttons!!
-            function edit_conf(){
+function edit_conf(){   //this must be called ONLY from saveconf and deleteconf buttons!!
 
-                disable_button(saveconf, "#1a1a1a","#9c9c9c", "#4E4E56");
-                disable_button(deleteconf, "#1a1a1a","#9c9c9c", "#4E4E56");
+    disable_button(saveconf, "#1a1a1a","#9c9c9c", "#4E4E56");
+    disable_button(deleteconf, "#1a1a1a","#9c9c9c", "#4E4E56");
 
-                fetch("/config", {
-                    method: "POST",
-                    headers: {
-                        'Content-Type': "application/json"
-                    },            
-                    body: JSON.stringify({"save": ((this.value == 1) ? true : false)}) //sends the value of the button that calls the function 
-                })
+    fetch("/config", {
+        method: "POST",
+        headers: {
+            'Content-Type': "application/json"
+        },            
+        body: JSON.stringify({"save": ((this.value == 1) ? true : false)}) //sends the value of the button that calls the function 
+    })
 
-                const tip2= document.getElementById("tip2");
-                //if user deleted config, then only saveconf button must be enabled
-                if(this.value == 0){    
-                    const tip1= document.getElementById("tip1");
-                    if(tip1.innerText!==""){
-                        tip1.innerText= "";
-                    }
+    const tip2= document.getElementById("tip2");
+    //if user deleted config, then only saveconf button must be enabled
+    if(this.value == 0){    
+        const tip1= document.getElementById("tip1");
+        if(tip1.innerText!==""){
+            tip1.innerText= "";
+        }
                     
-                    
-                    tip2.innerText="ESPclock is now disconnected. To connect ESPclock to a new wifi, connect your device to ESPclock AP, then go to http://192.168.4.1 and insert new wifi credentials";
-                    tip2.style.margin = "0px 26px 18px 26px";
-                    enable_button(saveconf, "#1440616e", "#51A0DB", "#51A0DB");
-                    disable_button(update_but, "#627D9E");
-                    saveconf.innerText = "SAVE";
+        tip2.innerText="ESPclock is now disconnected. To connect ESPclock to a new wifi, connect your device to ESPclock AP, then go to http://192.168.4.1 and insert new wifi credentials";
+        tip2.style.margin = "0px 26px 18px 26px";
+        enable_button(saveconf, "#1440616e", "#51A0DB", "#51A0DB");
+        disable_button(update_but, "#627D9E");
+        saveconf.innerText = "SAVE";
 
-                    enable_button(connect_but, "#9a031e");
-                    connect_but.innerText = "CONNECT";
+        enable_button(connect_but, "#9a031e");
+        connect_but.innerText = "CONNECT";
                     
-                    refresh_but.removeAttribute("disabled");
-                    refresh_but.style.cursor = "pointer";
-                    document.querySelectorAll("path")[0].style.fill="#dee2e6";
-                }
+        refresh_but.removeAttribute("disabled");
+        refresh_but.style.cursor = "pointer";
+        document.querySelectorAll("path")[0].style.fill="#dee2e6";
+    }
 
-                //if user saves config, deleteconf button is enabled
-                else{   
-                    saveconf.innerText = "SAVED"; 
-                    enable_button(deleteconf, "#740c0c45", "#BA1E16", "#BA1E16");
-                    tip2.innerText="";
-                    tip2.style.margin = "0px";
-                }
-            }
+    //if user saves config, deleteconf button is enabled
+    else{   
+        saveconf.innerText = "SAVED"; 
+        enable_button(deleteconf, "#740c0c45", "#BA1E16", "#BA1E16");
+        tip2.innerText="";
+        tip2.style.margin = "0px";
+    }
+}
            
-            saveconf.addEventListener("click", edit_conf);
-            deleteconf.addEventListener("click", edit_conf);
+saveconf.addEventListener("click", edit_conf);
+deleteconf.addEventListener("click", edit_conf);
 
 </script>      
 </body>

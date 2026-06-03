@@ -78,11 +78,12 @@ const byte SEG_CHAR_MAP[] = {
 };
 
 //global vars
-bool colon=true;
+bool colon=true;  //if blink is ON, this will change every second
 bool blink=true;
 bool br_auto=false;
 bool twelve=false;
-bool leadingzero=false;
+bool leadingzero=true;
+bool lzMidnightEx=false;
 uint8_t brightness=7;
 uint8_t ms_ovfl=0;
 
@@ -301,11 +302,11 @@ void checkAlarm(){
       timehm= strdup(load_al[F("timehm")]);
       //Serial.println("timehm > " + timehm);
 
-      alarm_hour= load_al[("alarm_hour")];
-      alarm_min= load_al[("alarm_min")];
-      snooze= load_al[("snooze")];
+      alarm_hour= load_al["alarm_hour"];
+      alarm_min= load_al["alarm_min"];
+      snooze= load_al["snooze"];
 
-      String week= strdup(load_al[("week")]);
+      String week= strdup(load_al["week"]);
       fla.close();
    
       for(uint8_t n=0; n<7; n++){
@@ -344,7 +345,6 @@ void alarm_off(){
   if(alarm_stop==0 && elapsedMillis > debounceTime){
     alarm_stop=1;
     snoozeOn=0;
-    Serial.println("Alarm OFF");
   }
   prevMillis = millis();
   snoozeMsStart=0;
@@ -444,6 +444,10 @@ void setup() {
     serializeJson(uc_json, uc_str);
 
     request->send(200,  "application/json", uc_str);
+  });
+
+  server.on("/NRX.ttf", HTTP_GET, [](AsyncWebServerRequest *request){
+    request->send(LittleFS,"/NRX.ttf", "font/ttf");
   });
 
   //client requests list of ssids and server sends it to client
@@ -697,6 +701,7 @@ void setup() {
     al_json["alarm"]= alarm_status;
     al_json["timehm"]= timehm;
     al_json["snooze"]= snooze;
+    al_json["ringing"]= alarm_stop;
     String sk="";
     
     for(uint8_t j=0; j<7; j++){
@@ -708,6 +713,12 @@ void setup() {
     serializeJson(al_json, al_str);
 
     request->send(200,  "application/json", al_str);
+  });
+
+  server.on("/mute", HTTP_POST, [](AsyncWebServerRequest *request){}, NULL, [](AsyncWebServerRequest *request, uint8_t *data, size_t len, size_t index, size_t total){
+    alarm_stop=1;
+    snoozeOn=0;
+    request->send(200, "application/json", "{\"mute\":\"1\"}");
   });
 
   /*
@@ -724,15 +735,15 @@ void setup() {
               
       JsonDocument config;
 
-      config[F("ssid")] = ssid;           //const *char
-      config[F("pw")] = password;         //const *char
-      config[F("ntp_ad")] = ntp_addr;     //const *char
-      config[F("offset")] = gmt_offset;   //offset saved as int
-      config[F("br_auto")] = br_auto;     //bool as 1 or 0
-      config[F("br")] = brightness;       //uint8_t
-      config[F("blink")] = blink;        //bool as 1 or 0
-      config[F("twelve")] = twelve;      
-      config[F("lz")] = leadingzero;
+      config["ssid"] = ssid;           //const *char
+      config["pw"] = password;         //const *char
+      config["ntp_ad"] = ntp_addr;     //const *char
+      config["offset"] = gmt_offset;   //offset saved as int
+      config["br_auto"] = br_auto;     //bool as 1 or 0
+      config["br"] = brightness;       //uint8_t
+      config["blink"] = blink;        //bool as 1 or 0
+      config["twelve"] = twelve;      
+      config["lz"] = leadingzero;
       config.shrinkToFit();
               
       File fc = LittleFS.open("/config.json", "w+");
@@ -768,7 +779,7 @@ void setup() {
 }
 
 
-//[facoltativo] follow this to update to SNTP -->  time interval between NTP polling call is every 2 hours
+//[optional] follow this to update to SNTP 
 //https://werner.rothschopf.net/microcontroller/202103_arduino_esp32_ntp_en.htm
 //ESP officail SNTP https://docs.espressif.com/projects/esp-idf/en/stable/esp32/api-reference/system/system_time.html
 
@@ -776,7 +787,7 @@ void setup() {
 unsigned long acPrevMillis=0; //used by autoConnect
 unsigned long acElapsedMillis=0;  //used by autoConnect
 
-//🟢🟢NEW🟢🟢resilient wifi-connection: when POWER OUTAGE HAPPENS, it will retry the connection every (about) 2.5min
+//🟢🟢NEW feature🟢🟢wifi-connection: when POWER OUTAGE HAPPENS, it will retry the connection every (about) 2.5min
 bool autoConnect(void){
     acElapsedMillis = millis() - acPrevMillis;
     bool retval=0;
@@ -787,8 +798,6 @@ bool autoConnect(void){
     }
     return retval;
   }
-
-
 
   void loop() {
   // Serial.println(esp_clk_get_cpu_freq_mhz());
@@ -801,17 +810,15 @@ bool autoConnect(void){
     wifiScan();
     newScan=false;
   }
-
     //Serial.println(WiFi.status());                     
-  if(LittleFS.exists("/config.json") && start_NtpClient==false && autoConnect()){ 
+  if(start_NtpClient==false && autoConnect() && LittleFS.exists("/config.json")){ 
     checkConfig();
   }
   
   if(start_NtpClient==true){
 
-    /*The getLocalTime() function has an optional timeout parameter in milliseconds 
-    (with the default value being 5 seconds).  This timeout value is used in case there
-    is an NTP server request being made in the background
+    /*The getLocalTime() function has an optional timeout parameter in milliseconds (with the default value being 5 seconds).
+    This timeout value is used in case there is an NTP server request being made in the background
     (for example when you just called the configTime() function before calling the getLocalTime()
     function).   getLocalTime(&timeinfo, 5000);
 
@@ -820,7 +827,6 @@ bool autoConnect(void){
     getLocalTime(&timeinfo);
 
     if(myTimer(1000)){
-
         //printLocalTime();
        if(alarm_status==1){
 
@@ -832,14 +838,14 @@ bool autoConnect(void){
               
               alarm_ring();
 
-              if(snooze>0 && snoozeMsStart==0){  //activated Once, to start snoozetimer VAR
-                snoozeMsStart=1; 
+              if(snooze>0 && snoozeMsStart==0){  
+                snoozeMsStart=1;  //activated Once. starts the countdown for the snooze
                 //Serial.println("FROM alarm time> snoozeOn=1");
               }
             }
           }
 
-          //2- after alarm time passes, enables snoozetimer adn snooze 
+          //2- after alarm time passes, enables snoozetimer and snooze 
           if(timeinfo.tm_min != alarm_min && alarm_stop==0 && snoozeMsStart==1){
             snoozeMsStart=0;  // this makes the code access to this "if" once
             snoozeOn=1; 
@@ -887,23 +893,34 @@ bool autoConnect(void){
             }
         }   
         
+        //prevents displaying " : 1" instead of 00:01 (if leadingzero is OFF) in 24hr mode
+        if(timeinfo.tm_hour==00 && leadingzero==false){
+          leadingzero=true;
+          lzMidnightEx=true;
+        }
+        else if(timeinfo.tm_hour!=00 && lzMidnightEx==true){
+          leadingzero=false;
+          lzMidnightEx=false;
+        }
+
         if(blink==1){
             if(colon==true){   //colon is ON
+              
               if(!twelve){  
                 //module.setDisplayToDecNumber((timeinfo.tm_hour*100)+timeinfo.tm_min, 0x04, true <- leading zero);
                 display.setDisplayToDecNumber((timeinfo.tm_hour*100)+timeinfo.tm_min, 0x04, leadingzero);
               }
 
               //12hr format is on
-              else{
-                if(timeinfo.tm_hour <= 12){
+              else{   
+                if(timeinfo.tm_hour > 0 && timeinfo.tm_hour <= 12){ //display from 1:00 to 12:59    //00:00 is never shown --> midnight is 12:00 in this mode!!!
                   //module.setDisplayToDecNumber((timeinfo.tm_hour*100)+timeinfo.tm_min, 0x04, true);
                   display.setDisplayToDecNumber((timeinfo.tm_hour*100)+timeinfo.tm_min, 0x04, leadingzero);
                 }
 
-                else{
+                else{   //🔴🔴🔴🔴🔴🔴🔴🔴🔴🔴🔴🔴🔴🔴🔴🔴🔴🔴🔴🔴🔴
                  // module.setDisplayToDecNumber(((timeinfo.tm_hour-12)*100)+timeinfo.tm_min, 0x04, true);
-                  display.setDisplayToDecNumber(((timeinfo.tm_hour-12)*100)+timeinfo.tm_min, 0x04, leadingzero);
+                  display.setDisplayToDecNumber((abs(timeinfo.tm_hour-12)*100)+timeinfo.tm_min, 0x04, leadingzero);
                 }
               }
               colon=false;  
@@ -918,13 +935,13 @@ bool autoConnect(void){
 
               //if 12hr mode is active
               else{ 
-                if(timeinfo.tm_hour <= 12){
+                if(timeinfo.tm_hour > 0 && timeinfo.tm_hour <= 12){ //display from 1:00 to 12:59    //00:00 is never shown --> midnight is 12:00 in this mode!!!
+                  //module.setDisplayToDecNumber((timeinfo.tm_hour*100)+timeinfo.tm_min, 0x04, true);
                   display.setDisplayToDecNumber((timeinfo.tm_hour*100)+timeinfo.tm_min, 0, leadingzero);
-                  //module.setDisplayToDecNumber((timeinfo.tm_hour*100)+timeinfo.tm_min, 0, true);
                 }
                 else{
                   //module.setDisplayToDecNumber(((timeinfo.tm_hour-12)*100)+timeinfo.tm_min, 0, true);
-                  display.setDisplayToDecNumber(((timeinfo.tm_hour-12)*100)+timeinfo.tm_min, 0, leadingzero);
+                  display.setDisplayToDecNumber((abs(timeinfo.tm_hour-12)*100)+timeinfo.tm_min, 0, leadingzero);
                 }
               }
 
@@ -939,12 +956,13 @@ bool autoConnect(void){
 
           //if 12hr mode is active
               else{ 
-                if(timeinfo.tm_hour <= 12){
+                if(timeinfo.tm_hour > 0 && timeinfo.tm_hour <= 12){ //display from 1:00 to 12:59    //00:00 is never shown --> midnight is 12:00 in this mode!!!
+                  //module.setDisplayToDecNumber((timeinfo.tm_hour*100)+timeinfo.tm_min, 0x04, true);
                   display.setDisplayToDecNumber((timeinfo.tm_hour*100)+timeinfo.tm_min, 0x04, leadingzero);
                 }
                 
                 else{
-                  display.setDisplayToDecNumber(((timeinfo.tm_hour-12)*100)+timeinfo.tm_min, 0x04, leadingzero);
+                  display.setDisplayToDecNumber((abs(timeinfo.tm_hour-12)*100)+timeinfo.tm_min, 0x04, leadingzero);
                 }
             }
           }

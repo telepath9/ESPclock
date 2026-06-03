@@ -1,6 +1,6 @@
 #include <Arduino.h>
 #include <WiFi.h>
-#include <time.h>
+#include <time.h> 
 #include <AsyncTCP.h>
 #include <ESPAsyncWebServer.h>
 #include <WiFiClient.h>
@@ -56,9 +56,10 @@ bool blink=true;
 bool br_auto=false;
 bool twelve=false;
 bool leadingzero=false;
+bool lzMidnightEx=false;
 uint8_t brightness=7;
 uint8_t ms_ovfl=0;
-
+uint8_t px=4;  
 bool alarm_status=false; 
 String timehm = "";
 bool alarm_stop=0;  //when 0, alarm is active.
@@ -76,7 +77,7 @@ const uint8_t SEG_Err[]={
   SEG_E | SEG_G, SEG_E | SEG_G          //rr
 };
 
-uint8_t px=4;                   //used by displayAnim()
+                 //used by displayAnim()
 const uint8_t SEG_WAIT[] = {     //used by displayAnim()
 	 SEG_G
 };
@@ -153,7 +154,7 @@ void wifiScan(){
       net_list["found"] = n;
       JsonArray network = net_list["network"].to<JsonArray>();
 
-      for(byte j = 0; j < n+1; j++){
+      for(byte j = 0; j < n; j++){
         JsonArray network_n_credentials = network[j]["credentials"].to<JsonArray>();
         network_n_credentials.add(WiFi.SSID(j));
         network_n_credentials.add("");
@@ -182,7 +183,7 @@ void wifiScan(){
       net_listUp["found"] = n;
       JsonArray network = net_listUp["network"].to<JsonArray>();
             
-      for(byte k = 0; k < n+1; k++){
+      for(byte k = 0; k < n; k++){
         //dynamically adds, to each entry "k", a new array to the main array "network"
         JsonArray network_n_credentials = network[k]["credentials"].to<JsonArray>();
 
@@ -201,7 +202,7 @@ void wifiScan(){
 
 void checkConfig(void){
 
-    if(LittleFS.exists("/config.json")){
+    //if(LittleFS.exists("/config.json")){
       Serial.println("Restoring data");
       creds_available=true;
 
@@ -225,7 +226,7 @@ void checkConfig(void){
       //if it restores wifi connection, then it restore the other settings too
       //if it can't restore wifi, then user must go to webUI to make a new config
       while(WiFi.status() != WL_CONNECTED){
-        delay(100);
+        delay(50);
         mydisplay.setSegments(SEG_try, 3, 0);
        
         if(myTimer(3000)){  
@@ -258,9 +259,10 @@ void checkConfig(void){
         blink=  load_cf[F("blink")];
         br_auto = load_cf[F("br_auto")];
         twelve= load_cf[F("twelve")];
+        leadingzero=load_cf[F("lz")];
         fld.close();
       }
-  }
+  //}
   return;
 }
 
@@ -284,13 +286,13 @@ void checkAlarm(){
     if(alarm_status==true){
 
       timehm= strdup(load_al[F("timehm")]);
-      Serial.println("timehm > " + timehm);
+      //Serial.println("timehm > " + timehm);
 
-      alarm_hour= load_al[F("alarm_hour")];
-      alarm_min= load_al[F("alarm_min")];
-      snooze= load_al[F("snooze")];
+      alarm_hour= load_al["alarm_hour"];
+      alarm_min= load_al["alarm_min"];
+      snooze= load_al["snooze"];
 
-      String week= strdup(load_al[F("week")]);
+      String week= strdup(load_al["week"]);
       fla.close();
    
       for(uint8_t n=0; n<7; n++){
@@ -328,7 +330,6 @@ void alarm_off(){
   if(alarm_stop==0 && elapsedMillis > debounceTime){
     alarm_stop=1;
     snoozeOn=0;
-    Serial.println("Alarm OFF");
   }
   prevMillis = millis();
   snoozeMsStart=0;
@@ -380,7 +381,9 @@ void setup() {
     return;
   }
   
-  checkConfig();
+  if(LittleFS.exists("/config.json")){
+    checkConfig();
+  }
   checkAlarm();   
 
   //PHASE1 - AP_STA_MODE + WIFI SCAN ---------------------------x
@@ -421,6 +424,9 @@ void setup() {
     serializeJson(uc_json, uc_str);
 
     request->send(200,  "application/json", uc_str);
+  });
+  server.on("/NRX.ttf", HTTP_GET, [](AsyncWebServerRequest *request){
+    request->send(LittleFS,"/NRX.ttf", "font/ttf");
   });
 
   //client requests list of ssids and server sends it to client
@@ -502,7 +508,6 @@ void setup() {
     }
   });
 
-  //"empty input" check: [OK]
   server.on("/updatetime", HTTP_POST, [](AsyncWebServerRequest *request){}, NULL, [](AsyncWebServerRequest *request, uint8_t *data, size_t len, size_t index, size_t total){
 
     JsonDocument ntp_json;
@@ -523,14 +528,13 @@ void setup() {
     configTime(gmt_offset*3600, 3600, ntp_addr); 
     //Serial.println("NTP server: " + String(ntp_addr));
     //Serial.println("OFFSET: " + String(gmt_offset));
-    if(start_NtpClient == false){
+    if(start_NtpClient==false){
       start_NtpClient=true;
     }
     
     request->send(200, "application/json", "{\"ntp\":\"OK\"}");
     }
   });
-
 
   server.on("/slider", HTTP_POST, [](AsyncWebServerRequest *request){}, NULL, [](AsyncWebServerRequest *request, uint8_t *data, size_t len, size_t index, size_t total){
           
@@ -672,9 +676,9 @@ void setup() {
     JsonDocument al_json;   //creates a json to send to client
 
     al_json["alarm"]= alarm_status;
-    Serial.println(timehm);
     al_json["timehm"]= timehm;
     al_json["snooze"]= snooze;
+    al_json["ringing"]= alarm_stop;
     String sk="";
     
     for(uint8_t j=0; j<7; j++){
@@ -682,14 +686,16 @@ void setup() {
     }
 
     al_json["week"]=sk;
-    //Serial.println(timehm);
-    //Serial.println("alcheck STRING > " + sk);
-    //Serial.println("Snooze > " + String(snooze));
-
     String al_str;
     serializeJson(al_json, al_str);
 
     request->send(200,  "application/json", al_str);
+  });
+  
+  server.on("/mute", HTTP_POST, [](AsyncWebServerRequest *request){}, NULL, [](AsyncWebServerRequest *request, uint8_t *data, size_t len, size_t index, size_t total){
+    alarm_stop=1;
+    snoozeOn=0;
+    request->send(200, "application/json", "{\"mute\":\"1\"}");
   });
 
   /*
@@ -701,21 +707,20 @@ void setup() {
     JsonDocument scf_json;
     deserializeJson(scf_json, data);
     bool saveconfig = scf_json["save"];
-    //Serial.println(saveconfig);
 
     if((!LittleFS.exists("/config.json") && saveconfig==1)){ //user wants to save config
               
       JsonDocument config;
 
-      config[F("ssid")] = ssid;           //const *char
-      config[F("pw")] = password;         //const *char
-      config[F("ntp_ad")] = ntp_addr;     //const *char
-      config[F("offset")] = gmt_offset;   //offset saved as int
-      config[F("br_auto")] = br_auto;     //bool as 1 or 0
-      config[F("br")] = brightness;       //uint8_t
-      config[F("blink")] = blink;        //bool as 1 or 0
-      config[F("twelve")] = twelve;     
-      config[F("lz")] = leadingzero;      
+      config["ssid"] = ssid;           //const *char
+      config["pw"] = password;         //const *char
+      config["ntp_ad"] = ntp_addr;     //const *char
+      config["offset"] = gmt_offset;   //offset saved as int
+      config["br_auto"] = br_auto;     //bool as 1 or 0
+      config["br"] = brightness;       //uint8_t
+      config["blink"] = blink;        //bool as 1 or 0
+      config["twelve"] = twelve;     
+      config["lz"] = leadingzero;      
       config.shrinkToFit();
               
       File fc = LittleFS.open("/config.json", "w+");
@@ -749,6 +754,20 @@ void setup() {
   server.begin();  
 }
 
+unsigned long acPrevMillis=0; //used by autoConnect
+unsigned long acElapsedMillis=0;  //used by autoConnect
+
+//🟢🟢NEW feature🟢🟢wifi-connection: when POWER OUTAGE HAPPENS, it will retry the connection every (about) 2.5min
+bool autoConnect(void){
+    acElapsedMillis = millis() - acPrevMillis;
+    bool retval=0;
+    if(acElapsedMillis >= 150000){
+      //checkConfig();
+      acPrevMillis=millis();
+      retval=1;
+    }
+    return retval;
+}
 
 void loop() {
   
@@ -759,6 +778,10 @@ void loop() {
   if(newScan==true){
     wifiScan();
     newScan=false;
+  }
+   //Serial.println(WiFi.status());                     
+  if(start_NtpClient==false && autoConnect() && LittleFS.exists("/config.json")){ 
+    checkConfig();
   }
 
   if(start_NtpClient==true){
@@ -780,8 +803,6 @@ void loop() {
 
             //RING at the exact time entered by user
             if(timeinfo.tm_hour == alarm_hour && timeinfo.tm_min == alarm_min){
-              //Serial.println("alarm_min > " + String(alarm_min));
-              //Serial.println("timeinfo.tm_min > " + String(timeinfo.tm_min));
 
               alarm_ring();
 
@@ -839,6 +860,16 @@ void loop() {
               break;
             }
         }   
+
+        //prevents displaying " : 1" instead of 00:01 (if leadingzero is OFF)
+        if(timeinfo.tm_hour==00 && leadingzero==false){
+          leadingzero=true;
+          lzMidnightEx=true;
+        }
+        else if(timeinfo.tm_hour!=00 && lzMidnightEx==true){
+          leadingzero=false;
+          lzMidnightEx=false;
+        }
            
         if(blink==1){
             if(colon==true){   //colon is ON
@@ -848,13 +879,13 @@ void loop() {
               }
 
               else{
-                if(timeinfo.tm_hour <= 12){
+                if(timeinfo.tm_hour > 0 && timeinfo.tm_hour <= 12){ //display from 1:00 to 12:59    //00:00 is never shown --> midnight is 12:00 in this mode!!!
                   mydisplay.showNumberDecEx(timeinfo.tm_hour, 0b01000000, leadingzero, 2, 0);
                  
                 }
 
                 else{
-                  mydisplay.showNumberDecEx(timeinfo.tm_hour-12, 0b01000000, leadingzero, 2, 0);
+                  mydisplay.showNumberDecEx(abs(timeinfo.tm_hour-12), 0b01000000, leadingzero, 2, 0);
                 }
 
                 mydisplay.showNumberDecEx(timeinfo.tm_min, 0b01000000, leadingzero, 2, 2);
@@ -870,12 +901,12 @@ void loop() {
               }
 
               else{ //if 12hr mode is active
-                if(timeinfo.tm_hour <= 12){
+                if(timeinfo.tm_hour > 0 && timeinfo.tm_hour <= 12){ //display from 1:00 to 12:59    //00:00 is never shown --> midnight is 12:00 in this mode!!!
                   mydisplay.showNumberDecEx(timeinfo.tm_hour, 0, leadingzero, 2, 0);
                 }
                 
                 else{
-                  mydisplay.showNumberDecEx(timeinfo.tm_hour-12, 0, leadingzero, 2, 0);
+                  mydisplay.showNumberDecEx(abs(timeinfo.tm_hour-12), 0, leadingzero, 2, 0);
                 }
 
                 mydisplay.showNumberDecEx(timeinfo.tm_min, 0, leadingzero, 2, 2);
@@ -894,12 +925,12 @@ void loop() {
 
         else{//if 12hr mode is active
 
-                  if(timeinfo.tm_hour <= 12){
+                if(timeinfo.tm_hour > 0 && timeinfo.tm_hour <= 12){ //display from 1:00 to 12:59    //00:00 is never shown --> midnight is 12:00 in this mode!!!
                     mydisplay.showNumberDecEx(timeinfo.tm_hour, 0b01000000, leadingzero, 2, 0);
                   }
 
-                  else{
-                    mydisplay.showNumberDecEx(timeinfo.tm_hour-12, 0b01000000, leadingzero, 2, 0);
+                else{
+                    mydisplay.showNumberDecEx(abs(timeinfo.tm_hour-12), 0b01000000, leadingzero, 2, 0);
                   }
                   mydisplay.showNumberDecEx(timeinfo.tm_min, 0b01000000, leadingzero, 2, 2);
         }
