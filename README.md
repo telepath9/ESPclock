@@ -6,10 +6,13 @@
 ![GitHub Repo stars](https://img.shields.io/github/stars/telepath9/ESPclock?style=for-the-badge&logo=github&color=A02ADB	)
 
 [![Static Badge](https://img.shields.io/badge/Mentioned_by-Hackster.io-%232E9FE6?style=for-the-badge&logo=hackster&logoColor=white&color=%232E9FE6)](https://www.hackster.io/news/a-diy-retro-modern-alarm-clock-for-under-10-4e4e972345d8)
+[![Static Badge](https://img.shields.io/badge/Mentioned_by-SeeedStudio-%232E9FE6?style=for-the-badge&color=rgb(0,58,74))](https://www.linkedin.com/posts/seeedstudio_seeedxiao-xiao-esp32-activity-7438192154243493888-qwSJ)
+
+
 
 ---
 
-<img src="https://github.com/telepath9/ESPclock/blob/54c39c18d9204351de640fb42218651ce3664671/pics/newfont.png" alt="Alt Text" width="100%" height="100%">
+<img src="https://github.com/telepath9/ESPclock/blob/cb65eefd7f321586202e2b84a2ed587d0e3370f0/pics/font3.webp" alt="Alt Text" width="100%" height="100%">
 
 
 is a smart clock that connects to a NTP server to get the current time. 
@@ -27,7 +30,7 @@ It uses a ESP8266 (Wemos D1 mini) or ESP32 (XIAO ESP32 C3)
 
 2. Install PIOarduino extension on VSCode/VSCodium;
 
-3. Download the latest .zip file that you can find in the <a href="https://github.com/telepath9/ESPclock/releases">Release</a> section, extract it, then open in VSCode/VSCodium the ESPclock project directory;
+3. Download the latest .zip file that you can find in the <a href="https://github.com/telepath9/ESPclock/releases"><b>Release</b></a> section, extract it, then open in VSCode/VSCodium the ESPclock project directory;
 
 4. Select the PIOarduino extension in VSCode/VSCodium, then you have to store the html page into the esp8266 flash memory in two steps:
 	1. Platform -> Build filesystem image
@@ -47,7 +50,7 @@ It uses a ESP8266 (Wemos D1 mini) or ESP32 (XIAO ESP32 C3)
 </details>
 
 <h2>📱 WEB UI </h2>
-<img src="https://github.com/telepath9/ESPclock/blob/669b48f9ad6c6df066c71207a9129f1ba0dcdb98/pics/2.3.0.webp" alt="Alt Text" width="100%" height="100%">
+<img src="https://github.com/telepath9/ESPclock/blob/8f7c84c4e2b27847c5cdae36362c9a6e251f5699/pics/v2.3.0.webp" alt="Alt Text" width="100%" height="100%">
 
 <h2>🤖 CURRENT FEATURES</h2>
 
@@ -59,7 +62,7 @@ It uses a ESP8266 (Wemos D1 mini) or ESP32 (XIAO ESP32 C3)
 - [x] Blinking colon toggle
 - [x] ESP32 port
 - [x] Replace NTPclient.h with time.h library
-- [x] ESPmDNS
+- [x] ESPmDNS: web UI can be accessed by simply pasting "espclock.local" in the address bar of the browser.
 - [x] 12-Hour clock mode
 - [x] Alarm clock mode with buzzer
 - [x] Snooze feature for Alarm clock mode
@@ -70,6 +73,9 @@ It uses a ESP8266 (Wemos D1 mini) or ESP32 (XIAO ESP32 C3)
 - [ ] HA support
 - [ ] Display Temperature
 - [x] TM1652 0.8" display support	
+
+> [!NOTE]
+> About ESPmDNS: if more ESPclocks are connected to the same network, to access the web UI of second one, user must use "espclock.local-2", and so on...
 
 <h2>🛒 PART LIST</h2>
 <details>
@@ -138,7 +144,7 @@ Forks are encouranged too, and i'm eager to see new changes that people can add 
 
 <h2>❤️ SUPPORT</h2>
 If you find ESPclock an interesting project, please consider to  <b>star</b> ⭐ the repository!<br>
-And if you don't want to miss the next updates and releases, be sure to click on the  <b>watch</b> 👁️ button!
+To not miss the next updates and releases, be sure to click on the  <b>watch</b> 👁️ button!
 If you want to financially contribute, contact me.
 
 <details> 
