@@ -70,7 +70,6 @@ It uses a ESP8266 (Wemos D1 mini) or ESP32 (XIAO ESP32 C3)
 - [ ] Timezone Support
 - [x] Added TTP223 Touch button
 - [ ] ESPhome or Homeassistant integration
-- [ ] HA support
 - [ ] Display Temperature
 - [x] TM1652 0.8" display support	
 
@@ -118,12 +117,12 @@ It uses a ESP8266 (Wemos D1 mini) or ESP32 (XIAO ESP32 C3)
 <h2>🔌 BOARD WIRING (buzzer and TTP223 coming soon...)</h2>
 <details> 
 <summary><b>XIAO ESP32 C3 - TM1652 0.8" Display</b></summary>
-<img src="https://github.com/telepath9/ESPclock/blob/1d05fa707535ed9df221d80e062bd623caf88a3e/pics/wiring_2.3.0.jpg" alt="Alt Text" width="100%" height="100%">
+<img src="https://github.com/telepath9/ESPclock/blob/a6fae0d17180ef585f9a34ca514e80f5d7f3edf5/pics/tm1652_wiring_2.3.0.webp" alt="Alt Text" width="100%" height="100%">
 </details>
 <details> 
 <summary><b>XIAO ESP32 C3 - TM1637 0.56" Display</b></summary>
 <img src="https://github.com/telepath9/ESPclock/blob/fa035fd003b75fdb8b4b9cf68d04e8ba993e35fc/pics/xiao-top1.0.jpg" alt="Alt Text" width="100%" height="100%">
-<img src="https://github.com/telepath9/ESPclock/blob/ff830831e95c264ad7939fba758ce32de801831d/pics/xiao_top3_w.jpg" alt="Alt Text" width="100%" height="100%">
+<img src="https://github.com/telepath9/ESPclock/blob/a6fae0d17180ef585f9a34ca514e80f5d7f3edf5/pics/tm1637_wiring_2.3.0.webp" alt="Alt Text" width="100%" height="100%">
 </details>
 <details> 
 <summary><b>ESP8266 (Wemos D1 Mini 3.0.0) - TM1637 0.56" Display</b></summary> 
