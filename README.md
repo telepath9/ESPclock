@@ -33,6 +33,7 @@ It uses a ESP8266 (Wemos D1 mini) or ESP32 (XIAO ESP32 C3)
 3. Download the latest .zip file that you can find in the <a href="https://github.com/telepath9/ESPclock/releases"><b>Release</b></a> section, extract it, then open in VSCode/VSCodium the ESPclock project directory;
 
 4. Select the PIOarduino extension in VSCode/VSCodium, then you have to store the html page into the esp8266 flash memory in two steps:
+	<b>🔴(Be sure to have closed all Serial Monitor instances, otherwise it will fail to upload the fs image)</b>
 	1. Platform -> Build filesystem image
 	2. Platform -> Upload filesystem image
 
@@ -114,7 +115,7 @@ It uses a ESP8266 (Wemos D1 mini) or ESP32 (XIAO ESP32 C3)
 </details>
 
 
-<h2>🔌 BOARD WIRING (buzzer and TTP223 coming soon...)</h2>
+<h2>🔌 BOARD WIRING</h2>
 <details> 
 <summary><b>XIAO ESP32 C3 - TM1652 0.8" Display</b></summary>
 <img src="https://github.com/telepath9/ESPclock/blob/a6fae0d17180ef585f9a34ca514e80f5d7f3edf5/pics/tm1652_wiring_2.3.0.webp" alt="Alt Text" width="100%" height="100%">
