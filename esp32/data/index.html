@@ -9,8 +9,8 @@
 <style>
 
 @font-face {
-  font-family: Neuropol; /* set name */
-  src: url("/NRX.ttf") format('truetype'); /* url of the font  --> meglio svg??*/
+  font-family: Neuropol; 
+  src: url("/NRX.ttf") format('truetype');
 }
 
 body{
@@ -39,7 +39,7 @@ body{
 .ssid_wrapper {
   display:flex;
   flex-direction:row;
-  margin: 0px 19px 15px 19px;
+  margin: 0px 19px 12px 19px;
 }
 
 .pw_wrapper{
@@ -47,7 +47,7 @@ body{
     flex-direction:row;
     width: 275px;
     height: 41px;
-    margin:0px 19px 36px ;
+    margin:0px 19px 33px ;
     /*background-color: #fff9ee;*/
     border-radius: 6px;
     background-color: #444444;
@@ -80,22 +80,24 @@ body{
 }
 
 .ntp_form{
+    /*display: block;*/
     border-radius: 10px;
 }
 
+/*
 .ntp_wrapper{
     display:flex;
     flex-direction:row;
    
-}
+}*/
 
 #ntp_id{
-    margin:0px 0px 10px 19px;
+    margin:0px 0px 0px 19px;
     font-size: 15px; 
     padding: 0 0 0 6px; 
     color:#bec1c4;
     background-color: #444444; 
-    width: 150px;
+    width: 269px;
     height: 40px;
     border-radius: 6px;
     border-style:none;
@@ -124,7 +126,7 @@ body{
     font-weight: 550;
     border-radius: 8px;
     border-style:none;
-    margin:0px 0px 20px 19px;
+    margin:33px 0px 20px 19px;
 }
 
 /* POPUP message (appears on top) */
@@ -382,18 +384,15 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 </style>
 </head>
 <body >
-    <!--style="background: linear-gradient(45deg,#6e2fe3,#ae0423);"-->
-    
     <div class="flex_container">
-        <p style="font-family: Neuropol; font-size: 36px; margin: 0px;"><b><i>ESPclock</i></b></p>
+        <p style="font-family: Neuropol; letter-spacing: -2px; font-size: 36px; margin: 0px;"><b><i>ESPclock</i></b></p>
         <form style="background-color: #1a1a1a; text-align: left;border-style:solid; border-color:#3c3e3f; border-radius: 12px; border-width: 1px;">
             
                 <h3 style="margin: 18px 0px 18px 26px;">WiFi Settings</h3>
                 <p id="tip1" style="font-size:14px; margin: 0px 26px 18px 26px; color:#6e9cd1;"></p>
                 <label style="margin-left: 26px;" for="ssid_list">Available networks</label>
                    <div class="ssid_wrapper">
-                      <select id="ssid_list" name="ssid" style=" padding-left: 2px; color: #bec1c4;font-size: 15px; background-color: #444444;  height: 40px; width: 237px; border-radius: 6px 0px 0px 6px; border-color:transparent;border-style:none;">
-                        </select>
+                      <select id="ssid_list" name="ssid" style=" padding-left: 2px; color: #bec1c4;font-size: 15px; background-color: #444444;  height: 40px; width: 237px; border-radius: 6px 0px 0px 6px; border-color:transparent;border-style:none;"></select>
                         <button type="button" id="refresh"  for="ssid_list" style="border-radius: 0px 6px 6px 0px;
                                  border: none;
                                 cursor: pointer;width:40px; height:40px; background-color: #444444;">
@@ -403,8 +402,8 @@ input[type="time"]::-webkit-calendar-picker-indicator {
                     </div>
 
                 <label style="padding-left: 26px; " for="pw">Password</label><br>                
-                <!--wrapper for PW field + toggle PW (eye)-->
-                <div class="pw_wrapper">
+                
+                <div class="pw_wrapper">    <!--wrapper for PW field + toggle PW (eye)-->
                     <input type="password" placeholder="Enter password" id="pw" maxlength="32" name="pw" required>
                     
                     <!--TOGGLE PASSWORD button-->
@@ -424,27 +423,116 @@ input[type="time"]::-webkit-calendar-picker-indicator {
                     <span class="popuptext" style="font-size: 14px; user-select: none;" id="myPopup"></span>
                 </div>
                 </div>
+
+                
         </form>
 
             <!--⌚  NTP SERVER FORM ⌚ -->
-            <div class="ntp_form" style="background-color:#1a1a1a; text-align: left; margin-top: 6px;border-style:solid; border-color: #3c3e3f;border-radius: 12px; border-width: 1px;">     
+            <form class="ntp_form" style="background-color:#1a1a1a; text-align: left; margin-top: 6px;border-style:solid; border-color: #3c3e3f;border-radius: 12px; border-width: 1px;">     
              <!--   <h3 style="margin: 18px 0px 18px 26px;">Timezone</h3>
                 <label style="margin-left: 26px;" for="tz">Select timezone</label>
                 <select id="tz" style="width: 275px; margin: 0px 0px 0px 20px; color: #bec1c4;
                                 font-size: 15px; background-color: #444444;  height: 40px;
                                 border-radius: 6px 6px 6px 6px; border-color:transparent;border-style:none; 
                                 "></select>-->
+                <h3 style="margin: 18px 0px 18px 26px;">Time Settings</h3> 
+                <label style="margin-left: 26px;" for="tz">Select Timezone</label>
+                <select id="tz" name="ssid" style="padding-left: 2px; margin: 0px 0px 12px 19px; color: #bec1c4;font-size: 15px; background-color: #444444;  height: 40px; width: 275px; border-radius: 6px; border-color:transparent;border-style:none;">
+                    <option value="cairo">Africa/Cairo</option>
+                    <option value="casablanca">Africa/Casablanca</option>
+                    <option value="johannesburg">Africa/Johannesburg</option>
+                    <option value="anchorage">America/Anchorage</option>
+                    <option value="buenos_aires">America/Argentina/Buenos Aires</option>
+                    <option value="chicago">America/Chicago</option>
+                    <option value="denver">America/Denver</option>
+                    <option value="guatemala">America/Guatemala</option>
+                    <option value="halifax">America/Halifax</option>
+                    <option value="los_angeles">America/Los Angeles</option>
+                    <option value="mexico_city">America/Mexico City</option>
+                    <option value="new_york">America/New York</option>
+                    <option value="phoenix">America/Phoenix</option>
+                    <option value="santiago">America/Santiago</option>
+                    <option value="sao_paulo">America/Sao Paulo</option>
+                    <option value="st_johns">America/St Johns</option>
+                    <option value="toronto">America/Toronto</option>
+                    <option value="vancouver">America/Vancouver</option>
+                    <option value="almaty">Asia/Almaty</option>
+                    <option value="amman">Asia/Amman</option>
+                    <option value="baghdad">Asia/Baghdad</option>
+                    <option value="bangkok">Asia/Bangkok</option>
+                    <option value="beirut">Asia/Beirut</option>
+                    <option value="dhaka">Asia/Dhaka</option>
+                    <option value="dubai">Asia/Dubai</option>
+                    <option value="ho_chi_minh">Asia/Ho Chi Minh</option>
+                    <option value="hong_kong">Asia/Hong Kong</option>
+                    <option value="jakarta">Asia/Jakarta</option>
+                    <option value="jerusalem">Asia/Jerusalem</option>
+                    <option value="karachi">Asia/Karachi</option>
+                    <option value="kathmandu">Asia/Kathmandu</option>
+                    <option value="kolkata">Asia/Kolkata</option>
+                    <option value="kuala_lumpur">Asia/Kuala Lumpur</option>
+                    <option value="manila">Asia/Manila</option>
+                    <option value="seoul">Asia/Seoul</option>
+                    <option value="shanghai">Asia/Shanghai</option>
+                    <option value="singapore">Asia/Singapore</option>
+                    <option value="taipei">Asia/Taipei</option>
+                    <option value="tashkent">Asia/Tashkent</option>
+                    <option value="tehran">Asia/Tehran</option>
+                    <option value="tokyo">Asia/Tokyo</option>
+                    <option value="ulaanbaatar">Asia/Ulaanbaatar</option>
+                    <option value="yekaterinburg">Asia/Yekaterinburg</option>
+                    <option value="azores">Atlantic/Azores</option>
+                    <option value="canary">Atlantic/Canary</option>
+                    <option value="reykjavik">Atlantic/Reykjavik</option>
+                    <option value="adelaide">Australia/Adelaide</option>
+                    <option value="brisbane">Australia/Brisbane</option>
+                    <option value="darwin">Australia/Darwin</option>
+                    <option value="hobart">Australia/Hobart</option>
+                    <option value="melbourne">Australia/Melbourne</option>
+                    <option value="perth">Australia/Perth</option>
+                    <option value="sydney">Australia/Sydney</option>
+                    <option value="amsterdam">Europe/Amsterdam</option>
+                    <option value="athens">Europe/Athens</option>
+                    <option value="belgrade">Europe/Belgrade</option>
+                    <option value="berlin">Europe/Berlin</option>
+                    <option value="brussels">Europe/Brussels</option>
+                    <option value="bucharest">Europe/Bucharest</option>
+                    <option value="copenhagen">Europe/Copenhagen</option>
+                    <option value="dublin">Europe/Dublin</option>
+                    <option value="helsinki">Europe/Helsinki</option>
+                    <option value="istanbul">Europe/Istanbul</option>
+                    <option value="kiev">Europe/Kiev</option>
+                    <option value="lisbon">Europe/Lisbon</option>
+                    <option value="london">Europe/London</option>
+                    <option value="madrid">Europe/Madrid</option>
+                    <option value="moscow">Europe/Moscow</option>
+                    <option value="oslo">Europe/Oslo</option>
+                    <option value="paris">Europe/Paris</option>
+                    <option value="prague">Europe/Prague</option>
+                    <option value="rome">Europe/Rome</option>
+                    <option value="stockholm">Europe/Stockholm</option>
+                    <option value="warsaw">Europe/Warsaw</option>
+                    <option value="auckland">Pacific/Auckland</option>
+                    <option value="chatham">Pacific/Chatham</option>
+                    <option value="fiji">Pacific/Fiji</option>
+                    <option value="guam">Pacific/Guam</option>
+                    <option value="honolulu">Pacific/Honolulu</option>
+                    <option value="port_moresby">Pacific/Port Moresby</option>
+                    <option value="tahiti">Pacific/Tahiti</option>
+                    <option value="utc0">UTC0</option>
+                </select>
 
-                <h3 style="margin: 18px 0px 18px 26px;">NTP Server Settings</h3> 
-                <div class="ntp_wrapper">
-                    <input required id="ntp_id" type="text" placeholder="Enter NTP address">
-                    <input required type="number" placeholder="GMT Offset" id="gmt_offset" name="gmt_offset" min="-12" max="12">
-                </div>
+                <label style="margin-left: 26px;" for="ntp_id">NTP server</label><br>
+                <input required id="ntp_id" type="text" placeholder="Primary NTP server">
+                
+
+                <!--<div class="ntp_wrapper">
+                </div>-->
             
                 <button disabled type="submit" id="update_but">
                     UPDATE TIME
                 </button>
-            </div>
+            </form>
 
                 <div class="brightness_form" style="background-color:#1a1a1a;text-align: left; margin-top: 6px;border-style:solid; border-color: #3c3e3f;border-radius: 12px; border-width: 1px;">     
                     <h3 style="margin:18px 10px 0px 26px;">Display Settings</h3>
@@ -483,7 +571,7 @@ input[type="time"]::-webkit-calendar-picker-indicator {
                     <span style="display: flex; align-items: center; justify-content: space-between; margin:4px 0px 20px 0px;" class="blinky">
                         <p style="font-size: 17px; margin:0px 0px 2px 26px;">Leading zero</p>
                         <label class="switch">
-                            <input id="lead0_togg" type="checkbox" checked> 
+                            <input id="lead0_togg" type="checkbox"> 
                             <span class="slider round"></span>
                         </label>
                     </span>
@@ -572,9 +660,9 @@ input[type="time"]::-webkit-calendar-picker-indicator {
                     </div>
                 </div>
 
-                <div class="othersettings_form" style="background-color:#1a1a1a;text-align: left; margin-top: 6px;border-style:solid; border-color: #3c3e3f;border-radius: 999px; border-width: 1px;">     
+                <div class="othersettings_form" style="background-color:#1a1a1a;text-align: left; margin-top: 6px;border-style:solid; border-color: #3c3e3f;border-radius: 12px; border-width: 1px;">     
                     <span style="display: flex; align-items: center ">
-                            <h3 style="font-size:17px; margin:8px 0px 8px 26px;  ">Uptime:</h3>
+                            <h3 style="font-size:17px; margin:8px 0px 8px 26px;">Uptime:</h3>
                             <p id="upt_dd" style="margin:0px 0px 0px 6px;">0</p> 
                             <p style="margin:0px 0px 0px 6px;">days,</p>
                             <p id="upt_hh" style="margin:0px 0px 0px 6px;">0</p> 
@@ -582,9 +670,14 @@ input[type="time"]::-webkit-calendar-picker-indicator {
                             <p id="upt_mm" style="margin:0px 0px 0px 6px;">0</p> 
                             <p style="margin:0px 0px 0px 6px;">min</p>
                     </span>
+
+                    <span style="display: flex; align-items: center">
+                        <h3 style="font-size:17px; margin:0px 0px 8px 26px;">IP:</h3>
+                        <p id="ip_addr" style="margin:0px 0px 8px 6px;"><i>espclock_IP</i></p> 
+                    </span>
                 </div>
-            <p style="font-weight:450 ; background: linear-gradient(45deg,#a270ff,#ff0f3b);background-clip: text; margin: 4px 12px 0px 12px; ; color: transparent;">
-            ESPclock v2.3.1 • A project by <strong>telepath</strong></p>
+            <p style="font-weight:450; background: linear-gradient(45deg,#a270ff,#ff0f3b);background-clip: text; margin: 4px 12px 0px 12px; ; color: transparent;">
+            ESPclock v2.4.0 • A project by <strong>telepath</strong></p>
     </div>
                
 <svg style="display: none;">
@@ -613,35 +706,32 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 
 <script>
     let network_list;
-
     let now; 
     let currentTime;
+    let dcounter= document.getElementById("upt_dd");
+    let hcounter= document.getElementById("upt_hh");
+    let mcounter= document.getElementById("upt_mm");
+    let rem_d, rem_h, tothours, totmin;
 
-    function networkFetch(json_path_or_route){
-        
+    function networkFetch(json_path_or_route){       
             fetch(json_path_or_route)
                     .then(data=> data.json())
                     .then(data=> {
-
                         //data is the json obj received from server
                         network_list= data;
 
                         //select label that will contain all of the options
                         const ssid_element = document.getElementById("ssid_list");
                         let ssid_prefix= "ssid";       
-                        
                         //"Found" field that indicates how many networks are found after the scan
                         let foundnets = data.found;
                         
                         //this for populates the drop-down list (select label tag)
                         for(let i=0; i<foundnets; i++){
-
                             //creates new elem(option) for drop-down list
                             let add_option_n = document.createElement("option");
-
                             let ssidcounter =  i;
                             add_option_n.value = ssidcounter;
-                                
                             add_option_n.innerText = data.network[i].credentials[0];
                             
                             //once created the option, must add it to parent node (ssid_element)
@@ -649,7 +739,6 @@ input[type="time"]::-webkit-calendar-picker-indicator {
                         }           
                 });
     }  
-
    
     function disable_refresh_but(){
         refresh_but.setAttribute("disabled", "");
@@ -684,14 +773,7 @@ input[type="time"]::-webkit-calendar-picker-indicator {
         }
     }
   
-    let dcounter= document.getElementById("upt_dd");
-    let hcounter= document.getElementById("upt_hh");
-    let mcounter= document.getElementById("upt_mm");
-    let rem_d, rem_h, tothours, totmin;
-
     function msToUptime(millis, ms_over){
-                //    totdays= data.ms/86400000;
-          
                 //at least a day has passed
                 if(millis>= 86400000){   //days
                     rem_d= millis%86400000;    //for hours
@@ -700,14 +782,12 @@ input[type="time"]::-webkit-calendar-picker-indicator {
                     if(rem_d >= 3600000){   //calculate hours
                         hcounter.innerText = ((17*ms_over)%24) + Math.trunc((5*ms_over)/60) + Math.trunc(rem_d/3600000);
                         //tothours = rem_d/3600000;
-                        
                         rem_h= rem_d%3600000;
                         if(rem_h <3600000){
                               mcounter.innerText= ((5*ms_over)%60) + Math.trunc(rem_h/60000);
                         }
                     }
                     else if(rem_d < 3600000){   //if millis are not enough to make an hour, then calculates minutes
-
                         hcounter.innerText = ((17*ms_over)%24) + Math.trunc((5*ms_over)/60);
                         mcounter.innerText= ((5*ms_over)%60) + Math.trunc(rem_d/60000);
                         //totmin= rem_d/60000;
@@ -724,8 +804,7 @@ input[type="time"]::-webkit-calendar-picker-indicator {
                     }
                 }
 
-                //at least 1 min has passed
-                else if(millis>=60000 && millis<3600000 || millis<60000){   
+                else if(millis>=60000 && millis<3600000 || millis<60000){   //at least 1 min has passed
                     dcounter.innerText = (49*ms_over) + Math.trunc((17*ms_over)/24);
                     hcounter.innerText = ((17*ms_over)%24) + Math.trunc((5*ms_over)/60);
                     mcounter.innerText= ((5*ms_over)%60) + Math.trunc(millis/60000);
@@ -747,26 +826,19 @@ input[type="time"]::-webkit-calendar-picker-indicator {
     let ringInterval;
     let alarm_div_bord= document.getElementById("alarm_div_id");
 
-
-//🔴🔴🔴🔴🔴🔴🔴🔴🔴🔴🔴🔴🔴🔴🔴🔴🔴🔴🔴🔴🔴    RESET ALARM
-//MANCA UN CHECK CHE RIPRISTINA LE ANIMAZIONI/TASTO QUANDO PASSA L'ORA DELL'ALLARME🔴🔴🔴🔴🔴🔴🔴🔴🔴🔴🔴🔴
 let isAlarmRinging=false;
 
 function its_ringing(){
    now=Temporal.Now.plainTimeISO(); //Temporal is the newer standard for date&time!!!
-   currentTime= now.toString().slice(0,5);
-   //toLocaleTimeString(not efficient!!)
-
-
+   currentTime= now.toString().slice(0,5);  //toLocaleTimeString(not efficient!!)
+   
    if(currentTime==ring_time){ 
      isAlarmRinging=true;
      mute_but.style.animationName = "onoff";
      mute_but.style.cursor= "pointer";
      mute_but.removeAttribute("disabled", "");
-
      alarm_div_bord.style.animationName = "borderglow";
 
-     
    }   
    else if(currentTime!=ring_time && isAlarmRinging==true){
     
@@ -774,10 +846,8 @@ function its_ringing(){
     mute_but.style.animationName = "none";
     alarm_div_bord.style.animationName = "none";
     clearInterval(ringInterval);
-
    }
 }
-
 
     //onload() is mandatory, otherwise won't run the 1st fetch
     //it activates when server.on("/") function is called
@@ -811,7 +881,7 @@ function its_ringing(){
 
             }
 
-            if(data.twelve=== true){
+            if(data.twelve===true){
                 twelve.setAttribute("checked", "");
             }
 
@@ -994,20 +1064,15 @@ function its_ringing(){
                         fetch("/wifi_status")
                             .then(data => data.json())
                             .then((data) => {                                 
-                                //console.log("data.stat:", data.stat);
 
                                 if(data.stat==="ok" ){
-                                    //console.log("timer_deleted!");
                                     clearInterval(interval_obj);
                                     connected = true;
-
                                     clearInterval(asciivar);
                                     connect_but.innerText = "CONNECTED";
                                     connect_but.style.backgroundColor ="#52885d";
-
                                     popup_span_elem.innerText = "CONNECTED✅";
                                     popup_span_elem.classList.add("show");
-
                                     enable_button(update_but, "#267bbc");
 
                                     setTimeout(()=>{
@@ -1016,14 +1081,10 @@ function its_ringing(){
                             }
                                 
                                 else if(data.stat==="fail" ){
-                               
                                     console.log("WRONG PASSWORD!");
                                     clearInterval(interval_obj);
                                     clearInterval(asciivar);
-                                    //console.log("timer_deleted!!!");
-
                                     connect_but.innerText = "CONNECT";
-                                  
                                     popup_span_elem.innerText = "WRONG PASSWORD❌";
                                     popup_span_elem.classList.add("show");
 
@@ -1179,9 +1240,6 @@ function its_ringing(){
 
             const twelve= document.getElementById("twelve");
             twelve.onchange = function(){      
-                
-                //let twhr = this.checked ? true : false;
-                
                 fetch("/twelve", {
                     method: "POST",
                     headers: {
@@ -1189,18 +1247,10 @@ function its_ringing(){
                     },            
                     body: JSON.stringify({"tw": this.checked ? true : false}) 
                 })
-
-                /*.then(response => response.json())
-                .then((response)=> {
-                    console.log(response.status);
-                });        */
             }
 
-            //leading zero > if off, it displays hours like 09:30 as 9:30
-            //const leadzero= document.getElementById("lead0_togg");
+            //leading zero: if OFF, it displays hours like 09:30 as 9:30
             document.getElementById("lead0_togg").onchange = function(){      
-                
-                //let lead0 = this.checked ? true : false;
                 fetch("/lead0", {
                     method: "POST",
                     headers: {
@@ -1208,11 +1258,6 @@ function its_ringing(){
                     },            
                     body: JSON.stringify({"lz": this.checked ? true : false}) 
                 })
-
-                /*.then(response => response.json())
-                .then((response)=> {
-                    console.log(response.status);
-                });        */
             }
 
 //-----------------------------------------
@@ -1231,7 +1276,7 @@ for (i = 0; i < coll.length; i++) {
   });
 }
 
-//--------------------------------------Alarm days
+//Alarm days
 let mon = document.getElementById("mon");
 let tue = document.getElementById("tue");
 let wed = document.getElementById("wed");
@@ -1261,7 +1306,6 @@ sun.addEventListener("click", days_handler);
 
 const timeControl = document.getElementById("alarm_time"); 
 const snooze = document.getElementById("snooze");
-//let snooze_value = snooze.value;
 //const ringtone = document.getElementById("");
 
 const setalarm = document.getElementById("setalarm_id");
@@ -1346,7 +1390,6 @@ function mute(){
 }
 
 mute_but.addEventListener("click", mute);
-
 
 //-----------------------------------------
 const saveconf = document.getElementById("saveconf_id");

@@ -83,7 +83,6 @@ bool blink=true;
 bool br_auto=false;
 bool twelve=false;
 bool leadingzero=true;
-bool lzMidnightEx=false;
 uint8_t brightness=7;
 uint8_t ms_ovfl=0;
 
@@ -151,8 +150,7 @@ void wifiScan(){
     WiFi.disconnect();
 
     byte n = WiFi.scanNetworks();
-    Serial.print(n);
-    Serial.println(" networks found");
+    Serial.println(n + " networks found");
 
     //---------------------------------------------x
     //SSIDs found are stored in json
@@ -161,7 +159,7 @@ void wifiScan(){
     //If json doesn't exists yet, it creates it
     if(!LittleFS.exists("/network_list.json")){
       JsonDocument net_list;
-      //Serial.println("Network list doesn't exists. Creating it now...");  
+
       net_list["found"] = n;
       JsonArray network = net_list["network"].to<JsonArray>();
 
@@ -230,8 +228,8 @@ void checkConfig(void){
         return;
       }
 
-      ssid = load_cf[F("ssid")];
-      password = load_cf[F("pw")]; 
+      ssid = load_cf["ssid"];
+      password = load_cf["pw"]; 
       
       WiFi.begin(ssid, password);
 
@@ -268,12 +266,13 @@ void checkConfig(void){
   
         brightness = (uint8_t)load_cf["br"];
         module.setupDisplay(true, brightness, 6);
+        display.clear();
         //display.setIntensity(brightness);
         
-        blink=  load_cf[F("blink")];
-        br_auto = load_cf[F("br_auto")];
-        twelve= load_cf[F("twelve")];
-        leadingzero=load_cf[F("lz")];
+        blink=  load_cf["blink"];
+        br_auto = load_cf["br_auto"];
+        twelve= load_cf["twelve"];
+        leadingzero=load_cf["lz"];
         fld.close();
       }
   //}
@@ -289,17 +288,17 @@ void checkAlarm(){
 
     if (error) {
       fla.close();
-      Serial.print(F("deserializeJson() failed: "));
+      Serial.print("deserializeJson() failed: ");
       Serial.println(error.f_str());
       return;
     }
 
-    alarm_status= load_al[F("alarm")];
+    alarm_status= load_al["alarm"];
 
     //if alarm is set, edit JSON in order to update UI
     if(alarm_status==true){
 
-      timehm= strdup(load_al[F("timehm")]);
+      timehm= strdup(load_al["timehm"]);
       //Serial.println("timehm > " + timehm);
 
       alarm_hour= load_al["alarm_hour"];
@@ -493,7 +492,7 @@ void setup() {
 
     //check json integrity
     if(!f) {
-      Serial.println(F("Error opening /network_list.json"));
+      Serial.println("Error opening /network_list.json");
       request->send(500, "application/json", "{\"error\":\"Failed to open network_list.json\"}");
       f.close();
       return;
@@ -535,6 +534,7 @@ void setup() {
     deserializeJson(ntp_json, data);
     String ntp_str_test = strdup(ntp_json["ntp_addr"]);//used this cuz ntp_addr is const char* and i don't want to change it to String type
     ntp_str_test.trim();
+    display.clear();
 
     if(ntp_str_test=="" || ntp_json["offset"]==""){  //beware of multiple whitespaces though (e.g. "    ")
       Serial.println("NTP address or Offset==NULL");
@@ -542,13 +542,11 @@ void setup() {
       return;
     }
 
-    //POST/GET values are never null. The best they can be is an empty string, which you can convert to null/'NULL'.
+    //POST/GET values are never null. The best they can be is an empty string, which can be converted to null/'NULL'.
     else{
     ntp_addr = strdup(ntp_json["ntp_addr"]); 
     gmt_offset = (int)atoi(ntp_json["offset"]);
-    configTime(gmt_offset*3600, 3600, ntp_addr);  //arduino core function
-    //Serial.println("NTP server: " + String(ntp_addr));
-    //Serial.println("OFFSET: " + String(gmt_offset));
+    configTime(gmt_offset*3600, 3600, ntp_addr);  //arduino core funct
     if(start_NtpClient==false){
       start_NtpClient=true;
     }
@@ -619,6 +617,7 @@ void setup() {
             JsonDocument twelve_json;
             deserializeJson(twelve_json, data);
             twelve = (uint8_t)twelve_json["tw"];  //update blink var
+            display.clear();
             request->send(200, "application/json", "{\"status\":\"updated\"}");
   });
 
@@ -626,6 +625,7 @@ void setup() {
             JsonDocument leadz_json;
             deserializeJson(leadz_json, data);
             leadingzero = (uint8_t)leadz_json["lz"];  //update leading zero var
+            display.clear();
             request->send(200, "application/json", "{\"status\":\"updated\"}");
   });
 
@@ -659,18 +659,18 @@ void setup() {
         snooze= (uint8_t)doc["snooze"];
 
         JsonDocument alarmjson; 
-        alarmjson[F("alarm")] = alarm_status;  
-        alarmjson[F("timehm")]= timehm; //sends timehm with the format "hh:mm" 
-        alarmjson[F("alarm_hour")] = alarm_hour; 
-        alarmjson[F("alarm_min")] = alarm_min;
-        alarmjson[F("snooze")] = snooze;
+        alarmjson["alarm"] = alarm_status;  
+        alarmjson["timehm"]= timehm; //sends timehm with the format "hh:mm" 
+        alarmjson["alarm_hour"] = alarm_hour; 
+        alarmjson["alarm_min"] = alarm_min;
+        alarmjson["snooze"] = snooze;
 
         String wwd= "";
         for(uint8_t z=0; z<7; z++){
           wwd+= days[z];
         }
 
-        alarmjson[F("week")] = wwd;
+        alarmjson["week"] = wwd;
         alarmjson.shrinkToFit();
         File fa = LittleFS.open("/alarm.json", "w+");   //creates alarm.json file
 
@@ -763,7 +763,7 @@ void setup() {
       creds_available = false;
       start_NtpClient=false;
       attempts=0;
-      Serial.println(F("\n*Config.json DELETED*"));
+      Serial.println("\n*Config.json DELETED*");
     }
 
     request->send(200, "application/json", "{\"status\":\"updated\"}");
@@ -781,7 +781,7 @@ void setup() {
 
 //[optional] follow this to update to SNTP 
 //https://werner.rothschopf.net/microcontroller/202103_arduino_esp32_ntp_en.htm
-//ESP officail SNTP https://docs.espressif.com/projects/esp-idf/en/stable/esp32/api-reference/system/system_time.html
+//ESP official SNTP https://docs.espressif.com/projects/esp-idf/en/stable/esp32/api-reference/system/system_time.html
 
 
 unsigned long acPrevMillis=0; //used by autoConnect
@@ -893,33 +893,27 @@ bool autoConnect(void){
             }
         }   
         
-        //prevents displaying " : 1" instead of 00:01 (if leadingzero is OFF) in 24hr mode
-        if(timeinfo.tm_hour==00 && leadingzero==false){
-          leadingzero=true;
-          lzMidnightEx=true;
-        }
-        else if(timeinfo.tm_hour!=00 && lzMidnightEx==true){
-          leadingzero=false;
-          lzMidnightEx=false;
-        }
 
         if(blink==1){
             if(colon==true){   //colon is ON
-              
-              if(!twelve){  
-                //module.setDisplayToDecNumber((timeinfo.tm_hour*100)+timeinfo.tm_min, 0x04, true <- leading zero);
-                display.setDisplayToDecNumber((timeinfo.tm_hour*100)+timeinfo.tm_min, 0x04, leadingzero);
+              if(!twelve){  //24hr format
+
+                if(timeinfo.tm_hour==00 && leadingzero==false){
+                  display.setDisplayToDecNumberAt((timeinfo.tm_hour*100)+timeinfo.tm_min, 0x04, 1, true);
+                }
+
+                else{
+                  display.setDisplayToDecNumber((timeinfo.tm_hour*100)+timeinfo.tm_min, 0x04, leadingzero);
+                }
               }
 
               //12hr format is on
               else{   
                 if(timeinfo.tm_hour > 0 && timeinfo.tm_hour <= 12){ //display from 1:00 to 12:59    //00:00 is never shown --> midnight is 12:00 in this mode!!!
-                  //module.setDisplayToDecNumber((timeinfo.tm_hour*100)+timeinfo.tm_min, 0x04, true);
                   display.setDisplayToDecNumber((timeinfo.tm_hour*100)+timeinfo.tm_min, 0x04, leadingzero);
                 }
 
                 else{   //🔴🔴🔴🔴🔴🔴🔴🔴🔴🔴🔴🔴🔴🔴🔴🔴🔴🔴🔴🔴🔴
-                 // module.setDisplayToDecNumber(((timeinfo.tm_hour-12)*100)+timeinfo.tm_min, 0x04, true);
                   display.setDisplayToDecNumber((abs(timeinfo.tm_hour-12)*100)+timeinfo.tm_min, 0x04, leadingzero);
                 }
               }
@@ -929,18 +923,21 @@ bool autoConnect(void){
           else if(colon==false){//colon is OFF
 
               if(!twelve){
-                //module.setDisplayToDecNumber((timeinfo.tm_hour*100)+timeinfo.tm_min, 0, false);
-                display.setDisplayToDecNumber((timeinfo.tm_hour*100)+timeinfo.tm_min, 0, leadingzero);
+                if(timeinfo.tm_hour==00 && leadingzero==false){
+                  display.setDisplayToDecNumberAt((timeinfo.tm_hour*100)+timeinfo.tm_min, 0, 1, true);
+                }
+             
+                else{
+                  display.setDisplayToDecNumber((timeinfo.tm_hour*100)+timeinfo.tm_min, 0, leadingzero);
+                }
               }
 
               //if 12hr mode is active
               else{ 
                 if(timeinfo.tm_hour > 0 && timeinfo.tm_hour <= 12){ //display from 1:00 to 12:59    //00:00 is never shown --> midnight is 12:00 in this mode!!!
-                  //module.setDisplayToDecNumber((timeinfo.tm_hour*100)+timeinfo.tm_min, 0x04, true);
                   display.setDisplayToDecNumber((timeinfo.tm_hour*100)+timeinfo.tm_min, 0, leadingzero);
                 }
                 else{
-                  //module.setDisplayToDecNumber(((timeinfo.tm_hour-12)*100)+timeinfo.tm_min, 0, true);
                   display.setDisplayToDecNumber((abs(timeinfo.tm_hour-12)*100)+timeinfo.tm_min, 0, leadingzero);
                 }
               }
@@ -951,13 +948,19 @@ bool autoConnect(void){
         
       else{ //when blink==0
           if(!twelve){
-            display.setDisplayToDecNumber((timeinfo.tm_hour*100)+timeinfo.tm_min, 0x04, leadingzero);
+
+            if(timeinfo.tm_hour==00 && leadingzero==false){
+              display.setDisplayToDecNumberAt((timeinfo.tm_hour*100)+timeinfo.tm_min, 0x04, 1, true);
+            }
+
+            else{
+              display.setDisplayToDecNumber((timeinfo.tm_hour*100)+timeinfo.tm_min, 0x04, leadingzero);
+            }
           }
 
           //if 12hr mode is active
               else{ 
                 if(timeinfo.tm_hour > 0 && timeinfo.tm_hour <= 12){ //display from 1:00 to 12:59    //00:00 is never shown --> midnight is 12:00 in this mode!!!
-                  //module.setDisplayToDecNumber((timeinfo.tm_hour*100)+timeinfo.tm_min, 0x04, true);
                   display.setDisplayToDecNumber((timeinfo.tm_hour*100)+timeinfo.tm_min, 0x04, leadingzero);
                 }
                 
@@ -973,7 +976,7 @@ bool autoConnect(void){
           snoozeRing=1; //makes the alarm ring for snooze
         }
         
-        //intervallo di stop    //test
+        //stop interval - OK  
         if(snoozeRing==1 && millis() - snoozeTimer >= (snooze+1)*60*1000UL){  //...then stops
           snoozeOn=0;
           snoozeRing=0;
@@ -982,9 +985,7 @@ bool autoConnect(void){
   }     
 
   else{
-    
     displayAnim();
-    //Serial.println("looping form else1");
   }
 
   //optimization: instead of using "bool connected", i can only use WL_CONNECTED
@@ -994,7 +995,6 @@ bool autoConnect(void){
     WiFi.begin(ssid, password);
     
     while(1){
-
       displayAnim();
       //cycles here until it's connected to wifi
       if (WiFi.status() != WL_CONNECTED && creds_available==true){
@@ -1003,9 +1003,10 @@ bool autoConnect(void){
     
       //once connected, exit form while(1) with break, and then from first if since "connected==true" now
       else if(WiFi.status() == WL_CONNECTED){
-        //configTime(gmt_offset*3600, 3600, ntp_addr);
         connected = true;
         initMDNS();
+        //🔴🔴🔴🔴🔴🔴 After ESP is connected, must delete network_list!!!🔴🔴🔴🔴🔴🔴
+
         break;
       }
 

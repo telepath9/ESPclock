@@ -875,7 +875,7 @@ void loop() {
             if(colon==true){   //colon is ON
               if(!twelve){
                 mydisplay.showNumberDecEx(timeinfo.tm_hour, 0b01000000, leadingzero, 2, 0);
-                mydisplay.showNumberDecEx(timeinfo.tm_min, 0b01000000, leadingzero, 2, 2);
+                mydisplay.showNumberDecEx(timeinfo.tm_min, 0b01000000, true, 2, 2);
               }
 
               else{
@@ -888,7 +888,7 @@ void loop() {
                   mydisplay.showNumberDecEx(abs(timeinfo.tm_hour-12), 0b01000000, leadingzero, 2, 0);
                 }
 
-                mydisplay.showNumberDecEx(timeinfo.tm_min, 0b01000000, leadingzero, 2, 2);
+                mydisplay.showNumberDecEx(timeinfo.tm_min, 0b01000000, true, 2, 2);
               }
               colon=false;  
           }
@@ -897,7 +897,7 @@ void loop() {
 
               if(!twelve){
                 mydisplay.showNumberDecEx(timeinfo.tm_hour, 0, leadingzero, 2, 0);
-                mydisplay.showNumberDecEx(timeinfo.tm_min, 0, leadingzero, 2, 2);
+                mydisplay.showNumberDecEx(timeinfo.tm_min, 0, true, 2, 2);
               }
 
               else{ //if 12hr mode is active
@@ -909,7 +909,7 @@ void loop() {
                   mydisplay.showNumberDecEx(abs(timeinfo.tm_hour-12), 0, leadingzero, 2, 0);
                 }
 
-                mydisplay.showNumberDecEx(timeinfo.tm_min, 0, leadingzero, 2, 2);
+                mydisplay.showNumberDecEx(timeinfo.tm_min, 0, true, 2, 2);
               }
 
             colon=true;
@@ -920,7 +920,7 @@ void loop() {
       else{ //when blink==0
         if(!twelve){
                 mydisplay.showNumberDecEx(timeinfo.tm_hour, 0b01000000, leadingzero, 2, 0);
-                mydisplay.showNumberDecEx(timeinfo.tm_min, 0b01000000, leadingzero, 2, 2);
+                mydisplay.showNumberDecEx(timeinfo.tm_min, 0b01000000, true, 2, 2);
         }
 
         else{//if 12hr mode is active
@@ -932,7 +932,7 @@ void loop() {
                 else{
                     mydisplay.showNumberDecEx(abs(timeinfo.tm_hour-12), 0b01000000, leadingzero, 2, 0);
                   }
-                  mydisplay.showNumberDecEx(timeinfo.tm_min, 0b01000000, leadingzero, 2, 2);
+                  mydisplay.showNumberDecEx(timeinfo.tm_min, 0b01000000, true, 2, 2);
         }
       }    
     }
