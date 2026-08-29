@@ -48,7 +48,7 @@ It uses a ESP8266 (Wemos D1 mini) or ESP32 (XIAO ESP32 C3)
 </details>
 
 <h2>📱 WEB UI </h2>
-<img src="https://github.com/telepath9/ESPclock/blob/04867605e903324e45cfd8a8358fb3f727cac78c/pics/2.3.1.webp" alt="Alt Text" width="100%" height="100%">
+<img src="https://github.com/telepath9/ESPclock/blob/afda6c699596f9cc012e6f895a00c1be1102ecaa/pics/2.4.0.webp" alt="Alt Text" width="100%" height="100%">
 
 <h2>🤖 CURRENT FEATURES</h2>
 
@@ -60,16 +60,17 @@ It uses a ESP8266 (Wemos D1 mini) or ESP32 (XIAO ESP32 C3)
 - [x] Blinking colon toggle
 - [x] ESP32 port
 - [x] Replace NTPclient.h with time.h library
+- [x] Timezone Support
 - [x] ESPmDNS: web UI can be accessed by simply pasting "espclock.local" in the address bar of the browser.
 - [x] 12-Hour clock mode
 - [x] Alarm clock mode with buzzer
 - [ ] Multiple Alarm (Requested)
 - [x] Snooze feature for Alarm clock mode
-- [x] Display Uptime in webUI
-- [ ] Timezone Support
+- [x] Show Uptime in webUI
+- [x] Show Local IP in webUI
 - [x] Added TTP223 Touch button
 - [ ] ESPhome or Homeassistant integration
-- [ ] Display Temperature
+- [ ] Show Temperature
 - [x] TM1652 0.8" display support
 - [ ] Web installer
 
@@ -134,6 +135,13 @@ It uses a ESP8266 (Wemos D1 mini) or ESP32 (XIAO ESP32 C3)
 <h2>🪛 HOW TO ASSEMBLE ESPclock</h2>
 <img src="https://github.com/telepath9/ESPclock/blob/fc197cfd72fc6f489c0196dcbc484aab385d8b21/pics/howtoassemble.webp" alt="Alt Text" width="100%" height="100%">
 
+<h2>👨‍👩‍👧‍👦 COMMUNITY BUILDS</h2>
+<span>
+<img src="https://github.com/telepath9/ESPclock/blob/f22a80e5382a0b89a9741d32ecaa0e95cc034884/pics/community_builds/2.webp" alt="Alt Text" width="50%" height="50%"> 
+<img src="https://github.com/telepath9/ESPclock/blob/f22a80e5382a0b89a9741d32ecaa0e95cc034884/pics/community_builds/1.webp" alt="Alt Text" width="40%" height="40%">
+<img src="https://github.com/telepath9/ESPclock/blob/main/pics/community_builds/3.webp" alt="Alt Text" width="40%" height="40%">
+<img src="https://github.com/telepath9/ESPclock/blob/main/pics/community_builds/4.webp" alt="Alt Text" width="40%" height="40%">
+</span>
 
 
 <h2>🤝 CODE CONTRIBUTIONS</h2>
