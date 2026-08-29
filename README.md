@@ -1,10 +1,7 @@
 [![Static Badge](https://img.shields.io/badge/SLIM%20case-Makerworld-08bf08?style=for-the-badge&logo=bambulab)](https://makerworld.com/it/models/1594116-espclock-digital-clock#profileId-2069321)
 [![Static Badge](https://img.shields.io/badge/BOLD%20case-Makerworld-08bf08?style=for-the-badge&logo=bambulab)](https://makerworld.com/it/models/2405754-espclock-bold-digital-clock)
 [![Static Badge](https://img.shields.io/badge/BIG%20case-Makerworld-08bf08?style=for-the-badge&logo=bambulab)](https://makerworld.com/it/models/2616382-espclock-big-digital-clock#profileId-2887323)
-
-
 ![GitHub Repo stars](https://img.shields.io/github/stars/telepath9/ESPclock?style=for-the-badge&logo=github&color=A02ADB	)
-
 [![Static Badge](https://img.shields.io/badge/Mentioned_by-Hackster.io-%232E9FE6?style=for-the-badge&logo=hackster&logoColor=white&color=%232E9FE6)](https://www.hackster.io/news/a-diy-retro-modern-alarm-clock-for-under-10-4e4e972345d8)
 [![Static Badge](https://img.shields.io/badge/Mentioned_by-SeeedStudio-%232E9FE6?style=for-the-badge&color=rgb(0,58,74))](https://www.linkedin.com/posts/seeedstudio_seeedxiao-xiao-esp32-activity-7438192154243493888-qwSJ)
 
@@ -66,16 +63,18 @@ It uses a ESP8266 (Wemos D1 mini) or ESP32 (XIAO ESP32 C3)
 - [x] ESPmDNS: web UI can be accessed by simply pasting "espclock.local" in the address bar of the browser.
 - [x] 12-Hour clock mode
 - [x] Alarm clock mode with buzzer
+- [ ] Multiple Alarm (Requested)
 - [x] Snooze feature for Alarm clock mode
 - [x] Display Uptime in webUI
 - [ ] Timezone Support
 - [x] Added TTP223 Touch button
 - [ ] ESPhome or Homeassistant integration
 - [ ] Display Temperature
-- [x] TM1652 0.8" display support	
+- [x] TM1652 0.8" display support
+- [ ] Web installer
 
 > [!NOTE]
-> About ESPmDNS: if more ESPclocks are connected to the same network, to access the web UI of second one, user must use "espclock.local-2", and so on...
+> About ESPmDNS: if more ESPclocks are connected to the same network, in order to access the web UI of second one, user must enter "espclock.local" in the address bar to access to the web UI of the first clock; "espclock.local-2" to access to the seconds clock, and so on...
 
 <h2>🛒 PART LIST</h2>
 <details>
@@ -138,7 +137,7 @@ It uses a ESP8266 (Wemos D1 mini) or ESP32 (XIAO ESP32 C3)
 
 
 <h2>🤝 CODE CONTRIBUTIONS</h2>
-This is a personal project which i'm using to learn and to improve my coding skills. So, in order to follow my own plans, I won't accept any pull request.
+This is a personal project which i'm using to learn and to improve my coding skills. So, in order to follow my own plans, I won't accept any pull requests.
 If you have any suggestion/advice/feedback, you can open an issue.
 Forks are encouranged too, and i'm eager to see new changes that people can add to this project! 
 
@@ -146,6 +145,9 @@ Forks are encouranged too, and i'm eager to see new changes that people can add 
 If you find ESPclock an interesting project, please consider to  <b>star</b> ⭐ the repository!<br>
 To not miss the next updates and releases, be sure to click on the  <b>watch</b> 👁️ button!
 If you want to financially contribute, contact me.
+
+<h2>👁️ SHOW YOUR BUILD!</h2>
+If you've assembled you own build (vanilla or custom), don't forget to post a picture of the final result! You can do it on MakerWorld or in the "Issues" section.
 
 <details> 
 <summary><h2>⚠️ TROUBLESHOOTING</h2></summary>
@@ -157,4 +159,4 @@ There are (at the moment) two errors that can be displayed from the 7-segment di
 </details>
 
 <h2>🙋🏽 SPECIAL THANKS</h2>
-To maxint-rd and his <a href="https://github.com/maxint-rd/TM16xx">TM16xx</a> library, the "swiss knife" for TM16xx chips.
+To maxint-rd and his <a href="https://github.com/maxint-rd/TM16xx">TM16xx</a> library, the "swiss-army knife" for TM16xx chips.
