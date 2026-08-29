@@ -11,6 +11,7 @@
 #include <TM1652.h>
 #include <TM16xxDisplay.h>
 #include "esp_sntp.h"
+#include "tz.h"
 
 //internal temp sensor--> https://docs.espressif.com/projects/esp-idf/en/stable/esp32c3/api-reference/peripherals/temp_sensor.html
 
@@ -21,8 +22,7 @@
 #define ARDUINOJSON_USE_LONG_LONG 0
 
 //NON-blocking timer function (delay() is EVIL). only accepts milliseconds
-unsigned long myTimer(unsigned long everywhen){ //millis overflow-safe!
-
+unsigned long myTimer(unsigned long everywhen){ //millis-overflow safe!
         static unsigned long t1, diff_time;
         bool ret=0;
         diff_time= millis() - t1;
@@ -86,6 +86,9 @@ bool leadingzero=true;
 uint8_t brightness=7;
 uint8_t ms_ovfl=0;
 
+String user_tz;
+String user_posix;
+
 uint8_t px=4;  
 bool alarm_status=false; 
 String timehm = "";
@@ -131,12 +134,12 @@ struct tm timeinfo;
     Serial.println(&timeinfo, "%H:%M:%S zone %Z %z ");
     //Serial.println(timeinfo.tm_hour); //access to single time vars
 }*/
+
 const char *ntp_addr;
-int gmt_offset;
 bool start_NtpClient = false;
 
 //ALARM setup
-uint8_t hh, mm; //hour and minutes
+uint8_t hh, mm; //hour n minutes
 
 //all entries are initialized to 0
 bool days[7] = {0};   //in this case sun=days[0], mon=days[1], tue=days[2], ...
@@ -150,7 +153,7 @@ void wifiScan(){
     WiFi.disconnect();
 
     byte n = WiFi.scanNetworks();
-    Serial.println(n + " networks found");
+    Serial.printf("%d networks found", n);
 
     //---------------------------------------------x
     //SSIDs found are stored in json
@@ -259,15 +262,15 @@ void checkConfig(void){
 
         start_NtpClient=true;
         ntp_addr= strdup(load_cf["ntp_ad"]); 
-        gmt_offset = load_cf["offset"]; 
-        configTime(gmt_offset*3600, 3600, ntp_addr);
-        //Serial.println("NTP server: " + String(ntp_addr));
-        //Serial.println("OFFSET: " + String(gmt_offset));
-  
+        user_posix= strdup(load_cf["posix_tz"]);
+        configTime(0, 0, ntp_addr);        
+        setenv("TZ", user_posix.c_str(), 1); 
+        tzset();
+
+        user_tz=strdup(load_cf["tz_val"]);
         brightness = (uint8_t)load_cf["br"];
         module.setupDisplay(true, brightness, 6);
         display.clear();
-        //display.setIntensity(brightness);
         
         blink=  load_cf["blink"];
         br_auto = load_cf["br_auto"];
@@ -275,7 +278,6 @@ void checkConfig(void){
         leadingzero=load_cf["lz"];
         fld.close();
       }
-  //}
   return;
 }
 
@@ -299,8 +301,6 @@ void checkAlarm(){
     if(alarm_status==true){
 
       timehm= strdup(load_al["timehm"]);
-      //Serial.println("timehm > " + timehm);
-
       alarm_hour= load_al["alarm_hour"];
       alarm_min= load_al["alarm_min"];
       snooze= load_al["snooze"];
@@ -320,7 +320,7 @@ bool snoozeRing=0;
 bool snoozeMsStart=0;
 unsigned long snoozeTimer;
 
-void alarm_ring(){
+void alarm_ring(){  //intermittent RINGING
   if(tone_var){
     tone(BUZZER_PIN, 2000, 900);
     tone_var=0;
@@ -328,7 +328,6 @@ void alarm_ring(){
 
   else{
     tone(BUZZER_PIN, 0, 500);
-    //noTone(BUZZER_PIN);
     tone_var=1;
   }
 }
@@ -343,6 +342,7 @@ void alarm_off(){
 
   if(alarm_stop==0 && elapsedMillis > debounceTime){
     alarm_stop=1;
+    noTone(BUZZER_PIN); //can happen, sometimes, that the buzzer will ring at a very low volume... if noTone isn't enought to turn it OFF, try using pinMode
     snoozeOn=0;
   }
   prevMillis = millis();
@@ -380,7 +380,7 @@ void setup() {
 
   //LittleFS.format();
 
-  //Begin LittleFS can throw Err0
+  //LittleFS.begin can throw Err0
   if(!LittleFS.begin()){
     display.setDisplayToString("Err", 0, 0);
     module.setDisplayDigit(0,3,false);
@@ -426,10 +426,11 @@ void setup() {
 
   //this is triggered when entering to the webUI after the clock is set. It checks the status of all of the UI elements and updates it
   server.on("/uicheck", HTTP_GET, [](AsyncWebServerRequest *request){
-       
+      
     JsonDocument uc_json;
-
     uc_json["conn"] = connected;
+    uc_json["tz_val"]= user_tz;
+    uc_json["ntp_ad"] = ntp_addr;
     uc_json["bright"]= brightness; 
     uc_json["br_auto"] = br_auto;
     uc_json["blink"]= blink;
@@ -438,7 +439,8 @@ void setup() {
     uc_json["millis"]= millis();
     uc_json["msovfl"]= ms_ovfl;
     uc_json["lz"]= leadingzero;
-
+    uc_json["ip"]= WiFi.localIP();
+  
     String uc_str;
     serializeJson(uc_json, uc_str);
 
@@ -510,7 +512,6 @@ void setup() {
           
     if(attempts == 4){
       creds_available = false;
-      //Serial.println(password);
       Serial.println("handler: 5 attempts-WRONG PASSWORD- RESET attempts to 0");
       request->send(200, "application/json", "{\"stat\":\"fail\"}");
     }
@@ -528,32 +529,43 @@ void setup() {
     }
   });
 
-  server.on("/updatetime", HTTP_POST, [](AsyncWebServerRequest *request){}, NULL, [](AsyncWebServerRequest *request, uint8_t *data, size_t len, size_t index, size_t total){
+  server.on("/timeset", HTTP_POST, [](AsyncWebServerRequest *request){}, NULL, [](AsyncWebServerRequest *request, uint8_t *data, size_t len, size_t index, size_t total){
 
-    JsonDocument ntp_json;
-    deserializeJson(ntp_json, data);
-    String ntp_str_test = strdup(ntp_json["ntp_addr"]);//used this cuz ntp_addr is const char* and i don't want to change it to String type
-    ntp_str_test.trim();
+    JsonDocument time_json;
+    deserializeJson(time_json, data);
+    user_tz= strdup(time_json["tz_val"]);
+
+    //NTP string CHECK
+    String ntp_str = strdup(time_json["ntp_addr"]);//used this cuz ntp_addr is const char* and i don't want to change it to String type... i'll probably do it later
+    ntp_str.trim();  //part of input sanitization
     display.clear();
 
-    if(ntp_str_test=="" || ntp_json["offset"]==""){  //beware of multiple whitespaces though (e.g. "    ")
-      Serial.println("NTP address or Offset==NULL");
+
+    if(ntp_str=="" || user_tz=="" ){  //beware of multiple whitespaces though (e.g. "    ")
+      Serial.println("NTP address==NULL");
       request->send(200, "application/json", "{\"ntp\":\"FAIL\"}");
       return;
     }
 
-    //POST/GET values are never null. The best they can be is an empty string, which can be converted to null/'NULL'.
+    //POST/GET values are never null. The best they can be is an EMPTY string, which can be converted to null/'NULL'.
     else{
-    ntp_addr = strdup(ntp_json["ntp_addr"]); 
-    gmt_offset = (int)atoi(ntp_json["offset"]);
-    configTime(gmt_offset*3600, 3600, ntp_addr);  //arduino core funct
-    if(start_NtpClient==false){
-      start_NtpClient=true;
-    }
-    
-    request->send(200, "application/json", "{\"ntp\":\"OK\"}");
+      ntp_addr = strdup(time_json["ntp_addr"]); 
+      configTime(0, 0, ntp_addr);
+      user_posix = posixFinder(user_tz);
+      //Serial.printf("User TZ is %s\n", user_tz);
+      //Serial.printf("user TZ POSIX STRING is %s\n", user_posix.c_str());
+
+      setenv("TZ", user_posix.c_str(), 1);  //  Now adjust the TZ.  Clock settings are adjusted to show the new local time
+      tzset();
+      
+      if(start_NtpClient==false){
+        start_NtpClient=true;
+      }
+      
+      request->send(200, "application/json", "{\"ntp\":\"OK\"}");
     }
   });
+
 
   server.on("/slider", HTTP_POST, [](AsyncWebServerRequest *request){}, NULL, [](AsyncWebServerRequest *request, uint8_t *data, size_t len, size_t index, size_t total){
           
@@ -737,8 +749,9 @@ void setup() {
 
       config["ssid"] = ssid;           //const *char
       config["pw"] = password;         //const *char
+      config["posix_tz"] = user_posix;
       config["ntp_ad"] = ntp_addr;     //const *char
-      config["offset"] = gmt_offset;   //offset saved as int
+      config["tz_val"] = user_tz; 
       config["br_auto"] = br_auto;     //bool as 1 or 0
       config["br"] = brightness;       //uint8_t
       config["blink"] = blink;        //bool as 1 or 0
@@ -799,7 +812,7 @@ bool autoConnect(void){
     return retval;
   }
 
-  void loop() {
+void loop() {
   // Serial.println(esp_clk_get_cpu_freq_mhz());
 
   if(millis() == 4294967295UL){
@@ -857,8 +870,9 @@ bool autoConnect(void){
             
             if(snooze==0){
               alarm_stop=0;
+              noTone(BUZZER_PIN);
             }
-            else if(millis() - snoozeTimer >= (snooze+3)*60*1000UL){  //alarm stop viene restored dopo un certo intervallo di tempo ()SBAGLAITO!!!
+            else if(millis() - snoozeTimer >= (snooze+3)*60*1000UL){  //alarm stop is restored after a given time interval
               alarm_stop=0;
               snoozeRing=0;
             }
