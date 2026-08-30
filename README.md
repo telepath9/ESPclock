@@ -48,7 +48,7 @@ It uses a ESP8266 (Wemos D1 mini) or ESP32 (XIAO ESP32 C3)
 </details>
 
 <h2>📱 WEB UI </h2>
-<img src="https://github.com/telepath9/ESPclock/blob/54d7e278927e74feca1dcb77fd9ceac6a4dd744d/pics/2.4.0.webp" alt="Alt Text" width="100%" height="100%">
+<img src="https://github.com/telepath9/ESPclock/blob/75f719bba745ee0972ca90e6077301e34685ed2e/pics/2.4.0.webp" alt="Alt Text" width="100%" height="100%">
 
 <h2>🤖 CURRENT FEATURES</h2>
 
