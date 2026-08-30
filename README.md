@@ -48,7 +48,7 @@ It uses a ESP8266 (Wemos D1 mini) or ESP32 (XIAO ESP32 C3)
 </details>
 
 <h2>📱 WEB UI </h2>
-<img src="https://github.com/telepath9/ESPclock/blob/afda6c699596f9cc012e6f895a00c1be1102ecaa/pics/2.4.0.webp" alt="Alt Text" width="100%" height="100%">
+<img src="https://github.com/telepath9/ESPclock/blob/54d7e278927e74feca1dcb77fd9ceac6a4dd744d/pics/2.4.0.webp" alt="Alt Text" width="100%" height="100%">
 
 <h2>🤖 CURRENT FEATURES</h2>
 
@@ -75,7 +75,7 @@ It uses a ESP8266 (Wemos D1 mini) or ESP32 (XIAO ESP32 C3)
 - [ ] Web installer
 
 > [!NOTE]
-> About ESPmDNS: if more ESPclocks are connected to the same network, in order to access the web UI of second one, user must enter "espclock.local" in the address bar to access to the web UI of the first clock; "espclock.local-2" to access to the seconds clock, and so on...
+> About ESPmDNS: if more ESPclocks are connected to the same network, in order to access the web UI of the first one, user must enter "espclock.local" in the address bar, "espclock.local-2" to access to the web UI of second clock, and so on...
 
 <h2>🛒 PART LIST</h2>
 <details>
@@ -157,14 +157,12 @@ If you want to financially contribute, contact me.
 <h2>👁️ SHOW YOUR BUILD!</h2>
 If you've assembled you own build (vanilla or custom), don't forget to post a picture of the final result! You can do it on MakerWorld or in the "Issues" section.
 
-<details> 
-<summary><h2>⚠️ TROUBLESHOOTING</h2></summary>
+<h2>⚠️ TROUBLESHOOTING</h2>
 There are (at the moment) two errors that can be displayed from the 7-segment display:
 <ul>
 <li>Err0 -> when "LittleFS.begin()" fails</li>
 <li>Err1 -> when "index.html" doesn't exists in flash memory (user forgot to upload it)</li>
 </ul>
-</details>
 
 <h2>🙋🏽 SPECIAL THANKS</h2>
 To maxint-rd and his <a href="https://github.com/maxint-rd/TM16xx">TM16xx</a> library, the "swiss-army knife" for TM16xx chips.
