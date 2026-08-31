@@ -29,8 +29,8 @@ It uses a ESP8266 (Wemos D1 mini) or ESP32 (XIAO ESP32 C3)
 
 3. Download the latest .zip file that you can find in the <a href="https://github.com/telepath9/ESPclock/releases"><b>Release</b></a> section, extract it, then open in VSCode/VSCodium the ESPclock project directory;
 
-4. Select the PIOarduino extension in VSCode/VSCodium, then you have to store the html page into the esp8266 flash memory in two steps:
-	<b>🔴(Be sure to have closed all Serial Monitor instances, otherwise it will fail to upload the fs image)</b>
+4. Select the PIOarduino extension (it has the icon on a CPU) in VSCode/VSCodium, then you have to store the html page into the esp32/esp8266 flash memory in two steps:
+	<b>(Be sure to have closed all Serial Monitor instances, otherwise it will fail to upload the fs image)</b>
 	1. Platform -> Build filesystem image
 	2. Platform -> Upload filesystem image
 
@@ -42,7 +42,6 @@ It uses a ESP8266 (Wemos D1 mini) or ESP32 (XIAO ESP32 C3)
 
 7. After connecting to the ESPclock's AP, open your browser and paste in the address bar: http://192.168.4.1/ or "espclock.local".
 
-8. From the web UI, first add your home network, then the NTP server that matches your region, plus the GMT/UTC offset hour(s).
 
 9. And we're done! Hope that you liked my project! If you have any suggestions, let me know!
 </details>
@@ -69,8 +68,8 @@ It uses a ESP8266 (Wemos D1 mini) or ESP32 (XIAO ESP32 C3)
 - [x] Show Uptime in webUI
 - [x] Show Local IP in webUI
 - [x] Added TTP223 Touch button
-- [ ] ESPhome or Homeassistant integration
 - [ ] Show Temperature
+- [ ] ESPhome or Homeassistant integration
 - [x] TM1652 0.8" display support
 - [ ] Web installer
 
