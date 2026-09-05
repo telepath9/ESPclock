@@ -1,7 +1,6 @@
 {
   "name": "ESPclock",
   "version": "2.4.0",
-  "home_assistant_domain": "esphome",
   "new_install_prompt_erase": false,
   "builds": [
     {
