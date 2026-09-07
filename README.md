@@ -19,11 +19,11 @@ It uses a ESP8266 (Wemos D1 mini) or ESP32 (XIAO ESP32 C3)
 <img src="https://github.com/telepath9/ESPclock/blob/6b2b2224a42deda354a8a7220dcf724643eb9c2e/pics/pic1.jpg" alt="Alt Text" width="100%" height="100%">
 <img src="https://github.com/telepath9/ESPclock/blob/d3ea40822622406152dad12554adbceba28abb7e/pics/espclock_bold.jpg" alt="Alt Text" width="100%" height="100%">
 
-<h2>❇️ HOW TO INSTALL THE FIRMWARE</h2>
+<h2>❇️ HOW TO INSTALL THE FIRMWARE...</h2>
 <details>
 <summary><b>(Click to expand)</b></summary>
 
-## 🏃🏽‍➡️ with ESPclock Web Installer (QUICK and EASY, must be done from a PC) 
+## ⚡... with ESPclock Web Installer (QUICK and EASY, must be done from a PC) 
 <img src="https://github.com/telepath9/ESPclock/blob/6b8f77e82decf43d8bf355db69276ec9858422f5/pics/ewi.webp" alt="Alt Text" width="80%" height="80%">
 
 ---
@@ -37,7 +37,7 @@ It uses a ESP8266 (Wemos D1 mini) or ESP32 (XIAO ESP32 C3)
 7. Select your Timezone from the drop-down list and add your favourite NTP server address;
 8. And we're done! Hope that you liked my project! If you have any suggestions, write them in the "Issue" section!
 
-## 👨🏼‍💻 with VScode/VScodium (SLOWER and ADVANCED)
+## 🧑🏽‍💻...with VScode/VScodium (SLOWER and ADVANCED)
 
 1. Install VSCode or <b>VSCodium</b> (i prefer VSCodium because it basically is VSCode but <b>without</b> telemetry);
 
