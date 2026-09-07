@@ -19,9 +19,25 @@ It uses a ESP8266 (Wemos D1 mini) or ESP32 (XIAO ESP32 C3)
 <img src="https://github.com/telepath9/ESPclock/blob/6b2b2224a42deda354a8a7220dcf724643eb9c2e/pics/pic1.jpg" alt="Alt Text" width="100%" height="100%">
 <img src="https://github.com/telepath9/ESPclock/blob/d3ea40822622406152dad12554adbceba28abb7e/pics/espclock_bold.jpg" alt="Alt Text" width="100%" height="100%">
 
-<h2>📜 INSTRUCTIONS </h2>
+<h2>❇️ HOW TO INSTALL THE FIRMWARE</h2>
 <details>
 <summary><b>(Click to expand)</b></summary>
+
+## 🏃🏽‍➡️ with ESPclock Web Installer (QUICK and EASY, must be done from a PC) 
+<img src="https://github.com/telepath9/ESPclock/blob/6b8f77e82decf43d8bf355db69276ec9858422f5/pics/ewi.webp" alt="Alt Text" width="80%" height="80%">
+
+---
+
+1. Go to [ESPclock Web Installer](https://telepath9.github.io/ESPclock/);
+2. Plug your ESP board;
+3. Select the display you're using;
+4. Flash the firmware;
+5. Now let's connect PC or mobile to the ESPclock access point, with the password: waltwhite64 ;
+6. After connecting to the ESPclock's AP, open your browser and paste in the address bar: http://192.168.4.1/ or "espclock.local";
+7. Select your Timezone from the drop-down list and add your favourite NTP server address;
+8. And we're done! Hope that you liked my project! If you have any suggestions, write them in the "Issue" section!
+
+## 👨🏼‍💻 with VScode/VScodium (SLOWER and ADVANCED)
 
 1. Install VSCode or <b>VSCodium</b> (i prefer VSCodium because it basically is VSCode but <b>without</b> telemetry);
 
@@ -42,7 +58,8 @@ It uses a ESP8266 (Wemos D1 mini) or ESP32 (XIAO ESP32 C3)
 
 7. After connecting to the ESPclock's AP, open your browser and paste in the address bar: http://192.168.4.1/ or "espclock.local".
 
-
+8. Select your Timezone from the drop-down list and add your favourite NTP server address.
+   
 9. And we're done! Hope that you liked my project! If you have any suggestions, let me know!
 </details>
 
@@ -71,7 +88,7 @@ It uses a ESP8266 (Wemos D1 mini) or ESP32 (XIAO ESP32 C3)
 - [ ] Show Temperature
 - [ ] ESPhome or Homeassistant integration
 - [x] TM1652 0.8" display support
-- [ ] Web installer
+- [x] Web installer ([ESPclock Web Installer](https://telepath9.github.io/ESPclock/))
 
 > [!NOTE]
 > About ESPmDNS: if more ESPclocks are connected to the same network, in order to access the web UI of the first one, user must enter "espclock.local" in the address bar, "espclock.local-2" to access to the web UI of second clock, and so on...
