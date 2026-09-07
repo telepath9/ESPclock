@@ -6,6 +6,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 <link rel="espclockmanifest" href="manifest.json" />
 <link rel="shortcut icon" href="data:," /> <!--BLOCK FAVICON REQUEST https://hackernoon.com/disabling-my-favicon-how-and-why-->
+
 <title>ESPclock Web Installer</title>
 <meta charset="UTF-8" />
 <!--<meta> tag makes your web page responsive in any browser (laptop, tablet or smartphone)-->
@@ -15,7 +16,7 @@
 
 @font-face {
   font-family: Neuropol; 
-  src: url("/NRX.ttf") format('truetype');
+  src: url("css/fonts/NRX.ttf") format('truetype');
 }
 
 /*
@@ -168,6 +169,7 @@ a:hover{
 </style>
 </head>
 <body>
+<script type="module" src="https://unpkg.com/esp-web-tools@10/dist/web/install-button.js?module"></script>
 
       <!--TRY vw (viewport) to scale!!!!!-->
    <div class="flex_container">
@@ -195,33 +197,25 @@ a:hover{
        <p id="footerText" style="margin: 10px auto 6px; line-height: 0.9;"><b>ESPclock</b> is a project made by <b>telepath</b> and <b>ESPclock Web Installer</b> is powered by ESP Web Tools<br>
       </p>
    </footer>
-
-
-
-
-<script type="module" src="https://unpkg.com/esp-web-tools@10/dist/web/install-button.js?module">
-
-
+  
+<script>
+  
    const display = document.getElementById("display");
+   const espWebToolsButton = document.querySelector('esp-web-install-button');
 
    function selectDisplay(){
-      const espWebToolsButton = document.querySelector('esp-web-install-button');
-
       espWebToolsButton.manifest = `./${display.value}/manifest.json`;
-
+      console.log(espWebToolsButton.manifest);
    }
 
-   display.addEventListener("change", fuinzione);
-
+   display.addEventListener("change", selectDisplay);
 
 /*
    const install_but = document.getElementById("install");
    install_but.addEventListener("click", reaction);
-
    function reaction(){
       console.log("CLIK");
    }*/
-
    /*
    const manifest = {
       "name": name,
@@ -241,8 +235,6 @@ a:hover{
          }
       ]
    }*/
-
-
 </script>
 </body>
 </html>
