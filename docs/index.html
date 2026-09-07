@@ -177,8 +177,10 @@ a:hover{
       <p style="font-size: 3.91vw; line-height: 0.8; margin: 10px 0px 40px 0px; user-select: none;">Web Installer</p>
       <div class="wrapper1">
 
-                    <label style="font-size: 1.4vw;" for="display">Select Display</label>
+                    <p style="font-size: 1.4vw;">1. Plug your <b>ESP32-C3</b> or <b>ESP8266</b> board</p>
+                    <label style="font-size: 1.4vw;" for="display">2. Select Display</label>
                     <select id="display" style="font-size: 20px; width: 100%; margin-bottom: 5%;" >
+                    <option value="null">-</option>
                     <option value="tm1637">TM1637</option>
                     <option value="tm1652">TM1652</option>
                     </select>
@@ -197,7 +199,10 @@ a:hover{
        <p id="footerText" style="margin: 10px auto 6px; line-height: 0.9;"><b>ESPclock</b> is a project made by <b>telepath</b> and <b>ESPclock Web Installer</b> is powered by ESP Web Tools<br>
       </p>
    </footer>
-  
+
+
+
+
 <script>
   
    const display = document.getElementById("display");
@@ -206,16 +211,20 @@ a:hover{
    function selectDisplay(){
       espWebToolsButton.manifest = `./${display.value}/manifest.json`;
       console.log(espWebToolsButton.manifest);
+
    }
 
    display.addEventListener("change", selectDisplay);
 
+
 /*
    const install_but = document.getElementById("install");
    install_but.addEventListener("click", reaction);
+
    function reaction(){
       console.log("CLIK");
    }*/
+
    /*
    const manifest = {
       "name": name,
@@ -235,6 +244,8 @@ a:hover{
          }
       ]
    }*/
+
+
 </script>
 </body>
 </html>
