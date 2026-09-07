@@ -7,11 +7,11 @@
       "chipFamily": "ESP32-C3",
 
       "parts": [
-        { "path": "tm1652/esp32c3/bootloader.bin", "offset": 0 },
-        { "path": "tm1652/esp32c3/partitions.bin", "offset": 32768 },
-        { "path": "tm1652/esp32c3/boot_app0.bin", "offset": 57344 },
-        { "path": "tm1652/esp32c3/firmware.bin", "offset": 65536 },
-        { "path": "tm1652/esp32c3/littlefs.bin", "offset": 2686976 }
+        { "path": "./esp32c3/bootloader.bin", "offset": 0 },
+        { "path": "./esp32c3/partitions.bin", "offset": 32768 },
+        { "path": "./esp32c3/boot_app0.bin", "offset": 57344 },
+        { "path": "./esp32c3/firmware.bin", "offset": 65536 },
+        { "path": "./esp32c3/littlefs.bin", "offset": 2686976 }
       ]
     },
     {
