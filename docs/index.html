@@ -36,9 +36,8 @@ body{
    font-family: "Bebas Neue";
    font-weight: 400;
    font-size: 16px;
-
-
-
+   background-image: radial-gradient(#000000cd 1px, transparent 0);
+   background-size: 40px 40px;
 }
 
 .flex_container{
@@ -61,23 +60,6 @@ body{
    justify-content:center;
 }
 
-/*
-.deprecated{
-   font-family: "Bebas Neue";
-   font-weight: 400;
-   font-size: 80px;
-   font-size: 30px;
-   font-weight: 550;
-   width: 180px;
-   height: auto;
-   text-align: center;
-   background-color: #FF6B6B;
-   border: 3px solid #000000;
-   margin: 40px 0px 40px 0px;
-   box-shadow: var(--brtshadow);
-}*/
-
-
 .button {   
    width: 100%;
    border: 3px solid #000;
@@ -91,6 +73,7 @@ body{
    margin: 20px 0px 0px 0px;
    cursor: pointer;
    transition: all 0.1s ease;
+   
 }
 
 .button:hover {
@@ -121,8 +104,8 @@ body{
 }
 
 #display:focus {
-  outline: 3px solid #74B9FF;
-  outline-offset: 2px;
+  outline: none;
+  /*outline-offset: 2px;*/
   box-shadow: 5px 5px 0 0 #000;
   transform: translate(-1px, -1px);
 }
@@ -184,14 +167,15 @@ a:hover{
                     <option value="tm1637">TM1637</option>
                     <option value="tm1652">TM1652</option>
                     </select>
+         <!--<p style="font-size: 1.4vw;">3. Install the firmware!</p>-->
          <esp-web-install-button manifest=""><button slot="activate" class="button" id="install">INSTALL</button>
+      <!--   <p style="font-size: 1vw;">*At the moment it can only flash ESP32 firmwares. ESP8266 FIRMWAres coming soon...</p>-->
+
            <span slot="unsupported"><h3>Your browser doesn't support the WebSerial API</h3></span>
             <span slot="not-allowed"><h3>Please use https when requesting this website</h3></span>
          </esp-web-install-button>
+
       </div>   
-
-
-
    </div>
 
    <footer id="myfooter">
@@ -199,9 +183,6 @@ a:hover{
        <p id="footerText" style="margin: 10px auto 6px; line-height: 0.9;"><b>ESPclock</b> is a project made by <b>telepath</b> and <b>ESPclock Web Installer</b> is powered by ESP Web Tools<br>
       </p>
    </footer>
-
-
-
 
 <script>
   
