@@ -24,7 +24,7 @@ It uses a ESP8266 (Wemos D1 mini) or ESP32 (XIAO ESP32 C3)
 <summary><b>(Click to expand)</b></summary>
 
 ### ⚡... with ESPclock Web Installer (QUICK and EASY) 
-<img src="https://github.com/telepath9/ESPclock/blob/6b8f77e82decf43d8bf355db69276ec9858422f5/pics/ewi.webp" alt="Alt Text" width="100%" height="100%">
+<img src="https://github.com/telepath9/ESPclock/blob/f4d29de2d434ca082bdee65bc46d8f14fe04c2ac/pics/ewi2.webp" alt="Alt Text" width="100%" height="100%">
 
 ---
 
