@@ -19,6 +19,10 @@ It uses a ESP8266 (Wemos D1 mini) or ESP32 (XIAO ESP32 C3)
 <img src="https://github.com/telepath9/ESPclock/blob/6b2b2224a42deda354a8a7220dcf724643eb9c2e/pics/pic1.jpg" alt="Alt Text" width="100%" height="100%">
 <img src="https://github.com/telepath9/ESPclock/blob/d3ea40822622406152dad12554adbceba28abb7e/pics/espclock_bold.jpg" alt="Alt Text" width="100%" height="100%">
 
+<h2>⚠️WARNING for ESP8266 users‼️</h2>
+Looks like that ESP8266 <b>doesn't support</b> WPA3 networks (because this chip has almost reached its EoL), so if you have this kind of network and your ESP8266 doesn't connect anymore, that's the reason why.
+So, I suggest to upgrade to ESP32. 
+
 <h2>❇️ HOW TO INSTALL THE FIRMWARE...</h2>
 <details>
 <summary><b>(Click to expand)</b></summary>
@@ -47,12 +51,12 @@ It uses a ESP8266 (Wemos D1 mini) or ESP32 (XIAO ESP32 C3)
 
 4. Select the PIOarduino extension (it has the icon on a CPU) in VSCode/VSCodium, then you have to store the html page into the esp32/esp8266 flash memory in two steps:
 	<b>(Be sure to have closed all Serial Monitor instances, otherwise it will fail to upload the fs image)</b>
-	1. Platform -> Build filesystem image
-	2. Platform -> Upload filesystem image
+	1. Platform 🠊 Build filesystem image
+	2. Platform 🠊 Upload filesystem image
 
 5. Now lets upload the C/C++ code. Again from the PIOarduino extension in VSCode/VSCodium, go to:
-	1. General -> Build
-	2. General -> Upload
+	1. General 🠊 Build
+	2. General 🠊 Upload
 
 6. Now let's connect PC or mobile to the ESPclock access point, with the password: waltwhite64
 
@@ -75,17 +79,16 @@ It uses a ESP8266 (Wemos D1 mini) or ESP32 (XIAO ESP32 C3)
 - [x] Save/delete configuration (used to restore data after reboot)
 - [x] Automatic Brightness mode
 - [x] Blinking colon toggle
-- [x] ESP32 port
 - [x] Replace NTPclient.h with time.h library
 - [x] Timezone Support
 - [x] ESPmDNS: web UI can be accessed by simply pasting "espclock.local" in the address bar of the browser.
 - [x] 12-Hour clock mode
 - [x] Alarm clock mode with buzzer
+- [x] Snooze feature for "Alarm clock" mode
 - [ ] Multiple Alarm (Requested)
-- [x] Snooze feature for Alarm clock mode
 - [x] Show Uptime in webUI
 - [x] Show Local IP in webUI
-- [x] Added TTP223 Touch button
+- [x] Add TTP223 Touch button
 - [ ] Show Temperature
 - [ ] ESPhome or Homeassistant integration
 - [x] TM1652 0.8" display support
