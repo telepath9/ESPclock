@@ -12,8 +12,8 @@
 <img src="https://github.com/telepath9/ESPclock/blob/cb65eefd7f321586202e2b84a2ed587d0e3370f0/pics/font3.webp" alt="Alt Text" width="100%" height="100%">
 
 
-is a smart clock that connects to a NTP server to get the current time. 
-It uses a ESP8266 (Wemos D1 mini) or ESP32 (XIAO ESP32 C3)
+is a smart alarm clock that connects to WiFi to get the current time. 
+It uses a ESP32 (XIAO ESP32 C3) or ESP8266 (Wemos D1 mini). 
 
 <img src="https://github.com/telepath9/ESPclock/blob/092779388d558fc8df550596075db075423a6bf2/pics/big.jpeg" alt="Alt Text" width="100%" height="100%">
 <img src="https://github.com/telepath9/ESPclock/blob/6b2b2224a42deda354a8a7220dcf724643eb9c2e/pics/pic1.jpg" alt="Alt Text" width="100%" height="100%">
@@ -74,9 +74,9 @@ So, I suggest to upgrade to ESP32.
 <h2>🤖 CURRENT FEATURES</h2>
 
 - [x] Asynchronous webserver
-- [x] Automatic Wifi Scan</li>
+- [x] Automatic Wifi Scan
 - [x] Wifi and NTP server setup via web UI
-- [x] Save/delete configuration (used to restore data after reboot)
+- [x] Save/delete configuration
 - [x] Automatic Brightness mode
 - [x] Blinking colon toggle
 - [x] Replace NTPclient.h with time.h library
@@ -180,8 +180,9 @@ If you've assembled you own build (vanilla or custom), don't forget to post a pi
 <h2>⚠️ TROUBLESHOOTING</h2>
 There are (at the moment) two errors that can be displayed from the 7-segment display:
 <ul>
-<li>Err0 -> when "LittleFS.begin()" fails</li>
-<li>Err1 -> when "index.html" doesn't exists in flash memory (user forgot to upload it)</li>
+<li>Err0 🠊 when "LittleFS.begin()" fails</li>
+<li>Err1 🠊 when "index.html" doesn't exists in flash memory (user forgot to upload it)</li>
+<li>ESP8266 doesn't connect anymore to wifi 🠊 WPA3 networks not supported, upgrade to ESP32 (recommended) or downgrade your network to WPA2 (not recommended)</li>
 </ul>
 
 <h2>🙋🏽 SPECIAL THANKS</h2>
