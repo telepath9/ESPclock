@@ -51,12 +51,12 @@ So, I suggest to upgrade to ESP32.
 
 4. Select the PIOarduino extension (it has the icon on a CPU) in VSCode/VSCodium, then you have to store the html page into the esp32/esp8266 flash memory in two steps:
 	<b>(Be sure to have closed all Serial Monitor instances, otherwise it will fail to upload the fs image)</b>
-	1. Platform 🠊 Build filesystem image
-	2. Platform 🠊 Upload filesystem image
+	1. Platform ➡️ Build filesystem image
+	2. Platform ➡️ Upload filesystem image
 
 5. Now lets upload the C/C++ code. Again from the PIOarduino extension in VSCode/VSCodium, go to:
-	1. General 🠊 Build
-	2. General 🠊 Upload
+	1. General ➡️ Build
+	2. General ➡️ Upload
 
 6. Now let's connect PC or mobile to the ESPclock access point, with the password: waltwhite64
 
@@ -180,8 +180,8 @@ If you've assembled you own build (vanilla or custom), don't forget to post a pi
 <h2>⚠️ TROUBLESHOOTING</h2>
 There are (at the moment) two errors that can be displayed from the 7-segment display:
 <ul>
-<li>Err0 🠊 when "LittleFS.begin()" fails</li>
-<li>Err1 🠊 when "index.html" doesn't exists in flash memory (user forgot to upload it)</li>
+<li>Err0 ➡️ when "LittleFS.begin()" fails</li>
+<li>Err1 ➡️ when "index.html" doesn't exists in flash memory (user forgot to upload it)</li>
 <li>ESP8266 doesn't connect anymore to wifi 🠊 WPA3 networks not supported, upgrade to ESP32 (recommended) or downgrade your network to WPA2 (not recommended)</li>
 </ul>
 
