@@ -40,6 +40,7 @@ const char* ssid;
 const char* password;
 bool creds_available=false;
 bool connected=false;   //wifi connection state
+bool dCleared=0;
 
 const char *esp_ssid = "ESPclock32";
 const char *esp_password =  "waltwhite64"; //AP pw must be at least 8 chars, otherwise AP won't be customized 
@@ -321,6 +322,8 @@ bool snoozeMsStart=0;
 unsigned long snoozeTimer;
 
 void alarm_ring(){  //intermittent RINGING
+  //alarm_stop=0;
+  digitalWrite(BUZZER_PIN, HIGH);
   if(tone_var){
     tone(BUZZER_PIN, 2000, 900);
     tone_var=0;
@@ -339,11 +342,13 @@ unsigned long debounceTime = 800;              // Debounce time for the touch se
 
 void alarm_off(){
   elapsedMillis = millis() - prevMillis;
-
   if(alarm_stop==0 && elapsedMillis > debounceTime){
     alarm_stop=1;
-    noTone(BUZZER_PIN); //can happen, sometimes, that the buzzer will ring at a very low volume... if noTone isn't enought to turn it OFF, try using pinMode
+    noTone(BUZZER_PIN); //can happen, sometimes, that the buzzer will ring at a very low volume (or hiss)... if noTone isn't enought to turn it OFF, try using pinMode
+    digitalWrite(BUZZER_PIN, LOW);
     snoozeOn=0;
+
+    //remember to add a POST (from client) that updates in RT web UI when alarm is turned off from touch button?
   }
   prevMillis = millis();
   snoozeMsStart=0;
@@ -367,13 +372,14 @@ void initMDNS(){
 }
 
 void setup() {
-
   Serial.begin(115200);
   //Serial.println("SNTP Interval: " + String(sntp_get_sync_interval()));
   sntp_set_sync_interval(21600000UL); //time syncs with ntp servers every 6 hours
 
   module.begin(true, 4, 6);   //4=brightness level
-  pinMode(BUZZER_PIN, OUTPUT); 
+  pinMode(BUZZER_PIN, OUTPUT);
+  analogWrite(BUZZER_PIN, 0);
+  digitalWrite(BUZZER_PIN, 0);
 
   pinMode(3, INPUT_PULLUP);   //TTP223 Touch button
   attachInterrupt(digitalPinToInterrupt(3), alarm_off, RISING);
@@ -730,6 +736,8 @@ void setup() {
   server.on("/mute", HTTP_POST, [](AsyncWebServerRequest *request){}, NULL, [](AsyncWebServerRequest *request, uint8_t *data, size_t len, size_t index, size_t total){
     alarm_stop=1;
     snoozeOn=0;
+    noTone(BUZZER_PIN);
+    digitalWrite(BUZZER_PIN, LOW);
     request->send(200, "application/json", "{\"mute\":\"1\"}");
   });
 
@@ -843,7 +851,7 @@ void loop() {
         //printLocalTime();
        if(alarm_status==1){
 
-          //1- alarm rings at the right time
+          //1- alarm rings at the time chosen by user
           if(days[timeinfo.tm_wday]==true && alarm_stop==0){ //wrap this in a function
 
             //RING at the exact time entered by user
@@ -853,7 +861,6 @@ void loop() {
 
               if(snooze>0 && snoozeMsStart==0){  
                 snoozeMsStart=1;  //activated Once. starts the countdown for the snooze
-                //Serial.println("FROM alarm time> snoozeOn=1");
               }
             }
           }
@@ -870,7 +877,7 @@ void loop() {
             
             if(snooze==0){
               alarm_stop=0;
-              noTone(BUZZER_PIN);
+              //noTone(BUZZER_PIN);
             }
             else if(millis() - snoozeTimer >= (snooze+3)*60*1000UL){  //alarm stop is restored after a given time interval
               alarm_stop=0;
@@ -913,10 +920,18 @@ void loop() {
               if(!twelve){  //24hr format
 
                 if(timeinfo.tm_hour==00 && leadingzero==false){
+                  if(!dCleared){ //witout this --> 23:59 --> 20:00 (2 is not cleared from display)
+                    display.clear();
+                    dCleared=1;
+                  }
                   display.setDisplayToDecNumberAt((timeinfo.tm_hour*100)+timeinfo.tm_min, 0x04, 1, true);
+                  
                 }
 
                 else{
+                  if(dCleared){
+                    dCleared=0;
+                  }
                   display.setDisplayToDecNumber((timeinfo.tm_hour*100)+timeinfo.tm_min, 0x04, leadingzero);
                 }
               }
@@ -938,11 +953,20 @@ void loop() {
 
               if(!twelve){
                 if(timeinfo.tm_hour==00 && leadingzero==false){
+
+                  if(!dCleared){ //witout this --> 23:59 --> 20:00 (2 is not cleared from display)
+                    display.clear();
+                    dCleared=1;
+                  }
+                  
                   display.setDisplayToDecNumberAt((timeinfo.tm_hour*100)+timeinfo.tm_min, 0, 1, true);
                 }
              
                 else{
                   display.setDisplayToDecNumber((timeinfo.tm_hour*100)+timeinfo.tm_min, 0, leadingzero);
+                  if(dCleared){
+                    dCleared=0;
+                  }
                 }
               }
 
@@ -964,11 +988,18 @@ void loop() {
           if(!twelve){
 
             if(timeinfo.tm_hour==00 && leadingzero==false){
+              if(!dCleared){ //witout this --> 23:59 --> 20:00 (2 is not cleared from display)
+                    display.clear();
+                    dCleared=1;
+              }
               display.setDisplayToDecNumberAt((timeinfo.tm_hour*100)+timeinfo.tm_min, 0x04, 1, true);
             }
 
             else{
               display.setDisplayToDecNumber((timeinfo.tm_hour*100)+timeinfo.tm_min, 0x04, leadingzero);
+              if(dCleared){
+                  dCleared=0;
+              }
             }
           }
 
