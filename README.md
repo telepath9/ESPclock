@@ -12,16 +12,36 @@
 <img src="https://github.com/telepath9/ESPclock/blob/cb65eefd7f321586202e2b84a2ed587d0e3370f0/pics/font3.webp" alt="Alt Text" width="100%" height="100%">
 
 
-is a smart clock that connects to a NTP server to get the current time. 
-It uses a ESP8266 (Wemos D1 mini) or ESP32 (XIAO ESP32 C3)
+is a smart alarm clock that connects to WiFi to get the current time. 
+It uses a ESP32 (XIAO ESP32 C3) or ESP8266 (Wemos D1 mini). 
 
 <img src="https://github.com/telepath9/ESPclock/blob/092779388d558fc8df550596075db075423a6bf2/pics/big.jpeg" alt="Alt Text" width="100%" height="100%">
 <img src="https://github.com/telepath9/ESPclock/blob/6b2b2224a42deda354a8a7220dcf724643eb9c2e/pics/pic1.jpg" alt="Alt Text" width="100%" height="100%">
 <img src="https://github.com/telepath9/ESPclock/blob/d3ea40822622406152dad12554adbceba28abb7e/pics/espclock_bold.jpg" alt="Alt Text" width="100%" height="100%">
 
-<h2>📜 INSTRUCTIONS </h2>
+<h2>⚠️WARNING for ESP8266 users‼️</h2>
+Looks like that ESP8266 <b>doesn't support</b> WPA3 networks (because this chip has almost reached its EoL), so if you have this kind of network and your ESP8266 doesn't connect anymore, that's the reason why.
+So, I suggest to upgrade to ESP32. 
+
+<h2>❇️ HOW TO INSTALL THE FIRMWARE...</h2>
 <details>
 <summary><b>(Click to expand)</b></summary>
+
+### ⚡... with ESPclock Web Installer (QUICK and EASY) 
+<img src="https://github.com/telepath9/ESPclock/blob/f4d29de2d434ca082bdee65bc46d8f14fe04c2ac/pics/ewi2.webp" alt="Alt Text" width="100%" height="100%">
+
+---
+
+1. Go to [ESPclock Web Installer](https://telepath9.github.io/ESPclock/);
+2. Plug your ESP board;
+3. Select the display you're using;
+4. Flash the firmware;
+5. Now let's connect PC or mobile to the ESPclock access point, with the password: waltwhite64 ;
+6. After connecting to the ESPclock's AP, open your browser and paste in the address bar: http://192.168.4.1/ or "espclock.local";
+7. Select your Timezone from the drop-down list and add your favourite NTP server address;
+8. And we're done! Hope that you liked my project! If you have any suggestions, write them in the "Issue" section!
+
+### 🧑🏽‍💻...with VScode/VScodium (SLOWER and ADVANCED)
 
 1. Install VSCode or <b>VSCodium</b> (i prefer VSCodium because it basically is VSCode but <b>without</b> telemetry);
 
@@ -29,52 +49,53 @@ It uses a ESP8266 (Wemos D1 mini) or ESP32 (XIAO ESP32 C3)
 
 3. Download the latest .zip file that you can find in the <a href="https://github.com/telepath9/ESPclock/releases"><b>Release</b></a> section, extract it, then open in VSCode/VSCodium the ESPclock project directory;
 
-4. Select the PIOarduino extension in VSCode/VSCodium, then you have to store the html page into the esp8266 flash memory in two steps:
-	<b>🔴(Be sure to have closed all Serial Monitor instances, otherwise it will fail to upload the fs image)</b>
-	1. Platform -> Build filesystem image
-	2. Platform -> Upload filesystem image
+4. Select the PIOarduino extension (it has the icon on a CPU) in VSCode/VSCodium, then you have to store the html page into the esp32/esp8266 flash memory in two steps:
+	<b>(Be sure to have closed all Serial Monitor instances, otherwise it will fail to upload the fs image)</b>
+	1. Platform ➡️ Build filesystem image
+	2. Platform ➡️ Upload filesystem image
 
 5. Now lets upload the C/C++ code. Again from the PIOarduino extension in VSCode/VSCodium, go to:
-	1. General -> Build
-	2. General -> Upload
+	1. General ➡️ Build
+	2. General ➡️ Upload
 
 6. Now let's connect PC or mobile to the ESPclock access point, with the password: waltwhite64
 
 7. After connecting to the ESPclock's AP, open your browser and paste in the address bar: http://192.168.4.1/ or "espclock.local".
 
-8. From the web UI, first add your home network, then the NTP server that matches your region, plus the GMT/UTC offset hour(s).
+8. Select your Timezone from the drop-down list and add your favourite NTP server address.
+   
+9. And we're done! Hope that you liked my project! If you have any suggestions, write them in the "Issue" section!
 
-9. And we're done! Hope that you liked my project! If you have any suggestions, let me know!
 </details>
 
 <h2>📱 WEB UI </h2>
-<img src="https://github.com/telepath9/ESPclock/blob/04867605e903324e45cfd8a8358fb3f727cac78c/pics/2.3.1.webp" alt="Alt Text" width="100%" height="100%">
+<img src="https://github.com/telepath9/ESPclock/blob/75f719bba745ee0972ca90e6077301e34685ed2e/pics/2.4.0.webp" alt="Alt Text" width="100%" height="100%">
 
 <h2>🤖 CURRENT FEATURES</h2>
 
 - [x] Asynchronous webserver
-- [x] Automatic Wifi Scan</li>
+- [x] Automatic Wifi Scan
 - [x] Wifi and NTP server setup via web UI
-- [x] Save/delete configuration (used to restore data after reboot)
+- [x] Save/delete configuration
 - [x] Automatic Brightness mode
 - [x] Blinking colon toggle
-- [x] ESP32 port
 - [x] Replace NTPclient.h with time.h library
+- [x] Timezone Support
 - [x] ESPmDNS: web UI can be accessed by simply pasting "espclock.local" in the address bar of the browser.
 - [x] 12-Hour clock mode
 - [x] Alarm clock mode with buzzer
+- [x] Snooze feature for "Alarm clock" mode
 - [ ] Multiple Alarm (Requested)
-- [x] Snooze feature for Alarm clock mode
-- [x] Display Uptime in webUI
-- [ ] Timezone Support
-- [x] Added TTP223 Touch button
+- [x] Show Uptime in webUI
+- [x] Show Local IP in webUI
+- [x] Add TTP223 Touch button
+- [ ] Show Temperature
 - [ ] ESPhome or Homeassistant integration
-- [ ] Display Temperature
 - [x] TM1652 0.8" display support
-- [ ] Web installer
+- [x] Web installer ([ESPclock Web Installer](https://telepath9.github.io/ESPclock/))
 
 > [!NOTE]
-> About ESPmDNS: if more ESPclocks are connected to the same network, in order to access the web UI of second one, user must enter "espclock.local" in the address bar to access to the web UI of the first clock; "espclock.local-2" to access to the seconds clock, and so on...
+> About ESPmDNS: if more ESPclocks are connected to the same network, in order to access the web UI of the first one, user must enter "espclock.local" in the address bar, "espclock.local-2" to access to the web UI of second clock, and so on...
 
 <h2>🛒 PART LIST</h2>
 <details>
@@ -134,6 +155,13 @@ It uses a ESP8266 (Wemos D1 mini) or ESP32 (XIAO ESP32 C3)
 <h2>🪛 HOW TO ASSEMBLE ESPclock</h2>
 <img src="https://github.com/telepath9/ESPclock/blob/fc197cfd72fc6f489c0196dcbc484aab385d8b21/pics/howtoassemble.webp" alt="Alt Text" width="100%" height="100%">
 
+<h2>👨‍👩‍👧‍👦 COMMUNITY BUILDS</h2>
+<span>
+<img src="https://github.com/telepath9/ESPclock/blob/f22a80e5382a0b89a9741d32ecaa0e95cc034884/pics/community_builds/2.webp" alt="Alt Text" width="50%" height="50%"> 
+<img src="https://github.com/telepath9/ESPclock/blob/f22a80e5382a0b89a9741d32ecaa0e95cc034884/pics/community_builds/1.webp" alt="Alt Text" width="40%" height="40%">
+<img src="https://github.com/telepath9/ESPclock/blob/main/pics/community_builds/3.webp" alt="Alt Text" width="40%" height="40%">
+<img src="https://github.com/telepath9/ESPclock/blob/main/pics/community_builds/4.webp" alt="Alt Text" width="40%" height="40%">
+</span>
 
 
 <h2>🤝 CODE CONTRIBUTIONS</h2>
@@ -149,14 +177,13 @@ If you want to financially contribute, contact me.
 <h2>👁️ SHOW YOUR BUILD!</h2>
 If you've assembled you own build (vanilla or custom), don't forget to post a picture of the final result! You can do it on MakerWorld or in the "Issues" section.
 
-<details> 
-<summary><h2>⚠️ TROUBLESHOOTING</h2></summary>
+<h2>⚠️ TROUBLESHOOTING</h2>
 There are (at the moment) two errors that can be displayed from the 7-segment display:
 <ul>
-<li>Err0 -> when "LittleFS.begin()" fails</li>
-<li>Err1 -> when "index.html" doesn't exists in flash memory (user forgot to upload it)</li>
+<li>Err0 ➡️ when "LittleFS.begin()" fails</li>
+<li>Err1 ➡️ when "index.html" doesn't exists in flash memory (user forgot to upload it)</li>
+<li>ESP8266 doesn't connect anymore to wifi 🠊 WPA3 networks not supported, upgrade to ESP32 (recommended) or downgrade your network to WPA2 (not recommended)</li>
 </ul>
-</details>
 
 <h2>🙋🏽 SPECIAL THANKS</h2>
 To maxint-rd and his <a href="https://github.com/maxint-rd/TM16xx">TM16xx</a> library, the "swiss-army knife" for TM16xx chips.
