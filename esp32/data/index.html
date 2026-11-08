@@ -20,7 +20,17 @@ body{
     margin: 3px 3px 3px 3px;
 }
 
+a:link {
+  color: #ced4da;
+  background-color: transparent;
+  text-decoration: none;
+}
 
+a:visited {
+  color: #ced4da;
+  background-color: transparent;
+  text-decoration: none;
+}
 
 /*parent div, where all elements are placed*/
 .flex_container {
@@ -28,18 +38,33 @@ body{
     flex-direction:column;
     width:315px;
     border-radius: 14px;
-    border: 1px solid #3c3e3f; /*#d40228*/
-    background-color:#141414;  /* #e7e3da;*/  
+    border: 1px solid #3c3e3f; 
+    background-color:#141414;    
     text-align: center; 
     margin: 0px auto;
     padding: 0px 8px 4px 8px;
     
 }
 
+
+#ssid_form{
+    display: flex;
+    flex-direction: column;
+    padding: 19px;
+    background-color: #1a1a1a;
+    border-color:#3c3e3f;
+    gap: 0px;
+    text-align: left;
+    border-style:solid;
+    
+    border-radius: 12px;
+    border-width: 1px;
+}
+
 .ssid_wrapper {
   display:flex;
   flex-direction:row;
-  margin: 0px 19px 12px 19px;
+  margin: 0px 0px 12px 0px;
 }
 
 .pw_wrapper{
@@ -47,7 +72,7 @@ body{
     flex-direction:row;
     width: 275px;
     height: 41px;
-    margin:0px 19px 33px ;
+    margin:0px 0px 33px ;
     /*background-color: #fff9ee;*/
     border-radius: 6px;
     background-color: #444444;
@@ -69,13 +94,19 @@ body{
 }
 
 #connect{
-    cursor: pointer; /*x*/
-    background: linear-gradient(#C34945,#ae0423);
+    background-image: linear-gradient(#ce2f44,#9b0502);
+    color: #ced4da;
     box-shadow: inset 0 1px 0 #ffffff59,
     inset 0 -2px 0 #0003,
     0 1px 2px #0006,
     0 8px 24px -6px #cf524d99;
+    cursor: pointer;
 }
+
+/*
+#connect:enabled{
+    background-image: linear-gradient(#ce2f44,#9b0502);
+}*/
 
 #connect:hover{
     background: linear-gradient(#cf524d,#c5092b);
@@ -92,10 +123,15 @@ body{
     box-shadow: inset 0 2px 4px #00000073;
 }
 
+.ntp_form{
+    border-radius: 10px;
+    padding: 19px;
+
+}
 
 
 #update_but{
-    margin:33px 0px 20px 19px;
+    margin:33px 0px 0px 0px;
 
     background: linear-gradient(#269ebc,#348acc);
     box-shadow: inset 0 1px 0 #ffffff59,
@@ -124,14 +160,11 @@ body{
     box-shadow: inset 0 2px 4px #0004;
 }
 
+/*
 .butpop{
-    margin:0px 19px 20px ;
-}
+    margin:0px 0px 20px ;
+}*/
 
-.ntp_form{
-    /*display: block;*/
-    border-radius: 10px;
-}
 
 /*
 .ntp_wrapper{
@@ -141,7 +174,6 @@ body{
 }*/
 
 #ntp_id{
-    margin:0px 0px 0px 19px;
     font-size: 15px; 
     padding: 0 0 0 6px; 
     color:#bec1c4;
@@ -200,7 +232,7 @@ body{
     50%  {opacity: 1;}
     100% {opacity: 0;}
 }
-
+   
 #pw{
     font-size: 15px;
     padding: 0 0 0 6px ;
@@ -222,7 +254,7 @@ height:30px;
 }
 
 .switch {
-  margin: 0px 18px 0px 0px;
+  margin: 0px;
   position: relative;
   display: inline-block;
   width: 56px;
@@ -268,7 +300,6 @@ input:focus + .slider {
 }
 
 input:checked + .slider:before {
-/*content: 'A'; for auto brightness*/
   -webkit-transform: translateX(26px);
   -ms-transform: translateX(26px);
   transform: translateX(26px);
@@ -290,21 +321,54 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 .two_buttons{
     display:flex;
     flex-direction:row;
-    margin: 2px 0px 0px;
+    margin:0px 0px 2px;
 }
 
-#saveconf_id, #setalarm_id {
+.savebuttons{
     border-style:solid; 
     border-width: 1px;
     cursor:pointer;
     font-size: 16px;
-    /*line-height: 40px; -->on linux this centers text in Y, but not on windows. Maybe is a font issue (?)*/
-    /*135px;*/
     height: 40px;
     font-weight: 550;
-    border-radius: 999px;
-    width: 170px;
-    margin:0px 0px 10px 10px;
+    width: 177px;
+    margin:0px 0px 0px 3px;
+    border-radius: 25px;
+    
+    color:#51A0DB;
+    background-color: #1440616e;
+    border-color: #51A0DB;
+}
+
+#saveconf_id {
+   
+   /* border-style:solid;
+    
+    border-width: 1px;
+    cursor:pointer;
+    font-size: 16px;
+    height: 40px;
+    font-weight: 550;*/
+    border-radius: 6px 25px 25px 6px;
+    
+    
+   /* width: 177px;
+   margin:0px 0px 20px 3px;
+    margin:0px 0px 10px 3px;*/
+}
+
+#setalarm_id{
+    border-color: #AF63E4;
+    color: #AF63E4;
+    background-color: #ae63e427;
+    border-radius: 6px 25px 25px 6px  ;
+    
+}
+
+#save_custom_hr{
+    width: 275px;
+    padding: 0px;
+    margin: 8px 0px 0px;
 }
 
 @keyframes onoff{
@@ -321,12 +385,10 @@ input[type="time"]::-webkit-calendar-picker-indicator {
     border-width: 1px;
     cursor:not-allowed;
     font-size: 16px;
-    /*line-height: 40px; -->on linux this centers text in Y, but not on windows. Maybe is a font issue (?)*/
     width: 275px;
     height: 40px;
     font-weight: 550;
     border-radius: 999px;
-    margin:0px 0px 20px 19px;
     animation-name: none;
     animation-duration: 2s;
     animation-iteration-count: infinite;
@@ -340,12 +402,11 @@ input[type="time"]::-webkit-calendar-picker-indicator {
     border-width: 1px;
     font-size: 16px;
     cursor:pointer;
-    /*line-height: 40px; -->on linux this centers text in Y, but not on windows. Maybe is a font issue (?)*/
-    width: 95px;/*135px;*/
+    width: 95px;
     height: 40px;
     font-weight: 550;
-    border-radius: 999px;
-    margin:0px 0px 0px 19px;
+    border-radius: 25px 6px 6px 25px;
+    
 }
 
 .collapsible {
@@ -379,6 +440,9 @@ input[type="time"]::-webkit-calendar-picker-indicator {
   display: none;
   overflow: hidden;
   background-color: #f1f1f100;
+  padding: 0px 19px 20px 19px;
+
+
 }
 
 .collapsible:after {
@@ -405,16 +469,94 @@ input[type="time"]::-webkit-calendar-picker-indicator {
     user-select: none;   
 }
 
+#auto_br_div{
+    display: flex;
+    flex-direction: row;
+    gap: 3px;
+    margin: 0px 0px 8px;
+}
+
+.auto_br_buttons{
+    font-size: 16px;
+    font-weight: 550;
+    height: 40px;
+    width: 136px;
+    /*padding: 0px 20px;*/
+    color:#51A0DB;
+    background-color: #1440616e;
+    border: 1px solid #51A0DB;
+    cursor:pointer;
+    border-radius: 25px;
+    border-radius: 25px 6px 6px 25px;
+    
+}
+
+.auto_br_buttons:disabled{
+  color: #9c9c9c;
+  background: transparent;
+  border-color: #4e4e56;
+  cursor:not-allowed;
+}
+
+#auto_br_cus{
+    border-radius: 6px 25px 25px 6px;
+}
+
+#auto_br_slots_container{
+    display:flex; /*set to display: none to make it disappear*/
+    flex-direction: column;
+    /*gap: 4px;*/
+     gap: 8px;
+
+
+}
+
+.auto_br_slot{
+    display:flex;
+    flex-direction: row;
+    justify-content: space-between;
+   
+}
+
+.auto_br_slot > p { /*all the <p> that are childs of #auto_br_slot*/
+    text-align: center;
+    font-size: 16px;
+    font-weight: 700;
+    margin: auto 0px;
+    padding: 3px 9px;
+    background: #444444;
+    color: #ced4da;
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    border: none;
+}
+
+#auto_br_headers{
+    background-color: transparent;
+    
+    padding: 0px;
+}
+
+.number_inputs{
+    height: 36px;
+    font-size: 16px;
+    background: #444444;
+    color: #ced4da;
+    border: none;
+    border-radius: 6px;
+    padding: 0px 6px;
+}
+
 </style>
 </head>
 <body >
     <div class="flex_container">
         <p style="font-family: Neuropol; letter-spacing: -2px; font-size: 36px; margin: 0px;"><b><i>ESPclock</i></b></p>
-        <form style="background-color: #1a1a1a; text-align: left;border-style:solid; border-color:#3c3e3f; border-radius: 12px; border-width: 1px;">
+        <form id="ssid_form">
             
-                <h3 style="margin: 18px 0px 18px 26px;">WiFi Settings</h3>
+                <h3 style="margin: 0px 0px 0px 7px;">WiFi Settings</h3>
                 <p id="tip1" style="font-size:14px; margin: 0px 26px 18px 26px; color:#6e9cd1;"></p>
-                <label style="margin-left: 26px;" for="ssid_list">Available networks</label>
+                <label style="margin-left: 7px;" for="ssid_list">Available networks</label>
                    <div class="ssid_wrapper">
                       <select id="ssid_list" name="ssid" style=" padding-left: 2px; color: #bec1c4;font-size: 15px; background-color: #444444;  height: 40px; width: 237px; border-radius: 6px 0px 0px 6px; border-color:transparent;border-style:none;"></select>
                         <button type="button" id="refresh"  for="ssid_list" style="border-radius: 0px 6px 6px 0px;
@@ -425,8 +567,7 @@ input[type="time"]::-webkit-calendar-picker-indicator {
                         </button>
                     </div>
 
-                <label style="padding-left: 26px; " for="pw">Password</label><br>                
-                
+                <label style="padding-left: 7px; " for="pw">Password</label>
                 <div class="pw_wrapper">    <!--wrapper for PW field + toggle PW (eye)-->
                     <input type="password" placeholder="Enter password" id="pw" maxlength="32" name="pw" required>
                     
@@ -441,7 +582,7 @@ input[type="time"]::-webkit-calendar-picker-indicator {
                 
                 <div class="butpop">
                 <div class="popup"  style="position: relative;  display: inline-block; cursor: pointer;">
-                    <button type="submit" class="buttons" id="connect" style=" margin: 0px 0px 0px 0px;">
+                    <button type="submit" class="buttons" id="connect" style=" margin: 0px;">
                          CONNECT
                     </button>
                     <span class="popuptext" style="font-size: 14px; user-select: none;" id="myPopup"></span>
@@ -454,9 +595,9 @@ input[type="time"]::-webkit-calendar-picker-indicator {
             <!--⌚  NTP SERVER FORM ⌚ -->
             <div class="ntp_form" style="background-color:#1a1a1a; text-align: left; margin-top: 6px;border-style:solid; border-color: #3c3e3f;border-radius: 12px; border-width: 1px;">     
 
-                <h3 style="margin: 18px 0px 18px 26px;">Time Settings</h3> 
-                <label style="margin-left: 26px;" for="tz">Select Timezone</label>
-                <select id="tz" style="padding-left: 2px; margin: 0px 0px 12px 19px; color: #bec1c4;font-size: 15px; background-color: #444444;  height: 40px; width: 275px; border-radius: 6px; border-color:transparent;border-style:none;">
+                <h3 style="margin: 0px 0px 18px 7px;">Time Settings</h3> 
+                <label style="margin-left: 7px;" for="tz">Select Timezone</label>
+                <select id="tz" style="padding-left: 2px; margin: 0px 0px 12px 0px; color: #bec1c4;font-size: 15px; background-color: #444444;  height: 40px; width: 275px; border-radius: 6px; border-color:transparent;border-style:none;">
                     <option value="cairo">Africa/Cairo</option>
                     <option value="casablanca">Africa/Casablanca</option>
                     <option value="johannesburg">Africa/Johannesburg</option>
@@ -541,7 +682,7 @@ input[type="time"]::-webkit-calendar-picker-indicator {
                     <option value="utc0">UTC0</option>
                 </select>
 
-                <label style="margin-left: 26px;" for="ntp_id">NTP server</label><br>
+                <label style="margin-left: 7px;" for="ntp_id">NTP server</label><br>
                 <input required id="ntp_id" type="text" placeholder="Enter NTP server address">
             
                 <button disabled type="submit" class="buttons" id="update_but">
@@ -555,38 +696,38 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 
                     <div class="content">
                      <span style="display: flex; align-items: center; ">
-                    <p style="font-size: 17px; margin:0px 0px 2px 26px;">Brightness: </p>
-                    <p id="brp" style="margin:0px 0px 2px 6px;"></p> <!--displays actual brightness value-->
+                    <p style="font-size: 17px; margin:0px 0px 0px 7px;">Brightness: </p>
+                    <p id="brp" style="margin:0px 0px 0px 6px;"></p> <!--displays actual brightness value-->
                      </span>
 
-                    <input style=" margin:0px 0px 2px 20px;width: 275px; height: 40px;" type="range" id="brightness" name="brightness" min="0" max="7">
+                    <input style=" margin:0px 0px 2px; width: 275px; height: 40px;" type="range" id="brightness" name="brightness" min="0" max="7">
                     
-                    <span style="display: flex; align-items: center; justify-content: space-between; margin:4px 0px 20px 0px;" class="blinky">
-                        <p style="font-size: 17px; margin:0px 0px 2px 26px;">Auto brightness</p>
+                    <span style="display: flex; align-items: center; justify-content: space-between; margin:0px 0px 12px ;" class="blinky">
+                        <p style="font-size: 17px; margin:0px 0px 2px 7px;">Auto brightness</p>
                         <label class="switch">
                             <input id="bright_auto" type="checkbox">
                             <span class="slider round"></span>
                         </label>
                     </span>
 
-                    <span style="display: flex; align-items: center; justify-content: space-between; margin:4px 0px 20px 0px;" class="blinky">
-                        <p style="font-size: 17px; margin:0px 0px 2px 26px;">Blinking colon</p>
+                    <span style="display: flex; align-items: center; justify-content: space-between; margin:0px 0px 12px ;" class="blinky">
+                        <p style="font-size: 17px; margin:0px 0px 2px 7px;">Blinking colon</p>
                         <label class="switch">
                             <input id="blink_togg" type="checkbox" checked> <!--checked is an attribute-->
                             <span class="slider round"></span>
                         </label>
                     </span>
                     
-                    <span style="display: flex; align-items: center; justify-content: space-between; margin:4px 0px 20px 0px;" class="twelve">
-                        <p style="font-size: 17px; margin:0px 0px 2px 26px;">12-Hour clock</p>
+                    <span style="display: flex; align-items: center; justify-content: space-between; margin:0px 0px 12px ;" class="twelve">
+                        <p style="font-size: 17px; margin:0px 0px 2px 7px;">12-Hour clock</p>
                         <label class="switch">
                             <input id="twelve" type="checkbox">
                             <span class="slider round"></span>
                         </label>
                     </span>
 
-                    <span style="display: flex; align-items: center; justify-content: space-between; margin:4px 0px 20px 0px;" class="blinky">
-                        <p style="font-size: 17px; margin:0px 0px 2px 26px;">Leading zero</p>
+                    <span style="display: flex; align-items: center; justify-content: space-between; margin:4px 0px 0px 0px;" class="blinky">
+                        <p style="font-size: 17px; margin:0px 0px 2px 7px;">Leading zero</p>
                         <label class="switch">
                             <input id="lead0_togg" type="checkbox"> 
                             <span class="slider round"></span>
@@ -601,14 +742,14 @@ input[type="time"]::-webkit-calendar-picker-indicator {
                     <div class="content">
                     
                     <span style="display: flex; align-items: center; justify-content: flex-start; margin:0px 0px 0px 0px;">
-                        <div style="width: 131px; margin:0px 0px 20px 19px;">
+                        <div style="width: 131px;">
                             <p style="font-size: 17px; margin:0px 0px 0px 7px;">Time</p>  
                             <input type="time" id="alarm_time" value="08:00" required style=" height: 40px;  width: 125px; font-size:17px; cursor:pointer; padding:0px 5px 0px 5px; color:#bec1c4;background-color: #444444;border-style: none; border-radius:8px;">
                         </div>
 
-                        <div style="width: 131px; margin:0px 0px 20px 0px;">
+                        <div style="width: 131px; ">
                             <p style="font-size: 17px; margin:0px 0px 0px 21px;">Snooze</p> 
-                            <select id="snooze" name="snoo" style="margin: 0px 19px 0px 14px; width: 130px;  color: #bec1c4;font-size: 15px; background-color: #444444;  height: 40px; border-radius: 8px; border-color:transparent;border-style:none;">
+                            <select id="snooze" name="snoo" style="margin: 0px 0px 0px 10px; padding: 0px 0px 0px 5px; width: 130px;  color: #bec1c4;font-size: 15px; background-color: #444444;  height: 40px; border-radius: 8px; border-color:transparent;border-style:none;">
                                 <option id="0" value="0">Off</option>
                                 <option id="5" value="5">5 minutes</option>
                                 <option id="10" value="10">10 minutes</option>
@@ -618,15 +759,15 @@ input[type="time"]::-webkit-calendar-picker-indicator {
                         </div>
                     </span>
                        
-                        <p style="font-size: 17px; margin:0px 0px 18px 26px;">Days</p>
-                        <span style="width: 275px;display: flex; justify-content: space-between; margin: 0px 19px 18px 19px; user-select: none;">
-                            <button id="mon" value="0" class="days" style="margin: 0px 0px 18px;">M</button>
-                            <button id="tue" value="0" class="days" style="margin: 0px 0px 18px;">T</button>
-                            <button id="wed" value="0" class="days" style="margin: 0px 0px 18px;">W</button>
-                            <button id="thu" value="0" class="days" style="margin: 0px 0px 18px;">T</button>
-                            <button id="fri" value="0" class="days" style="margin: 0px 0px 18px;">F</button>
-                            <button id="sat" value="0" class="days" style="margin: 0px 0px 18px;">S</button>
-                            <button id="sun" value="0" class="days" style="margin: 0px 0px 18px;">S</button>
+                        <p style="font-size: 17px; margin: 9px 0px 0px 7px;">Days</p>
+                        <span style=" margin: 0px 0px 10px; width: 275px;display: flex; justify-content: space-between; user-select: none;">
+                            <button id="mon" value="0" class="days">M</button>
+                            <button id="tue" value="0" class="days">T</button>
+                            <button id="wed" value="0" class="days">W</button>
+                            <button id="thu" value="0" class="days">T</button>
+                            <button id="fri" value="0" class="days">F</button>
+                            <button id="sat" value="0" class="days">S</button>
+                            <button id="sun" value="0" class="days">S</button>
                         </span>
 
                         <!--
@@ -641,7 +782,7 @@ input[type="time"]::-webkit-calendar-picker-indicator {
                         </span> -->            
                         <div class="two_buttons" >
                             <button type="submit" id="deletealarm_id" value="0">DELETE</button>
-                            <button type="submit" id="setalarm_id" value="1" style="border-color: #AF63E4; color: #AF63E4; background-color: #ae63e427;">SET ALARM</button>
+                            <button type="submit" class="savebuttons" id="setalarm_id" value="1" >SET ALARM</button>
                         </div>
                         <button disabled type="submit" id="mute_id" value="0">MUTE ALARM</button>
                     </div>
@@ -666,13 +807,64 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 
                 <div class="othersettings_form" style="background-color:#1a1a1a;text-align: left; margin-top: 6px;border-style:solid; border-color: #3c3e3f;border-radius: 12px; border-width: 1px;">     
                     <button type="button" class="collapsible" style="padding:18px 10px 18px 26px; width: 100%;">Other Settings</button>
-                    <div class="content">
-                        <p id="tip2" style="font-size:14px; color:#ba4b4b; margin: 0px;"></p>
-                        <p style="font-size: 16px; margin:0px 0px 4px 26px;">Configuration data</p>
-                        <div class="two_buttons">
-                            <button type="submit" id="deleteconf_id" value="0">DELETE</button>
-                            <button type="submit" id="saveconf_id" value="1" style="margin:0px 0px 20px 10px; color:#51A0DB;background-color: #1440616e;border-color: #51A0DB;">SAVE</button>
+                    <div class="content" >
+
+
+                        <p style="font-size: 16px; margin:0px 0px 0px 7px">Auto brightness settings</p>
+                        <div id="auto_br_div">
+                            <button type="submit" class="auto_br_buttons" id="auto_br_std" value="std">STANDARD</button>
+                            <button disabled type="submit" class="auto_br_buttons" id="auto_br_cus" value="cus">CUSTOM</button>
+
                         </div>
+
+                        <form id="auto_br_slots_container" method="POST" target="_self">
+
+                            <!--yop--> 
+                            
+                            <div class="auto_br_slot"> 
+                                <p id="auto_br_headers">Slot</p>
+                                <p id="auto_br_headers">Hour</p>
+                                <p id="auto_br_headers">Brightness</p>
+                            </div>
+                            <div class="auto_br_slot"> 
+                                <p style="font-size: 18px;">1</p>
+                                <input required placeholder="hh" class="number_inputs" type="number" id="hour1" name="hour1" min="0" max="23">
+                                <input required placeholder="0-7" class="number_inputs" type="number" id="brig1" name="brig1" min="0" max="7">
+                            </div>
+
+                            <div class="auto_br_slot"> 
+                                <p style="font-size: 18px;">2</p>
+                                <input required placeholder="hh" class="number_inputs" type="number" id="hour2" name="hour2" min="0" max="23">
+                                <input required placeholder="0-7" class="number_inputs" type="number" id="brig2" name="brig2" min="0" max="7">
+                            </div>
+
+                            <div class="auto_br_slot"> 
+                                <p style="font-size: 18px;">3</p>
+                                <input required placeholder="hh" class="number_inputs" type="number" id="hour3" name="hour3" min="0" max="23">
+                                <input required placeholder="0-7" class="number_inputs" type="number" id="brig3" name="brig3" min="0" max="7">
+                            </div>
+
+                            <div class="auto_br_slot"> 
+                                <p style="font-size: 18px;">4</p>
+                                <input required placeholder="hh" class="number_inputs" type="number" id="hour4" name="hour4" min="0" max="23">
+                                <input required placeholder="0-7" class="number_inputs" type="number" id="brig4" name="brig4" min="0" max="7">
+                            </div>
+
+                            <button class="savebuttons" id="save_custom_hr" type="submit" >UPDATE</button>
+                        </form>
+                      
+
+
+
+
+                        <!--C'è un GAP di troppo QUA!!!!!-->
+                        <p style="font-size: 16px; margin:0px 0px 0px 7px; ">Configuration data</p>
+                        <p id="tip2" style="display: none; font-size:14px; color:#ba4b4b; margin:0px 13px 0px"></p> 
+                        <div class="two_buttons">
+                            <button type="submit" id="deleteconf_id" value="0" style="margin: 0px;">DELETE</button>
+                            <button type="submit" class="savebuttons" id="saveconf_id" value="1" >SAVE</button>
+                        </div>
+                        
                     </div>
                 </div>
 
@@ -893,7 +1085,7 @@ function its_ringing(){
             if(data.conn === true){ //wifi data
                 disable_button(connect_but);
                 connect_but.innerText = "CONNECTED";
-                connect_but.style.backgroundImage ="linear-gradient(#629869,#3E824B)";  
+                connect_but.style.backgroundImage ="linear-gradient(#629869,#3E824B)";  //green
                 disable_refresh_but();
                 enable_button(update_but); 
             }
@@ -1073,11 +1265,11 @@ function its_ringing(){
       let connected = false;
       const ascii_anim = ["⚫  ⚪  ⚪", "⚪  ⚫  ⚪", "⚪  ⚪  ⚫"];
 
-      //-------x
       //def of POLLING function of client, to know if it's connected
                 function pollingfunc(){
 
                     disable_button(connect_but);
+                    connect_but.style.backgroundImage = "linear-gradient(#ab6975, #905863)";
                     disable_refresh_but();
                     
                     //START LOADER anim
@@ -1106,7 +1298,7 @@ function its_ringing(){
                                     connected = true;
                                     clearInterval(asciivar);
                                     connect_but.innerText = "CONNECTED";
-                                    connect_but.style.backgroundImage ="linear-gradient(#629869,#3E824B)";   
+                                    connect_but.style.backgroundImage ="linear-gradient(#629869,#3E824B)";   //green
                                     popup_span_elem.innerText = "CONNECTED✅";
                                     popup_span_elem.classList.add("show");
                                     enable_button(update_but); 
@@ -1116,21 +1308,21 @@ function its_ringing(){
                                     }, 4900);     //popup fades out after 4900ms
                             }
                                 
-                                else if(data.stat==="fail" ){
-                                    console.log("WRONG PASSWORD!");
-                                    clearInterval(interval_obj);
-                                    clearInterval(asciivar);
-                                    connect_but.innerText = "CONNECT";
-                                    popup_span_elem.innerText = "WRONG PASSWORD❌";
-                                    popup_span_elem.classList.add("show");
-
-                                    setTimeout(()=>{
-                                        popup_span_elem.classList.remove("show");
-                                        enable_button(connect_but);
-                                        refresh_but.removeAttribute("disabled");
-                                        refresh_but.style.cursor = "pointer";
-                                        document.querySelectorAll("path")[0].style.fill="#dee2e6";
-                                    }, 4900);     
+                            else if(data.stat==="fail" ){
+                                console.log("WRONG PASSWORD!");
+                                clearInterval(interval_obj);
+                                clearInterval(asciivar);
+                                connect_but.innerText = "CONNECT";
+                                popup_span_elem.innerText = "WRONG PASSWORD❌";
+                                popup_span_elem.classList.add("show");
+                                setTimeout(()=>{
+                                    popup_span_elem.classList.remove("show");
+                                    enable_button(connect_but);
+                                    connect_but.style.backgroundImage ="linear-gradient(#ce2f44,#9b0502)";
+                                    refresh_but.removeAttribute("disabled");
+                                    refresh_but.style.cursor = "pointer";
+                                    document.querySelectorAll("path")[0].style.fill="#dee2e6";
+                                }, 4900);     
                             }
                           })
                         }, 3000);
@@ -1140,9 +1332,8 @@ function its_ringing(){
    
             //pw entered by user
             let pw_by_user = pw_element.value;
-            //console.log("Password is: ", pw_by_user);
 
-            if(pw_by_user.length == 0 ){
+            if(pw_by_user.length==0 ){
               alert("🔴Password field is empty!!!");
             }
 
@@ -1158,15 +1349,12 @@ function its_ringing(){
                 //select of all of the options from ssid_list
                 let ssid_by_user_opt = select_list.querySelectorAll("option");
                 let ssid_by_user_name = ssid_by_user_opt[ssid_by_user_num].innerText;
-                //console.log("chosen SSID is: ", ssid_by_user_name);
 
                 fetch("/sendcreds", {
                     method: "POST",
                     headers: {
                     'Content-Type': "application/json"
                     },
-
-                    //puts credentials in json format, inside http POST req body
                     body: JSON.stringify({"ssid" : ssid_by_user_name , "pw" :pw_by_user }) 
                 })
 
@@ -1191,14 +1379,14 @@ function its_ringing(){
                 }
 
                 else{
-                        fetch("/timeset", { //former /updatetime
-                            method: "POST",
-                            headers: {
-                                'Content-Type': "application/json"
-                            },
-                            //sends ntp addr in json, inside http POST req body
-                            body: JSON.stringify({"ntp_addr": ntp_input.value , "tz_val": tz_list.value})
-                        })
+                    fetch("/timeset", { //former /updatetime
+                        method: "POST",
+                        headers: {
+                            'Content-Type': "application/json"
+                        },
+                        //sends ntp addr in json, inside http POST req body
+                        body: JSON.stringify({"ntp_addr": ntp_input.value , "tz_val": tz_list.value})
+                    })
                 }
     }
 
@@ -1207,8 +1395,7 @@ function its_ringing(){
             const br_tag = document.getElementById("brp");  //displays actual brightness
                
             slider.onchange= function(){
-
-                br_tag.textContent = slider.value; //this shows the current brightness value (==slider.value)
+                //br_tag.textContent = slider.value; //this shows the current brightness value (==slider.value)
                 fetch("/slider", {
                     method: "POST",
                     headers: {
@@ -1217,6 +1404,13 @@ function its_ringing(){
                     body: JSON.stringify({"bgt": this.value})
                 })   
             }
+
+            function update_brightness_tag(){
+                br_tag.innerText = slider.value;
+            }
+        
+            slider.addEventListener("input", update_brightness_tag );
+            //slider.addEventListener("change", )
 
             const blink = document.getElementById("blink_togg"); 
 
@@ -1237,7 +1431,6 @@ function its_ringing(){
             bright_auto.onchange = function(){      
                 
                 this.checked ? slider.setAttribute("disabled", "") : slider.removeAttribute("disabled", "");
-                //let br_a = this.checked ? true : false;
                 
                 fetch("/br_auto", {
                     method: "POST",
@@ -1276,23 +1469,25 @@ function its_ringing(){
                 })
             }
 
-//-----------------------------------------
-var coll = document.getElementsByClassName("collapsible");
-var i;
+//--------------ALARM SETTINGS--------
+const coll = document.getElementsByClassName("collapsible");
+let i;
 
 for (i = 0; i < coll.length; i++) {
   coll[i].addEventListener("click", function() {
     this.classList.toggle("active");
     var content = this.nextElementSibling;
-    if (content.style.display === "block") {
+    if (content.style.display === "flex") {
       content.style.display = "none";
     } else {
-      content.style.display = "block";
+      //content.style.display = "block";
+      content.style.display = "flex";
+      content.style.flexDirection = "column";
+      content.style.gap = "8px";
     }
   });
 }
 
-//Alarm days
 let mon = document.getElementById("mon");
 let tue = document.getElementById("tue");
 let wed = document.getElementById("wed");
@@ -1407,14 +1602,73 @@ function mute(){
 
 mute_but.addEventListener("click", mute);
 
-//-----------------------------------------
+///-------------AUTO BRIGHTNESS SETTINGS---------------
+
+const auto_br_std = document.getElementById("auto_br_std");
+const auto_br_cus = document.getElementById("auto_br_cus");
+
+function auto_brightness_settings(){
+    if(this.value === "std"){
+        //must hide the form with display: none
+        auto_br_std.setAttribute("disabled", "");
+        auto_br_cus.removeAttribute("disabled", "");
+    }
+    else{
+        //must show the form
+        auto_br_cus.setAttribute("disabled", "");
+        auto_br_std.removeAttribute("disabled", "");
+    }
+}
+
+auto_br_std.addEventListener("click", auto_brightness_settings);
+auto_br_cus.addEventListener("click", auto_brightness_settings);
+
+//----
+const save_custom_hr = document.getElementById("save_custom_hr");
+
+const hours = [
+               document.getElementById("hour1"),
+               document.getElementById("hour2"),
+               document.getElementById("hour3"),
+               document.getElementById("hour4")
+            ];
+
+               
+/*
+const hour1 = document.getElementById("hour1");
+const hour2 = document.getElementById("hour2");
+const hour3 = document.getElementById("hour3");
+const hour4 = document.getElementById("hour4");*/
+
+const brig1 = document.getElementById("brig1");
+const brig2 = document.getElementById("brig2");
+const brig3 = document.getElementById("brig3");
+const brig4 = document.getElementById("brig4");
+
+function auto_brightness_custom(){
+    
+    let h_iter = "hour";
+
+    for(i=0; i<4; i++){
+
+        if(hours[i].checkValidity() === false){
+            hours[i].style.border = "1px solid #BA1E16";
+            alert(`Invalid value in hour${i+1} !`);
+        }
+
+    }
+   
+}
+
+save_custom_hr.addEventListener("click", auto_brightness_custom);
+
+
+//----------CONFIG SETTINGS-------------------------------
 const saveconf = document.getElementById("saveconf_id");
 
 function edit_conf(){   //this must be called ONLY from saveconf and deleteconf buttons!!
-
     disable_button(saveconf, "#1a1a1a","#9c9c9c", "#4E4E56");
     disable_button(deleteconf, "#1a1a1a","#9c9c9c", "#4E4E56");
-
     fetch("/config", {
         method: "POST",
         headers: {
@@ -1430,14 +1684,16 @@ function edit_conf(){   //this must be called ONLY from saveconf and deleteconf 
         if(tip1.innerText!==""){
             tip1.innerText= "";
         }
-                    
-        tip2.innerText="ESPclock is now disconnected. To connect ESPclock to a new wifi, connect your device to ESPclock AP, then go to http://192.168.4.1 and insert new wifi credentials";
-        tip2.style.margin = "0px 26px 18px 26px";
+        /*                    
+        tip2.style.margin = "0px 13px 0px";*/
+        tip2.innerHTML="ESPclock disconnected. To connect ESPclock to a new wifi, connect a device to ESPclock AP, then go to <a href=\"http://192.168.4.1\">http://192.168.4.1</a> and insert new wifi credentials.";
+        tip2.style.display = "block";     
         enable_button(saveconf, "#1440616e", "#51A0DB", "#51A0DB");
-        disable_button(update_but, "linear-gradient(#7895B0,#627D9E)"); // 🔴🔴🔴🔴🔴 cambiare solo da ENABLED --> a DISABLED
+        disable_button(update_but); 
         saveconf.innerText = "SAVE";
 
-        enable_button(connect_but);
+        enable_button(connect_but);   
+        connect_but.style.backgroundImage ="linear-gradient(#ce2f44,#9b0502)";  
         connect_but.innerText = "CONNECT";
                     
         refresh_but.removeAttribute("disabled");
@@ -1445,12 +1701,11 @@ function edit_conf(){   //this must be called ONLY from saveconf and deleteconf 
         document.querySelectorAll("path")[0].style.fill="#dee2e6";
     }
 
-    //if user saves config, deleteconf button is enabled
+    //when user saves config, deleteconf button is enabled
     else{   
         saveconf.innerText = "SAVED"; 
         enable_button(deleteconf, "#740c0c45", "#BA1E16", "#BA1E16");
-        tip2.innerText="";
-        tip2.style.margin = "0px";
+        tip2.style.display = "none";     
     }
 }
            
