@@ -111,7 +111,7 @@ So, I suggest to upgrade to ESP32.
 <li>M2.5 screws: x10</li>
 <li>M2.5 nuts: x2</li>
 <li>Single row female 5pins header (for common GND): x1</li>
-<li>Passive Buzzer: x1</li>
+<li>(optional) Passive Buzzer: x1</li>
 <li>(optional) TTP223 Touch button: x1</li>
 </ul></details>
 
@@ -142,7 +142,6 @@ So, I suggest to upgrade to ESP32.
 </details>
 <details> 
 <summary><b>XIAO ESP32 C3 - TM1637 0.56" Display</b></summary>
-<img src="https://github.com/telepath9/ESPclock/blob/fa035fd003b75fdb8b4b9cf68d04e8ba993e35fc/pics/xiao-top1.0.jpg" alt="Alt Text" width="100%" height="100%">
 <img src="https://github.com/telepath9/ESPclock/blob/a6fae0d17180ef585f9a34ca514e80f5d7f3edf5/pics/tm1637_wiring_2.3.0.webp" alt="Alt Text" width="100%" height="100%">
 </details>
 <details> 
@@ -182,7 +181,7 @@ There are (at the moment) two errors that can be displayed from the 7-segment di
 <ul>
 <li>Err0 ➡️ when "LittleFS.begin()" fails</li>
 <li>Err1 ➡️ when "index.html" doesn't exists in flash memory (user forgot to upload it)</li>
-<li>ESP8266 doesn't connect anymore to wifi 🠊 WPA3 networks not supported, upgrade to ESP32 (recommended) or downgrade your network to WPA2 (not recommended)</li>
+<li>ESP8266 doesn't connect anymore to wifi ➡️ WPA3 networks not supported, upgrade to ESP32 (recommended) or downgrade your network to WPA2 (not recommended)</li>
 </ul>
 
 <h2>🙋🏽 SPECIAL THANKS</h2>
